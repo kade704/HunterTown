@@ -7,6 +7,7 @@ public class ConstructionEditor : MonoBehaviour {
     private Image _blindShade;
     private Button _menuOpenButton;
     private bool _isEditing = false;
+    private Construction.Direction _direction;
 
     public Construction SelectedConstruction {
         get { return _selectedConstruction; }
@@ -74,14 +75,19 @@ public class ConstructionEditor : MonoBehaviour {
                 _menuOpenButton.gameObject.SetActive(true);
             }
 
+            if (Input.GetKeyDown(KeyCode.R)) {
+                _direction += 1;
+                if (_direction >= (Construction.Direction)4) _direction = 0;
+                _constructionCursor.Direction = _direction;
+            }
+
             var cursorPos = ConstructionManager.Instance.CellToWorld(cellPos);
             cursorPos.y += .25f;
             _constructionCursor.transform.position = cursorPos;
             _constructionCursor.Error = ConstructionManager.Instance.HasConstruction(cellPos);
 
             if (Input.GetMouseButtonDown(0) && !UIManager.IsPointerOverUI()) {
-                ConstructionManager.Instance.SetConstruction(_selectedConstruction, cellPos);
-
+                ConstructionManager.Instance.SetConstruction(_selectedConstruction, cellPos, _direction);
                 GameManager_.Instance.Money -= _selectedConstruction.Cost;
             }
         }

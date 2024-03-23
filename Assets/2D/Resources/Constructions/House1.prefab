@@ -83,7 +83,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!60 &-6374381837206509897
@@ -151,7 +151,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2a2a8b318f6c374486e542eee07495b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _type: 0
+  _type: 1
   _cost: 10
   _displayName: "\uC8FC\uD0DD1"
-  _icon: {fileID: 270898870, guid: 9ce137b1be9c78d4683d4c1afb72be4e, type: 3}
+  _icon: {fileID: 1430292771, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
+  _eastSprite: {fileID: 1722864094, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
+  _southSprite: {fileID: 1430292771, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
+  _westSprite: {fileID: -460201530, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
+  _northSprite: {fileID: -1750879985, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}

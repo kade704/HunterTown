@@ -123,343 +123,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: tiles_0
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 112
-        width: 32
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: c7111224f312985468f8ce16ba5fae23
-      internalID: -1003375434
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: tiles_1
-      rect:
-        serializedVersion: 2
-        x: 32
-        y: 112
-        width: 32
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 3718eb997b188024fb96f09444ebafc4
-      internalID: -1408000105
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: tiles_2
-      rect:
-        serializedVersion: 2
-        x: 64
-        y: 112
-        width: 32
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: fda260d5dfd8c484a88461714f93f221
-      internalID: 1042401240
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: tiles_4
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 96
-        width: 32
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 6bca5b56205e9164aad05bb00abe362f
-      internalID: -1684124210
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: tiles_5
-      rect:
-        serializedVersion: 2
-        x: 32
-        y: 96
-        width: 32
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 8baee67011b249542a63c1ad5e61c896
-      internalID: -853571634
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: tiles_3
-      rect:
-        serializedVersion: 2
-        x: 96
-        y: 112
-        width: 32
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 46083d414d9ac8e42bfb8d740e38ef57
-      internalID: 877059950
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: tiles_6
-      rect:
-        serializedVersion: 2
-        x: 64
-        y: 96
-        width: 32
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 8587a48e673faee4fb45243d57f07384
-      internalID: -970421115
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: tiles_7
-      rect:
-        serializedVersion: 2
-        x: 96
-        y: 96
-        width: 32
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: ac3a5c699072d794581f084726eef927
-      internalID: 1017777298
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: tiles_8
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 80
-        width: 32
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: a00beef9a8558984f91493daec8511ef
-      internalID: -2115405115
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: tiles_9
-      rect:
-        serializedVersion: 2
-        x: 32
-        y: 80
-        width: 32
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 1b3962ed87e39cb46b4bc509d293125d
-      internalID: -310026330
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: tiles_10
-      rect:
-        serializedVersion: 2
-        x: 64
-        y: 80
-        width: 32
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 29451e34725a33447a9755328b8fb8d3
-      internalID: -1960213810
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: tiles_11
-      rect:
-        serializedVersion: 2
-        x: 96
-        y: 80
-        width: 32
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 64120c3946b401143b9e1a731eec5d2f
-      internalID: 1811814524
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: tiles_12
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 64
-        width: 32
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: ba5f9b90043a3ff48964f025ecfd717d
-      internalID: -1549208783
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: tiles_13
-      rect:
-        serializedVersion: 2
-        x: 32
-        y: 64
-        width: 32
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: ad4207015fd05a644aed36938e3245be
-      internalID: 779544187
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: tiles_14
-      rect:
-        serializedVersion: 2
-        x: 64
-        y: 64
-        width: 32
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: becf65cfa67cf48429cce639dba76a10
-      internalID: -2093562870
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: tiles_15
-      rect:
-        serializedVersion: 2
-        x: 96
-        y: 64
-        width: 32
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: be182126d916c18499c89e72d858ac92
-      internalID: -153285702
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: tiles_16
+      name: Roads_0
       rect:
         serializedVersion: 2
         x: 0
@@ -473,14 +137,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9b4a547a97cf43b489c459cbb116b557
-      internalID: 1777452031
+      spriteID: 02cc02e0360db4a4da1efada25a5f8c6
+      internalID: -3711728
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tiles_17
+      name: Roads_1
       rect:
         serializedVersion: 2
         x: 32
@@ -494,14 +158,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 87361ae11021d34439f350cac86d53f0
-      internalID: 421276114
+      spriteID: ab9bd0e9c7d8d024495de7e749fa4b7b
+      internalID: 60986158
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tiles_18
+      name: Roads_2
       rect:
         serializedVersion: 2
         x: 64
@@ -515,14 +179,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: fa898c84a78ae7b4c99ff32a36101c37
-      internalID: -1345356954
+      spriteID: c96dcd0038378d84c966fce63ec0deb1
+      internalID: 785179344
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tiles_19
+      name: Roads_3
       rect:
         serializedVersion: 2
         x: 96
@@ -536,50 +200,260 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: cf801fc5fd6c1eb4a8ba0816126db720
-      internalID: 681404536
+      spriteID: b0b8012c237eba04495e69a7df583f0c
+      internalID: 1110279636
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tiles_20
+      name: Roads_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 32
+        width: 32
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0aafb48f9f164dc4c8d172442e308c58
+      internalID: 1186669591
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Roads_5
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 32
+        width: 32
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9f35124b8d8adaf4897312a978e9dda8
+      internalID: -1897608246
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Roads_6
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 32
+        width: 32
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e65017db7e68bf447b9a55fa6f2c533d
+      internalID: 83718644
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Roads_7
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 32
+        width: 32
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4c79ada1fd0ede1458367a439dc1d23b
+      internalID: -1927958277
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Roads_8
       rect:
         serializedVersion: 2
         x: 0
         y: 16
         width: 32
-        height: 32
-      alignment: 9
-      pivot: {x: 0.5, y: 0.28}
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 58eb1107ef5b6154ca840e17529187fe
-      internalID: 270898870
+      spriteID: 5209675a04788f74cbebac5695408471
+      internalID: -295972988
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tiles_21
+      name: Roads_9
       rect:
         serializedVersion: 2
         x: 32
         y: 16
         width: 32
-        height: 32
-      alignment: 9
-      pivot: {x: 0.5, y: 0.28}
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 04a974b6e4e1b524cbeca39e255398c6
-      internalID: 263824592
+      spriteID: ed5440487fb06d54584f7ef244c95127
+      internalID: -580307748
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Roads_10
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 16
+        width: 32
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 68d8eacdd27f47746b7dd16e315beb78
+      internalID: -873806994
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Roads_11
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 16
+        width: 32
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7c91c5f3b39eed74ba2da1def676ff70
+      internalID: 1281248992
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Roads_12
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 32
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6c45b4aed2f08634986c20fb297d7412
+      internalID: 1349382372
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Roads_13
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 0
+        width: 32
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c1f62dbe522805947b12497517a81f47
+      internalID: 1208307691
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Roads_14
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 32
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 16a701c707e67a540a7510462abfe6f4
+      internalID: 1284933799
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Roads_15
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 0
+        width: 32
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 955e57b1bfa1ff54292bc574bf2081a2
+      internalID: 1370674463
       vertices: []
       indices: 
       edges: []
@@ -595,30 +469,22 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      tiles_0: -1003375434
-      tiles_1: -1408000105
-      tiles_10: -1960213810
-      tiles_11: 1811814524
-      tiles_12: -1549208783
-      tiles_13: 779544187
-      tiles_14: -2093562870
-      tiles_15: -153285702
-      tiles_16: 1777452031
-      tiles_17: 421276114
-      tiles_18: -1345356954
-      tiles_19: 681404536
-      tiles_2: 1042401240
-      tiles_20: 270898870
-      tiles_21: 263824592
-      tiles_22: -842390938
-      tiles_23: -1203509758
-      tiles_3: 877059950
-      tiles_4: -1684124210
-      tiles_5: -853571634
-      tiles_6: -970421115
-      tiles_7: 1017777298
-      tiles_8: -2115405115
-      tiles_9: -310026330
+      Roads_0: -3711728
+      Roads_1: 60986158
+      Roads_10: -873806994
+      Roads_11: 1281248992
+      Roads_12: 1349382372
+      Roads_13: 1208307691
+      Roads_14: 1284933799
+      Roads_15: 1370674463
+      Roads_2: 785179344
+      Roads_3: 1110279636
+      Roads_4: 1186669591
+      Roads_5: -1897608246
+      Roads_6: 83718644
+      Roads_7: -1927958277
+      Roads_8: -295972988
+      Roads_9: -580307748
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

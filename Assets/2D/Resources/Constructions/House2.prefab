@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5880681913185632353}
   - component: {fileID: 8858731784408202509}
-  - component: {fileID: 6969974037599202187}
   - component: {fileID: 6654811032348287992}
+  - component: {fileID: 6969974037599202187}
   m_Layer: 0
   m_Name: House2
   m_TagString: Untagged
@@ -83,25 +83,9 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &6969974037599202187
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6348741680316753779}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2a2a8b318f6c374486e542eee07495b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _type: 0
-  _cost: 10
-  _displayName: "\uC8FC\uD0DD2"
-  _icon: {fileID: 263824592, guid: 9ce137b1be9c78d4683d4c1afb72be4e, type: 3}
 --- !u!60 &6654811032348287992
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -155,3 +139,24 @@ PolygonCollider2D:
       - {x: 0.37434876, y: -0.02275543}
       - {x: 0.3718796, y: 0.22824594}
   m_UseDelaunayMesh: 0
+--- !u!114 &6969974037599202187
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6348741680316753779}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2a2a8b318f6c374486e542eee07495b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _type: 1
+  _roadTile: {fileID: 0}
+  _cost: 10
+  _displayName: "\uC8FC\uD0DD2"
+  _icon: {fileID: 1828060907, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
+  _eastSprite: {fileID: -1540560302, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
+  _southSprite: {fileID: 1828060907, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
+  _westSprite: {fileID: 791452545, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
+  _northSprite: {fileID: -2056867373, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}

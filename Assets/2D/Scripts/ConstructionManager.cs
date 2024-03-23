@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class ConstructionManager : MonoBehaviour {
     private static ConstructionManager _instance;
+    private Tilemap _roadTilemap;
     private Transform _constructionParent;
     private Construction _constructionSelected;
     private ConstructionCursor _constructionCursor;
@@ -17,10 +19,12 @@ public class ConstructionManager : MonoBehaviour {
         _instance = this;
 
         _isometricGrid = GetComponent<Grid>();
-        _constructionParent = transform.Find("Constructions").transform;
+        _constructionParent = transform.Find("Buildings").transform;
         _constructionCursor = FindObjectOfType<ConstructionCursor>();
         _uiConstructionInfo = FindObjectOfType<UIConstructionInfo>();
         _constructionEditor = FindObjectOfType<ConstructionEditor>();
+        _roadTilemap = transform.Find("RoadTilemap").GetComponent<Tilemap>();
+        print(_roadTilemap);
     }
 
     private void Update() {
@@ -33,7 +37,9 @@ public class ConstructionManager : MonoBehaviour {
 
             _constructionCursor.Construction = construction;
             if (construction) {
+                _constructionCursor.Error = false;
                 _constructionCursor.transform.position = construction.transform.position;
+                _constructionCursor.Direction = construction.Direction_;
                 _constructionCursor.SetOutline(true);
             }
 
@@ -57,22 +63,25 @@ public class ConstructionManager : MonoBehaviour {
         return _constructionBuilded.GetValueOrDefault(cellPos);
     }
 
-    public void SetConstruction(Construction construction, Vector2Int cellPos) {
+    public void SetConstruction(Construction construction, Vector2Int cellPos, Construction.Direction direction) {
         if (HasConstruction(cellPos)) return;
 
-        var pos = new Vector3Int(cellPos.x, cellPos.y, 0);
-        var worldPos = _isometricGrid.CellToWorld(pos);
-        worldPos.y += 0.25f;
+        if (construction.ConstructionType == Construction.Type.BUILDING) {
+            var pos = new Vector3Int(cellPos.x, cellPos.y, 0);
+            var worldPos = _isometricGrid.CellToWorld(pos);
+            worldPos.y += 0.25f;
 
-        var newConstruction = Instantiate(construction, worldPos, Quaternion.identity, _constructionParent);
-        newConstruction.CellPos = cellPos;
+            var newConstruction = Instantiate(construction, worldPos, Quaternion.identity, _constructionParent);
+            newConstruction.CellPos = cellPos;
+            newConstruction.Direction_ = direction;
 
-        _constructionBuilded[cellPos] = newConstruction;
+            _constructionBuilded[cellPos] = newConstruction;
+        } else if (construction.ConstructionType == Construction.Type.ROAD) {
+            _roadTilemap.SetTile(new Vector3Int(cellPos.x, cellPos.y), construction.RoadTile);
+        }
     }
 
     public void RemoveConstruction(Vector2Int cellPos) {
-        print(cellPos);
-
         var construction = _constructionBuilded[cellPos];
         if (construction) {
             if (_constructionSelected == construction) {

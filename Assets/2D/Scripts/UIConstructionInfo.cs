@@ -13,12 +13,13 @@ public class UIConstructionInfo : MonoBehaviour {
                 UIManager.ShowCanvasGroup(_canvasGroup);
 
                 _nameText.text = value.DisplayName;
+                _destroyButton.onClick.RemoveAllListeners();
                 _destroyButton.onClick.AddListener(() => {
                     ConstructionManager.Instance.RemoveConstruction(value.CellPos);
                 });
             } else {
                 UIManager.HideCanvasGroup(_canvasGroup);
-                _destroyButton.onClick.RemoveAllListeners();
+
             }
         }
     }

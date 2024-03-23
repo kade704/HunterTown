@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class ConstructionCursor : MonoBehaviour {
     private SpriteRenderer _spriteRenderer;
+    private Construction _construction;
 
     public Construction Construction {
         set {
@@ -10,12 +11,18 @@ public class ConstructionCursor : MonoBehaviour {
             } else {
                 _spriteRenderer.sprite = null;
             }
+            _construction = value;
+        }
+    }
+
+    public Construction.Direction Direction {
+        set {
+            _spriteRenderer.sprite = _construction.GetSpriteFromDirection(value);
         }
     }
 
     public bool Error {
-        set
-        {
+        set {
             _spriteRenderer.color = value ? Color.red : Color.white;
         }
     }

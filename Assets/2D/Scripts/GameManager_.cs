@@ -26,4 +26,11 @@ public class GameManager_ : MonoBehaviour {
     private void Start() {
         Money = _money;
     }
+
+    private void Update() {
+        if (Input.GetKeyDown(KeyCode.Q)) {
+            var npc = Resources.Load<GameObject>("NPC");
+            Instantiate(npc);
+        }
+    }
 }

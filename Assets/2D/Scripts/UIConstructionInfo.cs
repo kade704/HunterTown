@@ -6,27 +6,37 @@ public class UIConstructionInfo : MonoBehaviour {
     private TMP_Text _nameText;
     private Button _destroyButton;
     private CanvasGroup _canvasGroup;
-
-    public Construction Construction {
-        set {
-            if (value) {
-                UIManager.ShowCanvasGroup(_canvasGroup);
-
-                _nameText.text = value.DisplayName;
-                _destroyButton.onClick.RemoveAllListeners();
-                _destroyButton.onClick.AddListener(() => {
-                    ConstructionManager.Instance.RemoveConstruction(value.CellPos);
-                });
-            } else {
-                UIManager.HideCanvasGroup(_canvasGroup);
-
-            }
-        }
-    }
+    private Construction _selectedConstruction;
 
     private void Awake() {
         _canvasGroup = GetComponent<CanvasGroup>();
         _nameText = transform.Find("NameText").GetComponent<TMP_Text>();
         _destroyButton = transform.Find("DestroyButton").GetComponent<Button>();
+
+        ConstructionManager.Instance.OnConstructionClicked.AddListener(OnConstructionClicked);
+    }
+
+    private void OnConstructionClicked(Construction construction) {
+        if (_selectedConstruction) {
+            _selectedConstruction.SetOutline(false);
+        }
+
+        if (construction) {
+            UIManager.ShowCanvasGroup(_canvasGroup);
+
+            _nameText.text = construction.DisplayName;
+            _destroyButton.onClick.RemoveAllListeners();
+            _destroyButton.onClick.AddListener(() => {
+                construction.DestroyThis();
+                UIManager.HideCanvasGroup(_canvasGroup);
+            });
+
+            _selectedConstruction = construction;
+            _selectedConstruction.SetOutline(true);
+        } else {
+            UIManager.HideCanvasGroup(_canvasGroup);
+
+            _selectedConstruction = null;
+        }
     }
 }

@@ -2,24 +2,13 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class ConstructionEditor : MonoBehaviour {
-    private Construction _selectedConstruction;
+    private Construction _constructionToBuild;
     private ConstructionCursor _constructionCursor;
     private Image _blindShade;
     private Button _menuOpenButton;
     private bool _isEditing = false;
-    private Construction.Direction _direction;
-
-    public Construction SelectedConstruction {
-        get { return _selectedConstruction; }
-        set {
-            _selectedConstruction = value;
-            _constructionCursor.Construction = value;
-
-            if (value) {
-                _constructionCursor.SetOutline(false);
-            }
-        }
-    }
+    private Building.Direction _direction;
+    private Vector2Int _cellPos;
 
     public bool IsEditing => _isEditing;
 
@@ -48,7 +37,7 @@ public class ConstructionEditor : MonoBehaviour {
             constuctionSlot.Construction = construction;
             constuctionSlot.OnClick.AddListener(() => {
                 UIManager.HideCanvasGroup(menuCanvasGroup);
-                SelectedConstruction = construction;
+                _constructionToBuild = construction;
                 _isEditing = true;
 
                 var color = Color.black; color.a = .5f;
@@ -62,11 +51,11 @@ public class ConstructionEditor : MonoBehaviour {
     private void Update() {
         var cursor = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-        var cellPos = ConstructionManager.Instance.WorldToCell(cursor);
+        _cellPos = ConstructionManager.Instance.WorldToCell(cursor);
 
-        if (_selectedConstruction) {
+        if (_constructionToBuild) {
             if (Input.GetKeyDown(KeyCode.Escape) || Input.GetMouseButtonDown(1)) {
-                SelectedConstruction = null;
+                _constructionToBuild = null;
                 _isEditing = false;
 
                 var color = Color.black; color.a = 0f;
@@ -77,19 +66,56 @@ public class ConstructionEditor : MonoBehaviour {
 
             if (Input.GetKeyDown(KeyCode.R)) {
                 _direction += 1;
-                if (_direction >= (Construction.Direction)4) _direction = 0;
+                if (_direction >= (Building.Direction)4) _direction = 0;
                 _constructionCursor.Direction = _direction;
             }
 
-            var cursorPos = ConstructionManager.Instance.CellToWorld(cellPos);
+            var buildable = CheckBuildable();
+
+            var cursorPos = ConstructionManager.Instance.CellToWorld(_cellPos);
             cursorPos.y += .25f;
             _constructionCursor.transform.position = cursorPos;
-            _constructionCursor.Error = ConstructionManager.Instance.HasConstruction(cellPos);
+            _constructionCursor.Construction = _constructionToBuild;
+            _constructionCursor.Direction = _direction;
+            _constructionCursor.Error = !buildable;
 
-            if (Input.GetMouseButtonDown(0) && !UIManager.IsPointerOverUI()) {
-                ConstructionManager.Instance.SetConstruction(_selectedConstruction, cellPos, _direction);
-                GameManager_.Instance.Money -= _selectedConstruction.Cost;
+            if (Input.GetMouseButtonDown(0) && !UIManager.IsPointerOverUI() && buildable) {
+                if (_constructionToBuild is Building) {
+                    var newBuilding = ConstructionManager.Instance.BuildingMap.SetConstruction(_constructionToBuild, _cellPos) as Building;
+                    newBuilding.Direction_ = _direction;
+                } else if (_constructionToBuild is Road) {
+                    ConstructionManager.Instance.RoadMap.SetConstruction(_constructionToBuild, _cellPos);
+                }
+
+                GameManager_.Instance.Money -= _constructionToBuild.Cost;
             }
         }
+    }
+
+    private bool CheckBuildable() {
+        var result = true;
+        if (ConstructionManager.Instance.HasConstruction(_cellPos)) {
+            result = false;
+        }
+        if (_constructionToBuild is Building) {
+            if (_direction == Building.Direction.SOUTH) {
+                if (!ConstructionManager.Instance.RoadMap.HasConstruction(new Vector2Int(_cellPos.x - 1, _cellPos.y))) {
+                    result = false;
+                }
+            } else if (_direction == Building.Direction.NORTH) {
+                if (!ConstructionManager.Instance.RoadMap.HasConstruction(new Vector2Int(_cellPos.x + 1, _cellPos.y))) {
+                    result = false;
+                }
+            } else if (_direction == Building.Direction.EAST) {
+                if (!ConstructionManager.Instance.RoadMap.HasConstruction(new Vector2Int(_cellPos.x, _cellPos.y - 1))) {
+                    result = false;
+                }
+            } else if (_direction == Building.Direction.WEST) {
+                if (!ConstructionManager.Instance.RoadMap.HasConstruction(new Vector2Int(_cellPos.x, _cellPos.y + 1))) {
+                    result = false;
+                }
+            }
+        }
+        return result;
     }
 }

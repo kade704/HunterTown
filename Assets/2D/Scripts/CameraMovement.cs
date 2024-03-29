@@ -1,6 +1,7 @@
 using UnityEngine;
 
-public class CameraMovement : MonoBehaviour {
+public class CameraMovement : MonoBehaviour
+{
     [SerializeField] private float _zoomSpeed;
     [SerializeField] private float _zoomSmooth;
     [SerializeField] private float _dragSpeed;
@@ -10,15 +11,18 @@ public class CameraMovement : MonoBehaviour {
     private float _zoomTarget;
     private Vector2 _dragOrigin;
 
-    private void Awake() {
+    private void Awake()
+    {
         _camera = GetComponent<Camera>();
     }
 
-    private void Start() {
+    private void Start()
+    {
         _zoomTarget = _zoomCurr = _camera.orthographicSize;
     }
 
-    private void Update() {
+    private void Update()
+    {
         var scroll = Input.mouseScrollDelta.y;
 
         _zoomTarget += scroll * Time.deltaTime * -_zoomSpeed;

@@ -1,9 +1,11 @@
 using System;
 using UnityEngine;
 
-public class Road : Construction {
+public class Road : Construction
+{
     [Serializable]
-    public struct SpriteRule {
+    public struct SpriteRule
+    {
         [SerializeField] private Sprite _none;
         [SerializeField] private Sprite _swne;
         [SerializeField] private Sprite _swn;
@@ -41,50 +43,83 @@ public class Road : Construction {
 
     [SerializeField] private SpriteRule _spriteRule;
 
-    protected override void Awake() {
+    protected override void Awake()
+    {
         base.Awake();
 
         _constructionMap.OnConstructionSet.AddListener(UpdateSprite);
         _constructionMap.OnConstructionRemoved.AddListener(UpdateSprite);
     }
 
-    public void UpdateSprite() {
+    private void UpdateSprite()
+    {
         var east = _constructionMap.HasConstruction(new Vector2Int(_cellPos.x, _cellPos.y - 1));
         var west = _constructionMap.HasConstruction(new Vector2Int(_cellPos.x, _cellPos.y + 1));
         var north = _constructionMap.HasConstruction(new Vector2Int(_cellPos.x + 1, _cellPos.y));
         var south = _constructionMap.HasConstruction(new Vector2Int(_cellPos.x - 1, _cellPos.y));
 
-        if (south && west && north && east) {
+        if (south && west && north && east)
+        {
             _spriteRenderer.sprite = _spriteRule.SWNE;
-        } else if (south && west && north && !east) {
+        }
+        else if (south && west && north && !east)
+        {
             _spriteRenderer.sprite = _spriteRule.SWN;
-        } else if (south && west && !north && east) {
+        }
+        else if (south && west && !north && east)
+        {
             _spriteRenderer.sprite = _spriteRule.SWE;
-        } else if (south && !west && north && east) {
+        }
+        else if (south && !west && north && east)
+        {
             _spriteRenderer.sprite = _spriteRule.SNE;
-        } else if (!south && west && north && east) {
+        }
+        else if (!south && west && north && east)
+        {
             _spriteRenderer.sprite = _spriteRule.WNE;
-        } else if (south && west && !north && !east) {
+        }
+        else if (south && west && !north && !east)
+        {
             _spriteRenderer.sprite = _spriteRule.SW;
-        } else if (south && !west && north && !east) {
+        }
+        else if (south && !west && north && !east)
+        {
             _spriteRenderer.sprite = _spriteRule.SN;
-        } else if (south && !west && !north && east) {
+        }
+        else if (south && !west && !north && east)
+        {
             _spriteRenderer.sprite = _spriteRule.SE;
-        } else if (!south && west && north && !east) {
+        }
+        else if (!south && west && north && !east)
+        {
             _spriteRenderer.sprite = _spriteRule.WN;
-        } else if (!south && west && !north && east) {
+        }
+        else if (!south && west && !north && east)
+        {
             _spriteRenderer.sprite = _spriteRule.WE;
-        } else if (!south && !west && north && east) {
+        }
+        else if (!south && !west && north && east)
+        {
             _spriteRenderer.sprite = _spriteRule.NE;
-        } else if (south && !west && !north && !east) {
+        }
+        else if (south && !west && !north && !east)
+        {
             _spriteRenderer.sprite = _spriteRule.S;
-        } else if (!south && west && !north && !east) {
+        }
+        else if (!south && west && !north && !east)
+        {
             _spriteRenderer.sprite = _spriteRule.W;
-        } else if (!south && !west && north && !east) {
+        }
+        else if (!south && !west && north && !east)
+        {
             _spriteRenderer.sprite = _spriteRule.N;
-        } else if (!south && !west && !north && east) {
+        }
+        else if (!south && !west && !north && east)
+        {
             _spriteRenderer.sprite = _spriteRule.E;
-        } else {
+        }
+        else
+        {
             _spriteRenderer.sprite = _spriteRule.None;
         }
     }

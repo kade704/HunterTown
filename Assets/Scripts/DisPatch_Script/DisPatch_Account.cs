@@ -1,9 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEngine;
-using UnityEngine.SocialPlatforms;
-
 public class DisPatch_Account
 {
     DisPatch_Ability_Check ability_Check = new DisPatch_Ability_Check();

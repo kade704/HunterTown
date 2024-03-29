@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class DisPatch_Time_Account
 {
@@ -17,7 +15,7 @@ public class DisPatch_Time_Account
             {
                 unit_Guide++;
             }
-            if(GameManager.Instance.GetDisPatch_Account().GetAbility_Check().Unit_Ability_Check(unit,Unit.Unit_Ability.Terrible_Direction))
+            if (GameManager.Instance.GetDisPatch_Account().GetAbility_Check().Unit_Ability_Check(unit, Unit.Unit_Ability.Terrible_Direction))
             {
                 unit_Terrible_Direction++;
             }
@@ -28,9 +26,9 @@ public class DisPatch_Time_Account
     {
         if (GameManager.Instance.GetDisPatch_Account().GetAbility_Check().Portal_Ability_Check(portal, Portal.Portal_Ability.Good_Temper))
         {
-            
+
         }
     }
 
-    
+
 }

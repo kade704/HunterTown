@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -12,7 +11,7 @@ public class GameManager : MonoBehaviour
     private int day = 0;
     private void Awake()
     {
-        if(instance == null)
+        if (instance == null)
         {
             instance = this;
 
@@ -33,7 +32,7 @@ public class GameManager : MonoBehaviour
     {
         get
         {
-            if(null == instance)
+            if (null == instance)
             {
                 return null;
             }
@@ -51,7 +50,7 @@ public class GameManager : MonoBehaviour
         {
             yield return new WaitForSeconds(2.5f);
             day++;
-            Debug.Log("°ÔÀÓÅ¸ÀÌ¸Ó ÀÛµ¿ : ÀÏ¼ö + 1");
+            Debug.Log("ê²Œì„íƒ€ì´ë¨¸ ì‘ë™ : ì¼ìˆ˜ + 1");
             if (day % 7 == 0)
             {
                 GameTimmer_Week();
@@ -61,7 +60,7 @@ public class GameManager : MonoBehaviour
 
     public void GameTimmer_Week()
     {
-        Debug.Log("°ÔÀÓÅ¸ÀÌ¸Ó ÀÛµ¿ : ÁÖ°£ ÁøÇà");
+        Debug.Log("ê²Œì„íƒ€ì´ë¨¸ ì‘ë™ : ì£¼ê°„ ì§„í–‰");
         BroadcastMessage("Timmer_Check", SendMessageOptions.DontRequireReceiver);
     }
 }

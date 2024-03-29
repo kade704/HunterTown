@@ -3,7 +3,8 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class ConstructionMap : MonoBehaviour {
+public class ConstructionMap : MonoBehaviour
+{
 
     private Dictionary<Vector2Int, Construction> _constructionBuilded = new();
     private UnityEvent _onConstructionSet = new();
@@ -14,11 +15,13 @@ public class ConstructionMap : MonoBehaviour {
     public UnityEvent OnConstructionRemoved => _onConstructionRemoved;
 
 
-    public Construction GetConstruction(Vector2Int cellPos) {
+    public Construction GetConstruction(Vector2Int cellPos)
+    {
         return _constructionBuilded.GetValueOrDefault(cellPos);
     }
 
-    public Construction SetConstruction(Construction construction, Vector2Int cellPos) {
+    public Construction SetConstruction(Construction construction, Vector2Int cellPos)
+    {
         if (HasConstruction(cellPos)) return null;
 
         var worldPos = ConstructionManager.Instance.CellToWorld(cellPos);
@@ -34,9 +37,11 @@ public class ConstructionMap : MonoBehaviour {
         return newConstruction;
     }
 
-    public void RemoveConstruction(Vector2Int cellPos) {
-        var construction = _constructionBuilded[cellPos];
-        if (construction) {
+    public void RemoveConstruction(Vector2Int cellPos)
+    {
+        var construction = _constructionBuilded.GetValueOrDefault(cellPos);
+        if (construction)
+        {
             Destroy(construction.gameObject);
             _constructionBuilded.Remove(cellPos);
 
@@ -44,7 +49,8 @@ public class ConstructionMap : MonoBehaviour {
         }
     }
 
-    public bool HasConstruction(Vector2Int cellPos) {
+    public bool HasConstruction(Vector2Int cellPos)
+    {
         return GetConstruction(cellPos);
     }
 }

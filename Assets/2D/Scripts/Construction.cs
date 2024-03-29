@@ -1,38 +1,47 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(SpriteRenderer))]
-public class Construction : MonoBehaviour {
-    [SerializeField] private int _cost;           //°Ç¹° ¼³Ä¡ °¡°Ý
-    [SerializeField] private string _displayName; //UI¿¡ Ç¥½ÃµÇ´Â ÀÌ¸§
-    [SerializeField] private Sprite _icon;        //UI¿¡ Ç¥½ÃµÇ´Â ¾ÆÀÌÄÜ
+public class Construction : MonoBehaviour
+{
+    [SerializeField] private int _cost;           //ï¿½Ç¹ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½
+    [SerializeField] private string _displayName; //UIï¿½ï¿½ Ç¥ï¿½ÃµÇ´ï¿½ ï¿½Ì¸ï¿½
+    [SerializeField] private Sprite _icon;        //UIï¿½ï¿½ Ç¥ï¿½ÃµÇ´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
+    protected UnityEvent _onClicked = new();
     protected SpriteRenderer _spriteRenderer;
     protected Vector2Int _cellPos;
     protected ConstructionMap _constructionMap;
     protected int _defaultOrder;
 
     public Vector2Int CellPos { get { return _cellPos; } set { _cellPos = value; } }
-    public ConstructionMap ConstructionMap { get { return _constructionMap; } set { _constructionMap = value; } }
+    public UnityEvent OnClicked => _onClicked;
 
     public int Cost => _cost;
     public string DisplayName => _displayName;
     public Sprite Icon => _icon;
+    public Sprite CurrentSprite => _spriteRenderer.sprite;
 
-    protected virtual void Awake() {
+    protected virtual void Awake()
+    {
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _constructionMap = GetComponentInParent<ConstructionMap>();
         _defaultOrder = _spriteRenderer.sortingOrder;
     }
 
-    protected virtual void Update() {
+    protected virtual void Update()
+    {
         _spriteRenderer.sortingOrder = _defaultOrder - Mathf.FloorToInt(transform.position.y * 10);
     }
 
-    public void DestroyThis() {
-        _constructionMap.RemoveConstruction(CellPos);
+    private void OnDestroy()
+    {
+        if (_constructionMap.GetConstruction(CellPos) == this)
+            _constructionMap.RemoveConstruction(CellPos);
     }
 
-    public void SetOutline(bool outline) {
+    public void SetOutline(bool outline)
+    {
         _spriteRenderer.material.SetFloat("_Outline", outline ? 1 : 0);
     }
 }

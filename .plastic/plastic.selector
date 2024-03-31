@@ -1,4 +1,0 @@
-repository "Hunter_3D@zoljak@cloud"
-  path "/"
-    br "/main"
-    co "/main"

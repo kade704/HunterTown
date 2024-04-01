@@ -34,6 +34,7 @@ public class Hunter : MonoBehaviour
     [SerializeField] private string _displayName;
     [SerializeField] private int _defaultHp;
     [SerializeField] private int _defaultDamage;
+    private bool _isDispatched = false;
 
     private List<Ability> _abilities = new List<Ability>();
 
@@ -46,6 +47,15 @@ public class Hunter : MonoBehaviour
 
     public Ability[] Abilities => _abilities.ToArray();
     public Sprite Sprite => _spriteRenderer.sprite;
+
+    public bool Dispatch
+    {
+        set
+        {
+            _isDispatched = value;
+            _spriteRenderer.enabled = value;
+        }
+    }
 
 
     private void Awake()
@@ -124,5 +134,10 @@ public class Hunter : MonoBehaviour
             damageScale -= 0.25f;
         }
         return (int)(_defaultDamage * damageScale);
+    }
+
+    public int GetSurvivalPower()
+    {
+        return GetHp() + (int)(GetDamage() * 0.8f);
     }
 }

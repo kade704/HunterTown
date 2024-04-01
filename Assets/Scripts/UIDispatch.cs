@@ -12,6 +12,8 @@ public class UIDispatch : MonoBehaviour
     private Image _cursor;
     private Hunter _draggingHunter;
 
+    public Portal TargetPortal => _targetPortal;
+
     private void Awake()
     {
         _canvasGroup = GetComponent<CanvasGroup>();

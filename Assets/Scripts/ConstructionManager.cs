@@ -32,7 +32,6 @@ public class ConstructionManager : MonoBehaviour
         var house1 = Resources.Load<Building>("Constructions/House1");
         var house2 = Resources.Load<Building>("Constructions/House2");
         var road = Resources.Load<Road>("Constructions/Road");
-        var portal = Resources.Load<Portal>("Constructions/Portal");
 
         _roadMap.Set(road, new Vector2Int(-3, -1));
         _roadMap.Set(road, new Vector2Int(-2, -1));
@@ -45,9 +44,6 @@ public class ConstructionManager : MonoBehaviour
         _roadMap.Set(road, new Vector2Int(-1, 1));
         _buildingMap.Set(house1, new Vector2Int(0, 0));
         _buildingMap.Set(house2, new Vector2Int(0, -2));
-        var newPortal = _buildingMap.Set(portal, new Vector2Int(3, 3)) as Portal;
-        newPortal.DefaultPower = 10;
-
     }
 
     private void Update()

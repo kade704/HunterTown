@@ -13,9 +13,17 @@ public class PortalManager : MonoBehaviour
     public void AddRandomPortal()
     {
         var portal = Resources.Load<Portal>("Constructions/Portal");
-        var newPortal = ConstructionManager.Instance.SetConstruction(portal, new Vector2Int(3, 3)) as Portal;
+
+        Vector2Int cellPos;
+        do
+        {
+            cellPos = new Vector2Int(Random.Range(-5, 5), Random.Range(-5, 5));
+        } while (ConstructionManager.Instance.GetConstruction(cellPos) != null);
+
+
+        var newPortal = ConstructionManager.Instance.SetConstruction(portal, cellPos) as Portal;
         newPortal.DefaultPower = Random.Range(5, 15);
-        newPortal.DefaultDanger = Random.Range(5, 15);
+        newPortal.DefaultDanger = Random.Range(20, 100);
 
         var abilityCount = System.Enum.GetNames(typeof(Portal.Ability)).Length;
         for (int i = 0; i < 3; i++)
@@ -27,5 +35,7 @@ public class PortalManager : MonoBehaviour
             }
         }
         _portals.Add(newPortal);
+
+        UILogger.Instance.LogInfo($"({cellPos.x}, {cellPos.y})에 포탈이 생성되었습니다.");
     }
 }

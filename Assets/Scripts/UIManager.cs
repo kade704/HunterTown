@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -5,17 +6,15 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class UIManager : MonoBehaviour
+public class UIManager : Singleton<UIManager>
 {
-    private static UIManager _instance;
     private UnityEvent<string, Construction> _onConstructionInteracted = new();
 
-    public static UIManager Instance => _instance;
     public UnityEvent<string, Construction> OnConstructionInteracted => _onConstructionInteracted;
 
-    private void Awake()
+    protected override void Awake()
     {
-        _instance = this;
+        base.Awake();
 
         var moneyText = transform.Find("MoneyText").GetComponent<Text>();
         GameManager.Instance.OnMoneyChanged.AddListener((money) =>
@@ -24,19 +23,7 @@ public class UIManager : MonoBehaviour
         });
     }
 
-    public static void ShowCanvasGroup(CanvasGroup group)
-    {
-        group.alpha = 1;
-        group.blocksRaycasts = true;
-        group.interactable = true;
-    }
 
-    public static void HideCanvasGroup(CanvasGroup group)
-    {
-        group.alpha = 0;
-        group.blocksRaycasts = false;
-        group.interactable = false;
-    }
 
     public static GameObject[] GetUIObjectsOverPointer()
     {

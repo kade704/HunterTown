@@ -34,8 +34,9 @@ public class HunterManager : MonoBehaviour
         var hunterPrefab = Resources.Load<Hunter>("Hunter");
         var newHunter = Instantiate(hunterPrefab, transform);
         newHunter.DisplayName = "헌터" + hunterCount++;
-        newHunter.DefaultHp = Random.Range(50, 200);
-        newHunter.DefaultDamage = Random.Range(5, 25);
+        newHunter.DefaultHp = Random.Range(10, 50);
+        newHunter.DefaultDamage = Random.Range(1, 10);
         _hunters.Add(newHunter);
+        UILogger.Instance.LogInfo($"{newHunter.DisplayName}가 마을에 이주했습니다.");
     }
 }

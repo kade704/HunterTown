@@ -42,7 +42,10 @@ public class Portal : Building
     [SerializeField] private bool _mazeVisibility;
     [SerializeField] private List<Ability> _abilities = new List<Ability>();
     [SerializeField] private bool[] _abilityVisibilities = new bool[3];
-    [SerializeField] private Hunter[] disPatchedHunters = new Hunter[4];
+    [SerializeField] private Hunter[] _huntersToDispatch = new Hunter[4];
+
+    private bool _isDispatched = false;
+    private SpriteRenderer _progressSprite;
 
     public int DefaultPower { get { return _defaultPower; } set { _defaultPower = value; } }
     public int DefaultDanger { get { return _defaultDanger; } set { _defaultDanger = value; } }
@@ -52,55 +55,64 @@ public class Portal : Building
 
     public List<Ability> Abilities { get { return _abilities; } set { _abilities = value; } }
     public bool[] AbilityVisibilities => _abilityVisibilities;
+    public Hunter[] HuntersToDispatch => _huntersToDispatch;
 
 
-    public float Unit_Die_Base_Count(Hunter hunter, bool disPatch_Pass)
+    protected override void Awake()
     {
-        float var = 0;
-        int survivalPower = hunter.GetSurvivalPower();
-        float die_Per = 0f;
-        if (hunter.Abilities.Contains(Hunter.Ability.Sixth_Sense))
-        {
-            var += 0.03f;
-        }
-        if (hunter.Abilities.Contains(Hunter.Ability.Weakness))
-        {
-            var -= 0.07f;
-        }
-        if (disPatch_Pass)
-        {
-            die_Per = 1f - ((float)survivalPower / _defaultDanger);
-        }
-        else
-        {
-            die_Per = 1f - ((float)survivalPower / (_defaultDanger * 2f));
-        }
-        die_Per += var;
-
-        if (die_Per < 0f)
-        {
-            die_Per = 0f;
-        }
-        return die_Per;
-    }
-
-    public float Unit_Die_Account(Hunter hunter, bool disPatch_Pass)
-    {
-        float unit_Die_Per = Unit_Die_Base_Count(hunter, disPatch_Pass);
-        if (_abilities.Contains(Ability.Lush_Forest))
-        {
-            unit_Die_Per += LushForestVar;
-        }
-        if (_abilities.Contains(Ability.Peace))
-        {
-            unit_Die_Per += 0.02f;
-        }
-        if (unit_Die_Per < 0)
-        {
-            unit_Die_Per = 0;
-        }
-        return unit_Die_Per;
+        base.Awake();
+        _progressSprite = transform.Find("Progress").GetComponent<SpriteRenderer>();
     }
 
 
+
+    public void Dispatch()
+    {
+        _isDispatched = true;
+        StartCoroutine(IEnuDispatch());
+    }
+
+    private IEnumerator IEnuDispatch()
+    {
+        foreach (var hunter in _huntersToDispatch)
+        {
+            if (hunter)
+                hunter.IsDispatched = true;
+        }
+
+        _progressSprite.enabled = true;
+        var startTime = Time.time;
+        var nextTime = startTime + Random.Range(3, 8);
+        while (Time.time < nextTime)
+        {
+            var progressValue = (Time.time - startTime) / (nextTime - startTime);
+            _progressSprite.material.SetFloat("_Value", progressValue);
+            yield return null;
+        }
+        _progressSprite.enabled = false;
+
+        foreach (var hunter in _huntersToDispatch)
+        {
+            if (hunter)
+                hunter.IsDispatched = false;
+        }
+
+        foreach (var hunter in _huntersToDispatch)
+        {
+            if (hunter)
+            {
+                var deathProbability = CalcHunterDeathProbability(hunter);
+                if (Random.value < deathProbability)
+                {
+                    UILogger.Instance.LogError($"{hunter.DisplayName}가 파견중 사망했습니다.");
+                    Destroy(hunter.gameObject);
+                }
+            }
+        }
+    }
+
+    public float CalcHunterDeathProbability(Hunter hunter)
+    {
+        return 1 - Mathf.Clamp01(hunter.Viability / _defaultDanger);
+    }
 }

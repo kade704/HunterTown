@@ -9,6 +9,8 @@ public class UIDispatchSlot : MonoBehaviour
     private Image _sprite;
     private Hunter _hunter;
     private Text _deathProbability;
+    private Button _removeButton;
+    private int _index;
 
     private void Awake()
     {
@@ -16,18 +18,39 @@ public class UIDispatchSlot : MonoBehaviour
         _name = transform.Find("Name").GetComponent<Text>();
         _sprite = transform.Find("Sprite").GetComponent<Image>();
         _deathProbability = transform.Find("DeathProbability").GetComponent<Text>();
+        _removeButton = transform.Find("RemoveButton").GetComponent<Button>();
+        _removeButton.onClick.AddListener(() =>
+        {
+            Hunter = null;
+        });
+        _index = transform.GetSiblingIndex();
     }
 
     public Hunter Hunter
     {
         set
         {
-            _name.text = value.DisplayName;
-            _sprite.sprite = value.Sprite;
-            _hunter = value;
+            if (value)
+            {
+                _name.text = value.DisplayName;
+                _sprite.sprite = value.Sprite;
+                _sprite.enabled = true;
 
-            var deathPercent = (int)(CalcDeathProbability(value) * 100);
-            _deathProbability.text = $"사망 확률: {deathPercent}%";
+                var deathProbabilityPercent = (int)(_uiDispatch.TargetPortal.CalcHunterDeathProbability(value) * 100);
+                _deathProbability.text = $"사망 확률: {deathProbabilityPercent}%";
+            }
+            else
+            {
+                _name.text = "[헌터 배치]";
+                _sprite.enabled = false;
+
+                _deathProbability.text = $"사망 확률: ?%";
+            }
+
+            _hunter = value;
+            _uiDispatch.TargetPortal.HuntersToDispatch[_index] = value;
+            _uiDispatch.RefreshHunterSlot();
+
         }
         get
         {
@@ -35,22 +58,5 @@ public class UIDispatchSlot : MonoBehaviour
         }
     }
 
-    public float CalcDeathProbability(Hunter hunter)
-    {
-        var portal = _uiDispatch.TargetPortal;
-        float unit_Die_Per = portal.Unit_Die_Base_Count(hunter, true);
-        if (portal.Abilities.Contains(Portal.Ability.Peace))
-        {
-            unit_Die_Per += 0.02f;
-        }
-        if (portal.Abilities.Contains(Portal.Ability.Lush_Forest))
-        {
-            unit_Die_Per -= 0.03f;
-        }
-        if (unit_Die_Per < 0)
-        {
-            unit_Die_Per = 0;
-        }
-        return unit_Die_Per;
-    }
+
 }

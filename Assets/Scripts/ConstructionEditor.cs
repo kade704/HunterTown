@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ConstructionEditor : MonoBehaviour
+public class ConstructionEditor : UIPanel
 {
     private Construction _constructionToBuild;
     private ConstructionCursor _constructionCursor;
@@ -13,22 +13,24 @@ public class ConstructionEditor : MonoBehaviour
 
     public bool IsEditing => _isEditing;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         _constructionCursor = FindObjectOfType<ConstructionCursor>();
 
         var menuCanvasGroup = transform.Find("MenuPanel").GetComponent<CanvasGroup>();
         _menuOpenButton = transform.Find("MenuOpenButton").GetComponent<Button>();
         _menuOpenButton.onClick.AddListener(() =>
         {
-            UIManager.ShowCanvasGroup(menuCanvasGroup);
+            ShowPanel();
             _menuOpenButton.gameObject.SetActive(false);
         });
 
         var menuCloseButton = transform.Find("MenuPanel/CloseButton").GetComponent<Button>();
         menuCloseButton.onClick.AddListener(() =>
         {
-            UIManager.HideCanvasGroup(menuCanvasGroup);
+            HidePanel();
             _menuOpenButton.gameObject.SetActive(true);
         });
 
@@ -44,7 +46,7 @@ public class ConstructionEditor : MonoBehaviour
             constuctionSlot.Construction = construction;
             constuctionSlot.OnClick.AddListener(() =>
             {
-                UIManager.HideCanvasGroup(menuCanvasGroup);
+                HidePanel();
                 _constructionToBuild = construction;
                 _isEditing = true;
 

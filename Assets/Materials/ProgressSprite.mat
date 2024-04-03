@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: OutlineSprite
-  m_Shader: {fileID: 4800000, guid: fd829bd7d90078841a94b8b52e720ef9, type: 3}
+  m_Name: ProgressSprite
+  m_Shader: {fileID: 4800000, guid: 327e54c293d9f1546941f97a854d13a8, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -27,10 +27,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    m_Ints:
-    - _Outline: 0
+    m_Ints: []
     m_Floats:
-    - _Outline: 0
+    - _Value: 1
     m_Colors:
+    - _BGColor: {r: 0, g: 0, b: 0, a: 0.5}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []

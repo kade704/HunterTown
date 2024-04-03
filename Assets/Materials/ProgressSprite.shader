@@ -1,10 +1,11 @@
-Shader "Unlit/OutlineSprite"
+Shader "Unlit/ProgressSprite"
 {
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
         _Color ("Tint", Color) = (1,1,1,1)
-        _Outline ("Outline", Range(0, 1)) = 0
+        _BGColor ("Background Color", Color) = (0,0,0,0.5)
+        _Value ("Value", Range(0, 1)) = 0
     }
     SubShader
     {
@@ -37,9 +38,10 @@ Shader "Unlit/OutlineSprite"
 
             sampler2D _MainTex;
             fixed4 _Color;
+            fixed4 _BGColor;
             float4 _MainTex_ST;
             float4 _MainTex_TexelSize;
-            float _Outline;
+            float _Value;
 
             v2f vert (appdata v)
             {
@@ -52,21 +54,12 @@ Shader "Unlit/OutlineSprite"
 
             fixed4 frag(v2f i) : SV_Target
             {
-                fixed4 col = tex2D(_MainTex, i.uv) * i.color;
-
-                if (_Outline) {
-                    for (int x = -1; x <= 1; x++) {
-                        for (int y = -1; y <= 1; y++) {
-                            fixed2 coord = i.uv + fixed2(_MainTex_TexelSize.x * x, _MainTex_TexelSize.y * y);
-                            fixed4 color = tex2D(_MainTex, coord);
-                            if (color.a > 0.5 && col.a < 0.5) {
-                                return fixed4(1, 1, 1, 1);
-                            }
-                        }
-                    }
+                fixed4 col = tex2D(_MainTex, i.uv);
+                if (i.uv.x > _Value) {
+                    return col * _BGColor;
                 }
 
-                return col;
+                return col * i.color;
             }
             ENDCG
         }

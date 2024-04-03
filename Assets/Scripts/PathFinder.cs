@@ -16,10 +16,10 @@ public class PathFinder
 
     private static Node[] SearchPath(Node start, Node end)
     {
-        Func<Vector2Int, Vector2Int, int> heuristic = (a, b) =>
+        int heuristic(Vector2Int a, Vector2Int b)
         {
             return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y);
-        };
+        }
 
         var openSet = new List<Node>();
         var closeSet = new List<Node>();
@@ -27,8 +27,8 @@ public class PathFinder
 
         while (openSet.Count > 0)
         {
-            openSet = openSet.OrderBy(x => x.g + x.h).ToList();
-            var node = openSet.First();
+            openSet.Sort((a, b) => (a.g + a.h).CompareTo(b.g + b.h));
+            var node = openSet[0];
             openSet.RemoveAt(0);
             closeSet.Add(node);
 
@@ -88,7 +88,7 @@ public class PathFinder
 
             for (int i = 0; i < 4; i++)
             {
-                var neighbor = nodes.Where(x => x.road.CellPos == new Vector2Int(node.road.CellPos.x + xPos[i], node.road.CellPos.y + yPos[i])).FirstOrDefault();
+                var neighbor = nodes.FirstOrDefault(x => x.road.CellPos == new Vector2Int(node.road.CellPos.x + xPos[i], node.road.CellPos.y + yPos[i]));
                 if (neighbor != null)
                 {
                     node.neighbors.Add(neighbor);

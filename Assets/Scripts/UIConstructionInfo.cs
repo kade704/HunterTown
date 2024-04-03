@@ -1,19 +1,19 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIConstructionInfo : MonoBehaviour
+public class UIConstructionInfo : UIPanel
 {
     private Text _nameText;
     private Button _destroyButton;
-    private CanvasGroup _canvasGroup;
     private Construction _selectedConstruction;
     private Transform _interactionButtonsParent;
     private UIInteractionButton _interactionButtonRef;
 
 
-    private void Awake()
+    protected override void Awake()
     {
-        _canvasGroup = GetComponent<CanvasGroup>();
+        base.Awake();
+
         _nameText = transform.Find("NameBG/NameText").GetComponent<Text>();
         _destroyButton = transform.Find("InteractionButtons/DestroyButton").GetComponent<Button>();
         _interactionButtonsParent = transform.Find("InteractionButtons");
@@ -31,7 +31,7 @@ public class UIConstructionInfo : MonoBehaviour
 
         if (construction)
         {
-            UIManager.ShowCanvasGroup(_canvasGroup);
+            ShowPanel(20);
 
             _nameText.text = construction.DisplayName;
 
@@ -40,7 +40,7 @@ public class UIConstructionInfo : MonoBehaviour
             _destroyButton.onClick.AddListener(() =>
             {
                 Destroy(construction.gameObject);
-                UIManager.HideCanvasGroup(_canvasGroup);
+                HidePanel(20);
             });
 
             foreach (Transform interactionButton in _interactionButtonsParent)
@@ -56,7 +56,8 @@ public class UIConstructionInfo : MonoBehaviour
                 interactionButton.OnClick.AddListener(() =>
                 {
                     UIManager.Instance.OnConstructionInteracted.Invoke(interaction.ID, construction);
-                    UIManager.HideCanvasGroup(_canvasGroup);
+                    construction.SetOutline(false);
+                    HidePanel(20);
                 });
             }
 
@@ -65,7 +66,7 @@ public class UIConstructionInfo : MonoBehaviour
         }
         else
         {
-            UIManager.HideCanvasGroup(_canvasGroup);
+            HidePanel(20);
 
             _selectedConstruction = null;
         }

@@ -3,22 +3,38 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIMessageBox : MonoBehaviour
+public class UIMessageBox : UIPanel
 {
+    private Image _bg;
     private Image _icon;
     private Text _msg;
 
     public Image Icon => _icon;
     public Text Msg => _msg;
-
-    private void Awake()
+    public Color BgColor
     {
+        set => _bg.color = value;
+    }
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        _bg = GetComponent<Image>();
         _icon = transform.Find("Icon").GetComponent<Image>();
         _msg = transform.Find("Msg").GetComponent<Text>();
     }
 
     private void Start()
     {
-        Destroy(gameObject, 5f);
+        StartCoroutine(LifeTimeRoutine());
+    }
+
+    private IEnumerator LifeTimeRoutine()
+    {
+        yield return new WaitForSeconds(5f);
+        HidePanel();
+        yield return new WaitForSeconds(1f);
+        Destroy(gameObject);
     }
 }

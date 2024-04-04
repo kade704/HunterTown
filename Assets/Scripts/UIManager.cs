@@ -9,6 +9,7 @@ using UnityEngine.UI;
 public class UIManager : Singleton<UIManager>
 {
     private UnityEvent<string, Construction> _onConstructionInteracted = new();
+    private Text _timeText;
 
     public UnityEvent<string, Construction> OnConstructionInteracted => _onConstructionInteracted;
 
@@ -21,6 +22,13 @@ public class UIManager : Singleton<UIManager>
         {
             moneyText.text = "예산: " + money.ToString() + "원";
         });
+
+        _timeText = transform.Find("TimeText").GetComponent<Text>();
+    }
+
+    private void Update()
+    {
+        _timeText.text = $"2020년 1월 {GameManager.Instance.GameDay}일 {GameManager.Instance.GameHour}시 {GameManager.Instance.GameMinute}분";
     }
 
 

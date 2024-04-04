@@ -44,7 +44,7 @@ public class Portal : Building
     [SerializeField] private bool[] _abilityVisibilities = new bool[3];
     [SerializeField] private Hunter[] _huntersToDispatch = new Hunter[4];
 
-    private bool _isDispatched = false;
+    private bool _isDispatching = false;
     private SpriteRenderer _progressSprite;
 
     public int DefaultPower { get { return _defaultPower; } set { _defaultPower = value; } }
@@ -68,12 +68,16 @@ public class Portal : Building
 
     public void Dispatch()
     {
-        _isDispatched = true;
+
         StartCoroutine(IEnuDispatch());
     }
 
     private IEnumerator IEnuDispatch()
     {
+        UILogger.Instance.Log(UILogger.LogType.Info, $"파견이 시작되었습니다.");
+
+        _isDispatching = true;
+
         foreach (var hunter in _huntersToDispatch)
         {
             if (hunter)
@@ -91,24 +95,23 @@ public class Portal : Building
         }
         _progressSprite.enabled = false;
 
-        foreach (var hunter in _huntersToDispatch)
+        for (int i = 0; i < _huntersToDispatch.Length; i++)
         {
-            if (hunter)
-                hunter.IsDispatched = false;
-        }
-
-        foreach (var hunter in _huntersToDispatch)
-        {
+            var hunter = _huntersToDispatch[i];
             if (hunter)
             {
                 var deathProbability = CalcHunterDeathProbability(hunter);
                 if (Random.value < deathProbability)
                 {
-                    UILogger.Instance.LogError($"{hunter.DisplayName}가 파견중 사망했습니다.");
-                    Destroy(hunter.gameObject);
+                    UILogger.Instance.Log(UILogger.LogType.Error, $"{hunter.DisplayName}가 파견중 사망했습니다.");
+                    HunterManager.Instance.RemoveHunter(hunter);
                 }
+                hunter.IsDispatched = false;
+                _huntersToDispatch[i] = null;
             }
         }
+
+        _isDispatching = false;
     }
 
     public float CalcHunterDeathProbability(Hunter hunter)

@@ -25,7 +25,6 @@ public class HunterManager : MonoBehaviour
         AddRandomHunter();
         AddRandomHunter();
         AddRandomHunter();
-
     }
 
     static int hunterCount = 1;
@@ -37,6 +36,12 @@ public class HunterManager : MonoBehaviour
         newHunter.DefaultHp = Random.Range(10, 50);
         newHunter.DefaultDamage = Random.Range(1, 10);
         _hunters.Add(newHunter);
-        UILogger.Instance.LogInfo($"{newHunter.DisplayName}가 마을에 이주했습니다.");
+        UILogger.Instance.Log(UILogger.LogType.Info, $"{newHunter.DisplayName}가 마을에 이주했습니다.");
+    }
+
+    public void RemoveHunter(Hunter hunter)
+    {
+        _hunters.Remove(hunter);
+        Destroy(hunter.gameObject);
     }
 }

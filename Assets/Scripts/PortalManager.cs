@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,10 +8,20 @@ public class PortalManager : MonoBehaviour
 
     private void Start()
     {
-        AddRandomPortal();
+        StartCoroutine(AddRandomPortalRoutine());
     }
 
-    public void AddRandomPortal()
+    private IEnumerator AddRandomPortalRoutine()
+    {
+        yield return new WaitForSeconds(1);
+        while (true)
+        {
+            AddRandomPortal();
+            yield return new WaitForSeconds(60);
+        }
+    }
+
+    private void AddRandomPortal()
     {
         var portal = Resources.Load<Portal>("Constructions/Portal");
 
@@ -36,6 +47,6 @@ public class PortalManager : MonoBehaviour
         }
         _portals.Add(newPortal);
 
-        UILogger.Instance.LogInfo($"({cellPos.x}, {cellPos.y})에 포탈이 생성되었습니다.");
+        UILogger.Instance.Log(UILogger.LogType.Info, $"({cellPos.x}, {cellPos.y})에 포탈이 생성되었습니다.");
     }
 }

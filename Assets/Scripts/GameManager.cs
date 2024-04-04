@@ -22,6 +22,40 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public int GameMinute
+    {
+        get
+        {
+            return (int)(Time.time % 60);
+        }
+    }
+
+    public int GameHour
+    {
+        get
+        {
+            return (int)(Time.time / 60);
+        }
+    }
+
+    public int GameDay
+    {
+        get
+        {
+            return (int)(Time.time / 60 / 24) + 1;
+        }
+    }
+
+
+    public int GameMonth
+    {
+        get
+        {
+            return (int)(Time.time / 60);
+        }
+    }
+
+
     private void Awake()
     {
         _instance = this;

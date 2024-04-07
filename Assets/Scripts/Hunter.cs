@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Linq;
+using Sirenix.Utilities;
 using UnityEngine;
 
 public class Hunter : MonoBehaviour
@@ -52,14 +53,15 @@ public class Hunter : MonoBehaviour
 
     private void Start()
     {
-        var _roads = ConstructionManager.Instance.RoadMap.Constructions.Cast<Road>().ToArray();
+        var _roads = ConstructionManager.Instance.Constructions.FilterCast<Road>().ToArray();
+
         Road start = null;
         if (_roads.Length > 0)
         {
             start = _roads[Random.Range(0, _roads.Length)];
             transform.position = start.transform.position;
         }
-        StartCoroutine(IEnuMove(start));
+        StartCoroutine(MoveRoutine(start));
     }
 
     private void Update()
@@ -69,9 +71,9 @@ public class Hunter : MonoBehaviour
         _spriteRenderer.enabled = !_isDispatched;
     }
 
-    private IEnumerator IEnuMove(Road start)
+    private IEnumerator MoveRoutine(Road start)
     {
-        var _roads = ConstructionManager.Instance.RoadMap.Constructions.Cast<Road>().ToArray();
+        var _roads = ConstructionManager.Instance.Constructions.FilterCast<Road>().ToArray();
         Road target = null;
         if (_roads.Length > 0)
         {
@@ -94,6 +96,6 @@ public class Hunter : MonoBehaviour
 
         yield return new WaitForSeconds(3);
 
-        StartCoroutine(IEnuMove(target));
+        StartCoroutine(MoveRoutine(target));
     }
 }

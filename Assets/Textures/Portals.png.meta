@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 7fb5b5410ed82e9409fb6c1602cbc5aa
+guid: 72d2df6d6d70d1742a1af329f58bee74
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -39,7 +39,7 @@ TextureImporter:
     mipBias: 0
     wrapU: 1
     wrapV: 1
-    wrapW: 1
+    wrapW: 0
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
@@ -110,13 +110,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Company
+      name: Portal0
       rect:
         serializedVersion: 2
         x: 0
-        y: 355
-        width: 128
-        height: 157
+        y: 185
+        width: 64
+        height: 64
       alignment: 9
       pivot: {x: 0.5, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -124,50 +124,71 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 358eadff16d6a8341b94f9ae00444158
-      internalID: 1430292771
+      spriteID: 2ae51deb38e69ff4a974a0ba229aab5f
+      internalID: 234716113
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: House1
+      name: Portal1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 185
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 29ae2946d4e21674caee5463963c6bb1
+      internalID: 2063711746
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Portal2
       rect:
         serializedVersion: 2
         x: 128
-        y: 369
+        y: 185
         width: 64
-        height: 53
+        height: 64
       alignment: 9
-      pivot: {x: 0.5, y: 0.28}
+      pivot: {x: 0.5, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 02797c2b325ab574d8a8c1afc78e23eb
-      internalID: 1722864094
+      spriteID: 5434d8b651859ad41810ac064b942d96
+      internalID: 747874293
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: House2
+      name: Portal3
       rect:
         serializedVersion: 2
         x: 192
-        y: 369
+        y: 185
         width: 64
-        height: 53
+        height: 64
       alignment: 9
-      pivot: {x: 0.5, y: 0.28}
+      pivot: {x: 0.5, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b303d993c5b79cd47ba06036f3105f65
-      internalID: -1750879985
+      spriteID: ecb27f679b4aace4c8cf3a0e419647de
+      internalID: -529581609
       vertices: []
       indices: 
       edges: []
@@ -183,15 +204,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Buildings_3: -460201530
-      Buildings_4: 1828060907
-      Buildings_5: -1540560302
-      Buildings_6: -2056867373
-      Buildings_7: 791452545
-      Buildings_8: 1317039629
-      Company: 1430292771
-      House1: 1722864094
-      House2: -1750879985
+      Portal0: 234716113
+      Portal1: 2063711746
+      Portal2: 747874293
+      Portal3: -529581609
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

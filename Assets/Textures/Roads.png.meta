@@ -48,7 +48,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 32
+  spritePixelsToUnits: 64
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -123,15 +123,15 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Roads_0
+      name: RoadN
       rect:
         serializedVersion: 2
         x: 0
-        y: 48
-        width: 32
-        height: 16
+        y: 208
+        width: 64
+        height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -144,15 +144,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Roads_1
+      name: RoadE
       rect:
         serializedVersion: 2
-        x: 32
-        y: 48
-        width: 32
-        height: 16
+        x: 64
+        y: 208
+        width: 64
+        height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -165,15 +165,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Roads_2
+      name: RoadS
       rect:
         serializedVersion: 2
-        x: 64
-        y: 48
-        width: 32
-        height: 16
+        x: 128
+        y: 208
+        width: 64
+        height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -186,15 +186,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Roads_3
+      name: RoadW
       rect:
         serializedVersion: 2
-        x: 96
-        y: 48
-        width: 32
-        height: 16
+        x: 192
+        y: 208
+        width: 64
+        height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -207,15 +207,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Roads_4
+      name: RoadSN
       rect:
         serializedVersion: 2
         x: 0
-        y: 32
-        width: 32
-        height: 16
+        y: 176
+        width: 64
+        height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -228,15 +228,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Roads_5
+      name: RoadWE
       rect:
         serializedVersion: 2
-        x: 32
-        y: 32
-        width: 32
-        height: 16
+        x: 64
+        y: 176
+        width: 64
+        height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -249,15 +249,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Roads_6
+      name: RoadNone
       rect:
         serializedVersion: 2
-        x: 64
-        y: 32
-        width: 32
-        height: 16
+        x: 128
+        y: 176
+        width: 64
+        height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -270,15 +270,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Roads_7
+      name: RoadSWNE
       rect:
         serializedVersion: 2
-        x: 96
-        y: 32
-        width: 32
-        height: 16
+        x: 192
+        y: 176
+        width: 64
+        height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -291,15 +291,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Roads_8
+      name: RoadSWE
       rect:
         serializedVersion: 2
         x: 0
-        y: 16
-        width: 32
-        height: 16
+        y: 144
+        width: 64
+        height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -312,15 +312,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Roads_9
+      name: RoadSWN
       rect:
         serializedVersion: 2
-        x: 32
-        y: 16
-        width: 32
-        height: 16
+        x: 64
+        y: 144
+        width: 64
+        height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -333,15 +333,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Roads_10
+      name: RoadSNE
       rect:
         serializedVersion: 2
-        x: 64
-        y: 16
-        width: 32
-        height: 16
+        x: 128
+        y: 144
+        width: 64
+        height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -354,15 +354,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Roads_11
+      name: RoadWNE
       rect:
         serializedVersion: 2
-        x: 96
-        y: 16
-        width: 32
-        height: 16
+        x: 192
+        y: 144
+        width: 64
+        height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -375,15 +375,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Roads_12
+      name: RoadSW
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
-        width: 32
-        height: 16
+        y: 112
+        width: 64
+        height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -396,15 +396,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Roads_13
+      name: RoadNE
       rect:
         serializedVersion: 2
-        x: 32
-        y: 0
-        width: 32
-        height: 16
+        x: 64
+        y: 112
+        width: 64
+        height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -417,15 +417,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Roads_14
+      name: RoadWN
       rect:
         serializedVersion: 2
-        x: 64
-        y: 0
-        width: 32
-        height: 16
+        x: 128
+        y: 112
+        width: 64
+        height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -438,15 +438,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Roads_15
+      name: RoadSE
       rect:
         serializedVersion: 2
-        x: 96
-        y: 0
-        width: 32
-        height: 16
+        x: 192
+        y: 112
+        width: 64
+        height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -469,22 +469,22 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Roads_0: -3711728
-      Roads_1: 60986158
-      Roads_10: -873806994
-      Roads_11: 1281248992
-      Roads_12: 1349382372
-      Roads_13: 1208307691
-      Roads_14: 1284933799
-      Roads_15: 1370674463
-      Roads_2: 785179344
-      Roads_3: 1110279636
-      Roads_4: 1186669591
-      Roads_5: -1897608246
-      Roads_6: 83718644
-      Roads_7: -1927958277
-      Roads_8: -295972988
-      Roads_9: -580307748
+      RoadE: 60986158
+      RoadN: -3711728
+      RoadNE: 1208307691
+      RoadNone: 83718644
+      RoadS: 785179344
+      RoadSE: 1370674463
+      RoadSN: 1186669591
+      RoadSNE: -873806994
+      RoadSW: 1349382372
+      RoadSWE: -295972988
+      RoadSWN: -580307748
+      RoadSWNE: -1927958277
+      RoadW: 1110279636
+      RoadWE: -1897608246
+      RoadWN: 1284933799
+      RoadWNE: 1281248992
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -43,12 +43,17 @@ public class Road : Construction
 
     [SerializeField] private SpriteRule _spriteRule;
 
+    protected override void Start()
+    {
+        UpdateSprite();
+    }
+
     public void UpdateSprite()
     {
-        var east = _constructionMap.Exist(new Vector2Int(_cellPos.x, _cellPos.y - 1));
-        var west = _constructionMap.Exist(new Vector2Int(_cellPos.x, _cellPos.y + 1));
-        var north = _constructionMap.Exist(new Vector2Int(_cellPos.x + 1, _cellPos.y));
-        var south = _constructionMap.Exist(new Vector2Int(_cellPos.x - 1, _cellPos.y));
+        var east = ConstructionManager.Instance.IsRoadExistAt(new Vector2Int(_cellPos.x + 1, _cellPos.y));
+        var west = ConstructionManager.Instance.IsRoadExistAt(new Vector2Int(_cellPos.x - 1, _cellPos.y));
+        var north = ConstructionManager.Instance.IsRoadExistAt(new Vector2Int(_cellPos.x, _cellPos.y + 1));
+        var south = ConstructionManager.Instance.IsRoadExistAt(new Vector2Int(_cellPos.x, _cellPos.y - 1));
 
         if (south && west && north && east)
         {

@@ -20,9 +20,11 @@ public class Building : Construction
     }
 
 
-    public SpriteDirection _spriteDirection;
+    [SerializeField] protected SpriteDirection _spriteDirection;
 
-    protected Direction _direction;
+    [SerializeField] protected Direction _direction;
+
+    
 
     public Direction Direction_
     {
@@ -53,5 +55,22 @@ public class Building : Construction
                 break;
         }
         return null;
+    }
+
+    private static (Vector2Int, Vector2Int) DirectionToBasis(Building.Direction direction)
+    {
+        switch (direction)
+        {
+            case Building.Direction.SOUTH:
+                return (new Vector2Int(1, 0), new Vector2Int(0, 1));
+            case Building.Direction.NORTH:
+                return (new Vector2Int(0, 1), new Vector2Int(-1, 0));
+            case Building.Direction.EAST:
+                return (new Vector2Int(-1, 0), new Vector2Int(0, -1));
+            case Building.Direction.WEST:
+                return (new Vector2Int(0, -1), new Vector2Int(1, 0));
+            default:
+                return (new Vector2Int(0, 0), new Vector2Int(0, 0));
+        }
     }
 }

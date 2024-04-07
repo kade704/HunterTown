@@ -1,10 +1,8 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class PortalManager : MonoBehaviour
+public class PortalGenerator : MonoBehaviour
 {
-    private List<Portal> _portals = new();
 
     private void Start()
     {
@@ -29,10 +27,10 @@ public class PortalManager : MonoBehaviour
         do
         {
             cellPos = new Vector2Int(Random.Range(-5, 5), Random.Range(-5, 5));
-        } while (ConstructionManager.Instance.GetConstruction(cellPos) != null);
+        } while (ConstructionManager.Instance.GetConstructionAt(cellPos) != null);
 
 
-        var newPortal = ConstructionManager.Instance.SetConstruction(portal, cellPos) as Portal;
+        var newPortal = ConstructionManager.Instance.BuildConstruction(portal, cellPos) as Portal;
         newPortal.DefaultPower = Random.Range(5, 15);
         newPortal.DefaultDanger = Random.Range(20, 100);
 
@@ -45,7 +43,6 @@ public class PortalManager : MonoBehaviour
                 newPortal.Abilities.Add((Portal.Ability)choose);
             }
         }
-        _portals.Add(newPortal);
 
         UILogger.Instance.Log(UILogger.LogType.Info, $"({cellPos.x}, {cellPos.y})에 포탈이 생성되었습니다.");
     }

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 7fb5b5410ed82e9409fb6c1602cbc5aa
+guid: 6dfc58489ce1232428a875becd10b09d
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -39,7 +39,7 @@ TextureImporter:
     mipBias: 0
     wrapU: 1
     wrapV: 1
-    wrapW: 1
+    wrapW: 0
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
@@ -110,64 +110,106 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Company
+      name: Tree0
       rect:
         serializedVersion: 2
         x: 0
-        y: 355
-        width: 128
-        height: 157
+        y: 173
+        width: 64
+        height: 73
       alignment: 9
-      pivot: {x: 0.5, y: 0.1}
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 358eadff16d6a8341b94f9ae00444158
-      internalID: 1430292771
+      spriteID: 333d4d0b1cecfce4fae22491ec11067a
+      internalID: -1037731341
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: House1
+      name: Tree1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 173
+        width: 64
+        height: 73
+      alignment: 9
+      pivot: {x: 0.5, y: 0.25}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d2b5a6223b31b9a4b9126f368ab8aa47
+      internalID: 825774269
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tree2
       rect:
         serializedVersion: 2
         x: 128
-        y: 369
+        y: 173
         width: 64
-        height: 53
+        height: 73
       alignment: 9
-      pivot: {x: 0.5, y: 0.28}
+      pivot: {x: 0.5, y: 0.25}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 02797c2b325ab574d8a8c1afc78e23eb
-      internalID: 1722864094
+      spriteID: e8af210f5ea2a154fba521f5338890a0
+      internalID: 1474336731
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: House2
+      name: Rock0
       rect:
         serializedVersion: 2
-        x: 192
-        y: 369
+        x: 0
+        y: 110
         width: 64
-        height: 53
+        height: 42
       alignment: 9
-      pivot: {x: 0.5, y: 0.28}
+      pivot: {x: 0.5, y: 0.32}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b303d993c5b79cd47ba06036f3105f65
-      internalID: -1750879985
+      spriteID: 8a677aeec7a105341b2d97d1e50e8a97
+      internalID: 1551026703
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rock1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 110
+        width: 64
+        height: 42
+      alignment: 9
+      pivot: {x: 0.5, y: 0.32}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d80820eded738864f9e9771fca70d961
+      internalID: -1357548120
       vertices: []
       indices: 
       edges: []
@@ -183,15 +225,11 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Buildings_3: -460201530
-      Buildings_4: 1828060907
-      Buildings_5: -1540560302
-      Buildings_6: -2056867373
-      Buildings_7: 791452545
-      Buildings_8: 1317039629
-      Company: 1430292771
-      House1: 1722864094
-      House2: -1750879985
+      Rock0: 1551026703
+      Rock1: -1357548120
+      Tree0: -1037731341
+      Tree1: 825774269
+      Tree2: 1474336731
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

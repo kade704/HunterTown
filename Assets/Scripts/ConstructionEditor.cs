@@ -96,12 +96,12 @@ public class ConstructionEditor : UIPanel
             {
                 if (_constructionToBuild is Building)
                 {
-                    var newBuilding = ConstructionManager.Instance.BuildingMap.Set(_constructionToBuild, _cellPos) as Building;
+                    var newBuilding = ConstructionManager.Instance.BuildConstruction(_constructionToBuild, _cellPos) as Building;
                     newBuilding.Direction_ = _direction;
                 }
                 else if (_constructionToBuild is Road)
                 {
-                    ConstructionManager.Instance.RoadMap.Set(_constructionToBuild, _cellPos);
+                    ConstructionManager.Instance.BuildConstruction(_constructionToBuild, _cellPos);
                 }
 
                 GameManager.Instance.Money -= _constructionToBuild.Cost;
@@ -112,7 +112,7 @@ public class ConstructionEditor : UIPanel
     private bool CheckBuildable()
     {
         var result = true;
-        if (ConstructionManager.Instance.ExistConstruction(_cellPos))
+        if (ConstructionManager.Instance.IsConstructionExistAt(_cellPos))
         {
             result = false;
         }
@@ -120,28 +120,28 @@ public class ConstructionEditor : UIPanel
         {
             if (_direction == Building.Direction.SOUTH)
             {
-                if (!ConstructionManager.Instance.RoadMap.Exist(new Vector2Int(_cellPos.x - 1, _cellPos.y)))
+                if (!ConstructionManager.Instance.IsRoadExistAt(new Vector2Int(_cellPos.x - 1, _cellPos.y)))
                 {
                     result = false;
                 }
             }
             else if (_direction == Building.Direction.NORTH)
             {
-                if (!ConstructionManager.Instance.RoadMap.Exist(new Vector2Int(_cellPos.x + 1, _cellPos.y)))
+                if (!ConstructionManager.Instance.IsRoadExistAt(new Vector2Int(_cellPos.x + 1, _cellPos.y)))
                 {
                     result = false;
                 }
             }
             else if (_direction == Building.Direction.EAST)
             {
-                if (!ConstructionManager.Instance.RoadMap.Exist(new Vector2Int(_cellPos.x, _cellPos.y - 1)))
+                if (!ConstructionManager.Instance.IsRoadExistAt(new Vector2Int(_cellPos.x, _cellPos.y - 1)))
                 {
                     result = false;
                 }
             }
             else if (_direction == Building.Direction.WEST)
             {
-                if (!ConstructionManager.Instance.RoadMap.Exist(new Vector2Int(_cellPos.x, _cellPos.y + 1)))
+                if (!ConstructionManager.Instance.IsRoadExistAt(new Vector2Int(_cellPos.x, _cellPos.y + 1)))
                 {
                     result = false;
                 }

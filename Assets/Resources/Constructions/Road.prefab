@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6832948428233060486}
   - component: {fileID: 8594503060345636915}
   - component: {fileID: 3380698535929008947}
-  - component: {fileID: 7268727104586665986}
+  - component: {fileID: 5991370557115557502}
   m_Layer: 0
   m_Name: Road
   m_TagString: Untagged
@@ -98,30 +98,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96e96bc543b6fd74f8a192636ac737e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _id: road
   _cost: 0
-  _displayName: "\uBCF4\uD589\uB85C"
-  _icon: {fileID: -3711728, guid: 9ce137b1be9c78d4683d4c1afb72be4e, type: 3}
+  _displayName: "\uB3C4\uB85C"
+  _icon: {fileID: -1927958277, guid: 9ce137b1be9c78d4683d4c1afb72be4e, type: 3}
+  _size: {x: 1, y: 1}
   _buildable: 1
   _destroyable: 1
   _interactions: []
   _spriteRule:
-    _none: {fileID: -3711728, guid: 9ce137b1be9c78d4683d4c1afb72be4e, type: 3}
-    _swne: {fileID: 1110279636, guid: 9ce137b1be9c78d4683d4c1afb72be4e, type: 3}
-    _swn: {fileID: -1927958277, guid: 9ce137b1be9c78d4683d4c1afb72be4e, type: 3}
-    _swe: {fileID: 1186669591, guid: 9ce137b1be9c78d4683d4c1afb72be4e, type: 3}
-    _sne: {fileID: -1897608246, guid: 9ce137b1be9c78d4683d4c1afb72be4e, type: 3}
-    _wne: {fileID: 83718644, guid: 9ce137b1be9c78d4683d4c1afb72be4e, type: 3}
-    _sw: {fileID: -295972988, guid: 9ce137b1be9c78d4683d4c1afb72be4e, type: 3}
-    _sn: {fileID: 785179344, guid: 9ce137b1be9c78d4683d4c1afb72be4e, type: 3}
-    _se: {fileID: -873806994, guid: 9ce137b1be9c78d4683d4c1afb72be4e, type: 3}
-    _wn: {fileID: 1281248992, guid: 9ce137b1be9c78d4683d4c1afb72be4e, type: 3}
-    _we: {fileID: 60986158, guid: 9ce137b1be9c78d4683d4c1afb72be4e, type: 3}
-    _ne: {fileID: -580307748, guid: 9ce137b1be9c78d4683d4c1afb72be4e, type: 3}
-    _s: {fileID: 1284933799, guid: 9ce137b1be9c78d4683d4c1afb72be4e, type: 3}
-    _w: {fileID: 1349382372, guid: 9ce137b1be9c78d4683d4c1afb72be4e, type: 3}
-    _n: {fileID: 1208307691, guid: 9ce137b1be9c78d4683d4c1afb72be4e, type: 3}
-    _e: {fileID: 1370674463, guid: 9ce137b1be9c78d4683d4c1afb72be4e, type: 3}
---- !u!60 &7268727104586665986
+    _none: {fileID: 83718644, guid: 9ce137b1be9c78d4683d4c1afb72be4e, type: 3}
+    _swne: {fileID: -1927958277, guid: 9ce137b1be9c78d4683d4c1afb72be4e, type: 3}
+    _swn: {fileID: -580307748, guid: 9ce137b1be9c78d4683d4c1afb72be4e, type: 3}
+    _swe: {fileID: -295972988, guid: 9ce137b1be9c78d4683d4c1afb72be4e, type: 3}
+    _sne: {fileID: -873806994, guid: 9ce137b1be9c78d4683d4c1afb72be4e, type: 3}
+    _wne: {fileID: 1281248992, guid: 9ce137b1be9c78d4683d4c1afb72be4e, type: 3}
+    _sw: {fileID: 1349382372, guid: 9ce137b1be9c78d4683d4c1afb72be4e, type: 3}
+    _sn: {fileID: 1186669591, guid: 9ce137b1be9c78d4683d4c1afb72be4e, type: 3}
+    _se: {fileID: 1370674463, guid: 9ce137b1be9c78d4683d4c1afb72be4e, type: 3}
+    _wn: {fileID: 1284933799, guid: 9ce137b1be9c78d4683d4c1afb72be4e, type: 3}
+    _we: {fileID: -1897608246, guid: 9ce137b1be9c78d4683d4c1afb72be4e, type: 3}
+    _ne: {fileID: 1208307691, guid: 9ce137b1be9c78d4683d4c1afb72be4e, type: 3}
+    _s: {fileID: 785179344, guid: 9ce137b1be9c78d4683d4c1afb72be4e, type: 3}
+    _w: {fileID: 1110279636, guid: 9ce137b1be9c78d4683d4c1afb72be4e, type: 3}
+    _n: {fileID: -3711728, guid: 9ce137b1be9c78d4683d4c1afb72be4e, type: 3}
+    _e: {fileID: 60986158, guid: 9ce137b1be9c78d4683d4c1afb72be4e, type: 3}
+--- !u!60 &5991370557115557502
 PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -165,12 +167,13 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: -0.3125, y: -0.0625}
-      - {x: -0.15625, y: -0.1875}
-      - {x: 0.09375, y: -0.1875}
-      - {x: 0.3125, y: -0.09375}
-      - {x: 0.3125, y: 0.125}
-      - {x: 0.0625, y: 0.1875}
-      - {x: -0.125, y: 0.1875}
-      - {x: -0.3125, y: 0.0625}
+    - - {x: -0.4375, y: 0.03125}
+      - {x: -0.421875, y: -0.015625}
+      - {x: -0.109375, y: -0.1875}
+      - {x: 0.03125, y: -0.1875}
+      - {x: 0.34375, y: -0.046875}
+      - {x: 0.34375, y: 0.0625}
+      - {x: -0.0625, y: 0.234375}
+      - {x: -0.1875, y: 0.234375}
+      - {x: -0.4375, y: 0.09375}
   m_UseDelaunayMesh: 0

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Portal : Building
+public class Portal : Construction
 {
     public enum Ability
     {                                                                      //완료 여부
@@ -43,6 +43,7 @@ public class Portal : Building
     [SerializeField] private List<Ability> _abilities = new List<Ability>();
     [SerializeField] private bool[] _abilityVisibilities = new bool[3];
     [SerializeField] private Hunter[] _huntersToDispatch = new Hunter[4];
+    [SerializeField] private Sprite[] _spriteFrames;
 
     private bool _isDispatching = false;
     private SpriteRenderer _progressSprite;
@@ -64,15 +65,19 @@ public class Portal : Building
         _progressSprite = transform.Find("Progress").GetComponent<SpriteRenderer>();
     }
 
-
+    protected override void Start()
+    {
+        base.Start();
+        StartCoroutine(AnimateRoutine());
+    }
 
     public void Dispatch()
     {
 
-        StartCoroutine(IEnuDispatch());
+        StartCoroutine(DispatchRoutine());
     }
 
-    private IEnumerator IEnuDispatch()
+    private IEnumerator DispatchRoutine()
     {
         UILogger.Instance.Log(UILogger.LogType.Info, $"파견이 시작되었습니다.");
 
@@ -117,5 +122,16 @@ public class Portal : Building
     public float CalcHunterDeathProbability(Hunter hunter)
     {
         return 1 - Mathf.Clamp01(hunter.Viability / _defaultDanger);
+    }
+
+    private IEnumerator AnimateRoutine()
+    {
+        var frameIndex = 0;
+        while (true)
+        {
+            _spriteRenderer.sprite = _spriteFrames[frameIndex];
+            frameIndex = (frameIndex + 1) % _spriteFrames.Length;
+            yield return new WaitForSeconds(0.3f);
+        }
     }
 }

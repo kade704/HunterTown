@@ -1,53 +1,60 @@
+using System.Collections.Generic;
+using System.Linq;
+using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class ConstructionManager : MonoBehaviour
+public class ConstructionManager : MonoBehaviour, IDeserializable, ISerializable
 {
     private static ConstructionManager _instance;
+    private Dictionary<Vector2Int, Construction> _constructionMap = new();
+    private List<Construction> _constructions = new();
     private Construction _constructionSelected;
     private ConstructionEditor _constructionEditor;
-    private RoadMap _roadMap;
-    private BuildingMap _buildingMap;
     private Grid _isometricGrid;
     private UnityEvent<Construction> _onConstructionClicked = new();
+    private Construction[] _constructionPrefabs;
+    private UnityEvent _onConstructionBuilded = new();
+    private UnityEvent _onConstructionDestroyed = new();
+    private SpriteRenderer _cellCursor;
 
     public static ConstructionManager Instance => _instance;
-    public RoadMap RoadMap => _roadMap;
-    public BuildingMap BuildingMap => _buildingMap;
+    public Construction[] Constructions => _constructions.ToArray();
+    public UnityEvent OnConstructionBuilded => _onConstructionBuilded;
+    public UnityEvent OnConstructionDestroyed => _onConstructionDestroyed;
+
 
     public UnityEvent<Construction> OnConstructionClicked => _onConstructionClicked;
+
+    public Construction GetConstructionPrefab(string id)
+    {
+        return _constructionPrefabs.Where(c => c.Id == id).FirstOrDefault();
+    }
 
     private void Awake()
     {
         _instance = this;
 
+        _constructionPrefabs = Resources.LoadAll<Construction>("Constructions");
+
         _isometricGrid = GetComponent<Grid>();
         _constructionEditor = FindObjectOfType<ConstructionEditor>();
-        _roadMap = transform.Find("RoadMap").GetComponent<RoadMap>();
-        _buildingMap = transform.Find("BuildingMap").GetComponent<BuildingMap>();
+
+        _cellCursor = GameObject.Find("CellCursor").GetComponent<SpriteRenderer>();
     }
 
     private void Start()
     {
-        var house1 = Resources.Load<Building>("Constructions/House1");
-        var house2 = Resources.Load<Building>("Constructions/House2");
-        var road = Resources.Load<Road>("Constructions/Road");
-
-        _roadMap.Set(road, new Vector2Int(-3, -1));
-        _roadMap.Set(road, new Vector2Int(-2, -1));
-        _roadMap.Set(road, new Vector2Int(-1, -1));
-        _roadMap.Set(road, new Vector2Int(0, -1));
-        _roadMap.Set(road, new Vector2Int(1, -1));
-        _roadMap.Set(road, new Vector2Int(-1, -3));
-        _roadMap.Set(road, new Vector2Int(-1, -2));
-        _roadMap.Set(road, new Vector2Int(-1, 0));
-        _roadMap.Set(road, new Vector2Int(-1, 1));
-        _buildingMap.Set(house1, new Vector2Int(0, 0));
-        _buildingMap.Set(house2, new Vector2Int(0, -2));
+        var json = Resources.Load<TextAsset>("Map").text;
+        Deserialize(JToken.Parse(json));
     }
 
     private void Update()
     {
+        var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        var cellPos = WorldToCell(mousePos);
+        _cellCursor.transform.position = CellToWorld(cellPos);
+
         if (Input.GetMouseButtonDown(0) && !_constructionEditor.IsEditing)
         {
             if (UIManager.IsUIObjectOverPointer()) return;
@@ -79,7 +86,7 @@ public class ConstructionManager : MonoBehaviour
     public Vector2 CellToWorld(Vector2Int cellPos)
     {
         var pos = new Vector3Int(cellPos.x, cellPos.y, 0);
-        return _isometricGrid.CellToWorld(pos);
+        return _isometricGrid.GetCellCenterWorld(pos);
     }
 
     public Vector2Int WorldToCell(Vector2 worldPos)
@@ -88,43 +95,121 @@ public class ConstructionManager : MonoBehaviour
         return new Vector2Int(cellPos.x, cellPos.y);
     }
 
-    public Construction SetConstruction(Construction construction, Vector2Int cellPos)
+    public Construction BuildConstruction(Construction constructionPrefab, Vector2Int cellPos)
     {
-        if (construction is Building)
+        if (!constructionPrefab)
         {
-            return _buildingMap.Set(construction, cellPos);
-        }
-        else if (construction is Road)
+            Debug.LogError("Construction is null");
+            return null;
+        };
+
+        if (!CheckConstructionBuildable(constructionPrefab, cellPos))
         {
-            return _roadMap.Set(construction, cellPos);
+            Debug.LogError("Construction not buildable at this position: " + cellPos);
+            return null;
         }
 
-        return null;
+        var worldPos = CellToWorld(cellPos);
+        var newConstruction = Instantiate(constructionPrefab, worldPos, Quaternion.identity, transform);
+        newConstruction.CellPos = cellPos;
+
+        var size = newConstruction.Size;
+        for (var y = 0; y < size.y; y++)
+        {
+            for (var x = 0; x < size.x; x++)
+            {
+                var pos = cellPos + new Vector2Int(x, y);
+                _constructionMap[pos] = newConstruction;
+            }
+        }
+        _constructions.Add(newConstruction);
+        _onConstructionBuilded.Invoke();
+
+        return newConstruction;
     }
 
-    public void RemoveConstruction(Vector2Int cellPos)
+    public void DestroyConstruction(Vector2Int cellPos)
     {
-        _buildingMap.Remove(cellPos);
-        _roadMap.Remove(cellPos);
+        var construction = GetConstructionAt(cellPos);
+
+        var size = construction.Size;
+        for (int y = 0; y < size.y; y++)
+        {
+            for (int x = 0; x < size.x; x++)
+            {
+                var pos = construction.CellPos + new Vector2Int(x, y);
+                _constructionMap.Remove(pos);
+            }
+        }
+        _constructions.Remove(construction);
+
+        Destroy(construction.gameObject);
+
+        _onConstructionDestroyed.Invoke();
     }
 
-    public Construction GetConstruction(Vector2Int cellPos)
+    public bool CheckConstructionBuildable(Construction constructionPrefab, Vector2Int cellPos)
     {
-        Construction result;
+        var size = constructionPrefab.Size;
+        for (var y = 0; y < size.y; y++)
+        {
+            for (var x = 0; x < size.x; x++)
+            {
+                var pos = cellPos + new Vector2Int(x, y);
+                if (_constructionMap.GetValueOrDefault(pos))
+                    return false;
+            }
+        }
 
-        result = _buildingMap.Get(cellPos);
-        if (result) return result;
-
-        result = _roadMap.Get(cellPos);
-        if (result) return result;
-
-        return null;
+        return true;
     }
 
-    public bool ExistConstruction(Vector2Int cellPos)
+    public Construction GetConstructionAt(Vector2Int cellPos)
     {
-        var roadExist = _roadMap.Exist(cellPos);
-        var buildingExist = _buildingMap.Exist(cellPos);
-        return roadExist || buildingExist;
+        return _constructionMap.GetValueOrDefault(cellPos);
+    }
+
+    public bool IsConstructionExistAt(Vector2Int cellPos)
+    {
+        return GetConstructionAt(cellPos) != null;
+    }
+
+    public bool IsRoadExistAt(Vector2Int cellPos)
+    {
+        return GetConstructionAt(cellPos) is Road;
+    }
+
+    public void Deserialize(JToken token)
+    {
+        foreach (var construction in token)
+        {
+            var name = construction["id"].Value<string>();
+            var posX = construction["posX"].Value<int>();
+            var posY = construction["posY"].Value<int>();
+            var pos = new Vector2Int(posX, posY);
+            var constructionPrefab = GetConstructionPrefab(name);
+            if (!constructionPrefab)
+            {
+                Debug.LogError("Construction prefab not found: " + name);
+                continue;
+            }
+            BuildConstruction(constructionPrefab, pos);
+        }
+    }
+
+    public JToken Serialize()
+    {
+        var constructions = new JArray();
+        foreach (var construction in _constructions)
+        {
+            var obj = new JObject
+            {
+                ["id"] = construction.Id,
+                ["posX"] = construction.CellPos.x,
+                ["posY"] = construction.CellPos.y
+            };
+            constructions.Add(obj);
+        }
+        return constructions;
     }
 }

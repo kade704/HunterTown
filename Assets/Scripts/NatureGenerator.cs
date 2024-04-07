@@ -1,0 +1,23 @@
+using UnityEngine;
+
+public class NatureGenerator : MonoBehaviour
+{
+    void Start()
+    {
+        var naturePrefabs = Resources.LoadAll<Nature>("Constructions");
+
+        var count = 0;
+        while (count++ < 20)
+        {
+            var idx = Random.Range(0, naturePrefabs.Length);
+            var cellPos = new Vector2Int(Random.Range(-10, 10), Random.Range(-10, 10));
+
+            if (ConstructionManager.Instance.GetConstructionAt(cellPos) != null)
+                continue;
+
+            var naturePrefab = naturePrefabs[idx];
+            ConstructionManager.Instance.BuildConstruction(naturePrefab, cellPos);
+        }
+    }
+
+}

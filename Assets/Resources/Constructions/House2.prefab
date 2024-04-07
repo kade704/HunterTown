@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4142113863155088889}
   - component: {fileID: 5910216084651400077}
   - component: {fileID: 8870272267814787214}
-  - component: {fileID: 2693866775184892758}
+  - component: {fileID: 4436391697399867256}
   m_Layer: 0
   m_Name: House2
   m_TagString: Untagged
@@ -75,7 +75,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 300
-  m_Sprite: {fileID: 1430292771, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
+  m_Sprite: {fileID: -1750879985, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -98,18 +98,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5e25823fcaa94141ad9f3937c6253b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _id: house2
   _cost: 123
   _displayName: "\uC8FC\uD0DD2"
   _icon: {fileID: 1430292771, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
+  _size: {x: 1, y: 1}
   _buildable: 1
   _destroyable: 1
   _interactions: []
   _spriteDirection:
-    _east: {fileID: 1722864094, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
-    _south: {fileID: 1430292771, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
-    _west: {fileID: -460201530, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
-    _north: {fileID: -1750879985, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
---- !u!60 &2693866775184892758
+    _east: {fileID: 0}
+    _south: {fileID: 0}
+    _west: {fileID: 0}
+    _north: {fileID: 0}
+  _direction: 0
+--- !u!60 &4436391697399867256
 PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -144,8 +147,8 @@ PolygonCollider2D:
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.25}
-    oldSize: {x: 1, y: 1}
+    pivot: {x: 0.5, y: 0.28}
+    oldSize: {x: 1, y: 0.828125}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -153,13 +156,16 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 0.28125, y: 0.59375}
-      - {x: -0.09375, y: 0.59375}
-      - {x: -0.21875, y: 0.5}
-      - {x: -0.5, y: 0.09375}
-      - {x: -0.5, y: -0.25}
-      - {x: 0.15625, y: -0.25}
-      - {x: 0.375, y: -0.125}
-      - {x: 0.4375, y: -0.03125}
-      - {x: 0.4375, y: 0.46875}
+    - - {x: 0.265625, y: 0.42437506}
+      - {x: 0.25, y: 0.59625006}
+      - {x: -0.125, y: 0.59625006}
+      - {x: -0.21875, y: 0.58062506}
+      - {x: -0.421875, y: 0.37750006}
+      - {x: -0.421875, y: 0.0025000572}
+      - {x: -0.046875, y: -0.21624994}
+      - {x: 0.109375, y: -0.21624994}
+      - {x: 0.34375, y: -0.13812494}
+      - {x: 0.390625, y: -0.059999943}
+      - {x: 0.40625, y: 0.15875006}
+      - {x: 0.40625, y: 0.29937506}
   m_UseDelaunayMesh: 0

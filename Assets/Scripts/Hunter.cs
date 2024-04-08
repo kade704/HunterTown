@@ -85,6 +85,7 @@ public class Hunter : MonoBehaviour
 
             while (index < path.Length)
             {
+                if (!path[index]) break;
                 while (Vector3.Distance(transform.position, path[index].transform.position) > 0.01)
                 {
                     var speed = Timer.Instance.TimeScale;

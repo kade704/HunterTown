@@ -14,6 +14,7 @@ public class UIDispatch : UIPanel
     private Text _dangerText;
     private Text _difficultyText;
     private Text _rankText;
+    private Text _successText;
     private Hunter _draggingHunter;
     private Button _dispatchButton;
     private List<UIHunterSlot> _hunterSlots = new();
@@ -41,7 +42,8 @@ public class UIDispatch : UIPanel
         {
             if (_targetPortal)
             {
-                _targetPortal.Dispatch();
+                var hunters = _dispatchSlots.Select(x => x.Hunter).OfType<Hunter>().ToArray();
+                _targetPortal.Dispatch(hunters);
                 HidePanel();
             }
         });
@@ -50,6 +52,7 @@ public class UIDispatch : UIPanel
         _dangerText = transform.Find("DangerText").GetComponent<Text>();
         _difficultyText = transform.Find("DifficultyText").GetComponent<Text>();
         _rankText = transform.Find("RankText").GetComponent<Text>();
+        _successText = transform.Find("SuccessText").GetComponent<Text>();
 
         UIManager.Instance.OnConstructionInteracted.AddListener((id, construction) =>
         {
@@ -57,9 +60,9 @@ public class UIDispatch : UIPanel
             {
                 _targetPortal = construction as Portal;
 
-                _powerText.text = "능력치: " + _targetPortal.DefaultPower.ToString("F1");
-                _dangerText.text = "위험도: " + _targetPortal.DefaultDanger.ToString("F1");
-                _difficultyText.text = "복잡도: " + _targetPortal.DefaultDifficulty.ToString("F1");
+                _powerText.text = "능력치: " + (_targetPortal.PowerVisibility ? _targetPortal.DefaultPower.ToString("F1") : "???");
+                _dangerText.text = "위험도: " + (_targetPortal.DangerVisibility ? _targetPortal.DefaultDanger.ToString("F1") : "???");
+                _difficultyText.text = "복잡도: " + (_targetPortal.DifficultyVisibility ? _targetPortal.DefaultDifficulty.ToString("F1") : "???");
                 _rankText.text = _targetPortal.Rank.ToString();
 
                 _hunterSlots.Clear();
@@ -75,9 +78,9 @@ public class UIDispatch : UIPanel
                     _hunterSlots.Add(hunterSlot);
                 }
 
-                for (int i = 0; i < 4; i++)
+                foreach (var dispatchSlot in _dispatchSlots)
                 {
-                    _dispatchSlots[i].Hunter = _targetPortal.HuntersToDispatch[i];
+                    dispatchSlot.Hunter = null;
                 }
 
                 ShowPanel();
@@ -142,7 +145,25 @@ public class UIDispatch : UIPanel
 
         if (_targetPortal)
         {
-            _dispatchButton.interactable = _targetPortal.HuntersToDispatch.Where(x => x != null).Count() > 0;
+            var hunters = _dispatchSlots.Select(x => x.Hunter).OfType<Hunter>().ToArray();
+            var readyToDispatch = hunters.Count() > 0;
+            _dispatchButton.interactable = readyToDispatch;
+            if (readyToDispatch)
+            {
+                var success = (_targetPortal.CalcDispatchSuccessProbability(hunters) * 100f).ToString("F1");
+                if (_targetPortal.PowerVisibility)
+                {
+                    _successText.text = $"파견 성공 확률: {success}%";
+                }
+                else
+                {
+                    _successText.text = "파견 성공 확률: ?%";
+                }
+            }
+            else
+            {
+                _successText.text = "";
+            }
         }
     }
 
@@ -150,7 +171,7 @@ public class UIDispatch : UIPanel
     {
         foreach (var hunterSlot in _hunterSlots)
         {
-            var asd = _targetPortal.HuntersToDispatch.Where(x => x == hunterSlot.Hunter).FirstOrDefault();
+            var asd = _dispatchSlots.Where(x => x.Hunter == hunterSlot.Hunter).FirstOrDefault();
             hunterSlot.Enable = asd == null;
         }
     }

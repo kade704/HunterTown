@@ -56,6 +56,7 @@ public class UIConstructionInfo : UIPanel
                 interactionButton.OnClick.AddListener(() =>
                 {
                     UIManager.Instance.OnConstructionInteracted.Invoke(interaction.ID, construction);
+                    construction.OnInteracted.Invoke(interaction.ID);
                     construction.SetOutline(false);
                     HidePanel(20);
                 });

@@ -4,12 +4,12 @@ public class CameraMovement : MonoBehaviour
 {
     [SerializeField] private float _zoomSpeed;
     [SerializeField] private float _zoomSmooth;
-    [SerializeField] private float _dragSpeed;
 
     private Camera _camera;
     private float _zoomCurr;
     private float _zoomTarget;
     private Vector2 _dragOrigin;
+    private bool _isUIClicked;
 
     private void Awake()
     {
@@ -31,16 +31,30 @@ public class CameraMovement : MonoBehaviour
 
         _camera.orthographicSize = _zoomCurr;
 
-        //Not Working
-        //if (Input.GetMouseButtonDown(0)) {
-        //    _dragOrigin = _camera.ScreenToViewportPoint(Input.mousePosition);
-        //}
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (UIManager.IsUIObjectOverPointer())
+            {
+                _isUIClicked = true;
+            }
+            else
+            {
+                _dragOrigin = _camera.ScreenToWorldPoint(Input.mousePosition);
 
-        //if (Input.GetMouseButton(0)) {
-        //    Vector2 diff = transform.position - _camera.ScreenToViewportPoint(Input.mousePosition);
-        //    Vector3 pos = _dragOrigin - diff;
-        //    pos.z = -10;
-        //    transform.position = pos;
-        //}
+            }
+        }
+
+        if (Input.GetMouseButton(0) && !_isUIClicked)
+        {
+            var difference = _camera.ScreenToWorldPoint(Input.mousePosition) - transform.position;
+            var position = (Vector3)_dragOrigin - difference;
+            position.z = -10;
+            transform.position = position;
+        }
+
+        if (Input.GetMouseButtonUp(0))
+        {
+            _isUIClicked = false;
+        }
     }
 }

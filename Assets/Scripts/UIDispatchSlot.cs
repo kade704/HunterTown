@@ -36,21 +36,25 @@ public class UIDispatchSlot : MonoBehaviour
                 _sprite.sprite = value.Sprite;
                 _sprite.enabled = true;
 
-                var deathProbabilityPercent = (int)(_uiDispatch.TargetPortal.CalcHunterDeathProbability(value) * 100);
-                _deathProbability.text = $"사망 확률: {deathProbabilityPercent}%";
+                if (_uiDispatch.TargetPortal.DangerVisibility)
+                {
+                    var deathProbabilityPercent = (int)(_uiDispatch.TargetPortal.CalcHunterDeathProbability(value) * 100);
+                    _deathProbability.text = $"사망 확률: {deathProbabilityPercent}%";
+                }
+                else
+                {
+                    _deathProbability.text = $"사망 확률: ?%";
+                }
             }
             else
             {
                 _name.text = "[헌터 배치]";
                 _sprite.enabled = false;
-
-                _deathProbability.text = $"사망 확률: ?%";
+                _deathProbability.text = "";
             }
 
             _hunter = value;
-            _uiDispatch.TargetPortal.HuntersToDispatch[_index] = value;
             _uiDispatch.RefreshHunterSlot();
-
         }
         get
         {

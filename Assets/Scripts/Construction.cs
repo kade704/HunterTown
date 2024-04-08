@@ -12,6 +12,7 @@ public class Construction : MonoBehaviour
     [SerializeField] protected bool _buildable;
     [SerializeField] protected bool _destroyable;
     [SerializeField] protected ConstructionInteraction[] _interactions;
+    protected UnityEvent<string> _onInteracted = new();
 
     protected UnityEvent _onClicked = new();
     protected SpriteRenderer _spriteRenderer;
@@ -20,6 +21,7 @@ public class Construction : MonoBehaviour
 
     public string Id => _id;
     public Vector2Int CellPos { get { return _cellPos; } set { _cellPos = value; } }
+    public UnityEvent<string> OnInteracted => _onInteracted;
     public UnityEvent OnClicked => _onClicked;
     public int Cost => _cost;
     public string DisplayName => _displayName;

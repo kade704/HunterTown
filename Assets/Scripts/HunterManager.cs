@@ -32,9 +32,13 @@ public class HunterManager : MonoBehaviour
     {
         var hunterPrefab = Resources.Load<Hunter>("Hunter");
         var newHunter = Instantiate(hunterPrefab, transform);
+        var day = Timer.Instance.Day.total;
+        var stat = 13 + (day * day / 1500);
+        var hp = Random.Range(0, stat + 1 - 6) + 3;
+        var damage = stat - hp;
         newHunter.DisplayName = "헌터" + hunterCount++;
-        newHunter.DefaultHp = Random.Range(10, 50);
-        newHunter.DefaultDamage = Random.Range(1, 10);
+        newHunter.DefaultHp = hp;
+        newHunter.DefaultDamage = damage;
         _hunters.Add(newHunter);
         UILogger.Instance.Log(UILogger.LogType.Info, $"{newHunter.DisplayName}가 마을에 이주했습니다.");
     }

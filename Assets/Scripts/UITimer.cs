@@ -32,10 +32,13 @@ public class UITimer : MonoBehaviour
     }
     private void Update()
     {
+        var year = Timer.Instance.Year.current;
+        var month = Timer.Instance.Month.current;
         var day = Timer.Instance.Day.current;
         var hour = Timer.Instance.Hour.current;
-        var minute = Timer.Instance.Minute.current;
 
-        _timeText.text = $"2020년 1월 {day}일 {hour}시 {minute}분";
+        var clock = (hour < 12 ? "오전" : "오후") + " " + (hour % 12 == 0 ? "12" : hour % 12) + ":00";
+
+        _timeText.text = $"{year}년 {month}월 {day}일   {clock}";
     }
 }

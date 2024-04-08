@@ -32,13 +32,11 @@ public class Timer : Singleton<Timer>
 
     [SerializeField] private float _timeScale = 1f;
 
-    private Element _minute = new Element(0);
     private Element _hour = new Element(0);
     private Element _day = new Element(1);
     private Element _month = new Element(1);
     private Element _year = new Element(2020);
 
-    public Element Minute => _minute;
     public Element Hour => _hour;
     public Element Day => _day;
     public Element Month => _month;
@@ -55,20 +53,16 @@ public class Timer : Singleton<Timer>
     {
         while (true)
         {
-            var nextHour = _minute.Increase(60);
-            if (nextHour)
+            var nextDay = _hour.Increase(24);
+            if (nextDay)
             {
-                var nextDay = _hour.Increase(24);
-                if (nextDay)
+                var nextMonth = _day.Increase(30);
+                if (nextMonth)
                 {
-                    var nextMonth = _day.Increase(30);
-                    if (nextMonth)
-                    {
-                        _month.Increase(12);
-                    }
+                    _month.Increase(12);
                 }
             }
-            yield return new WaitForSeconds(0.1f * (1 / _timeScale));
+            yield return new WaitForSeconds((9f / 24f) * (1 / _timeScale));
         }
     }
 

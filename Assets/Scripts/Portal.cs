@@ -1,50 +1,19 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class Portal : Construction
 {
-    public enum Ability
-    {                                                                      //완료 여부
-        Cristal,            //크리스탈 포탈   : 자원 +20%   
-        Peace,              //평화의 문       : 유닛 사망률 -2%
-        Know,               //파악된 세계     : 던전 생성 시 모든 특성 파악      1
-        Good_Temper,        //적절한 기온     : 파견 시간 -10%                   1
-        View,               //절경            : 증가하는 능력치 +2               1
-        Badland,            //황무지          : 자원 -50%                        1
-        Danger_Creatures,   //전투 생물       : 위험도 +30%                      1  
-        Maze,               //미로            : 복잡도 +30%                      1
-        Mutation,           //돌연변이        : 포탈 능력치 +20%         
-        Lush_Forest,        //우거진 숲       : 최종 유닛 사망률 +3%              
-        Glacier,            //빙하지역        : 파견 시간 +30%                    1  
-        Lava,               //용암지역        : 포탈 성공확률 -5%                 
-        OverCrow,           //과밀도          : 포탈 웨이브 시간 -50%             1
-        Poision,            //독성 대기       : 실패 시 100%확률로 전멸           1  
-        Undead,             //언데드          : 능력치가 감소되지 않음           1
-        _MAX_,
-    }
-
-    public const float CristalVar = 0.2f;      //크리스탈 포탈
-    public const float PeaceVar = 0.02f;     //평화의문
-    public const float GoodTemperVar = 0.1f;  //적절한 기온
-    public const int ViewVar = 2;
-    public const float BadlandVar = 0.5f;
-    public const float LushForestVar = 0.03f;
-
-
     [SerializeField] private float _defaultPower;
     [SerializeField] private bool _powerVisibility;
     [SerializeField] private float _defaultDanger;
     [SerializeField] private bool _dangerVisibility;
     [SerializeField] private float _defaultDifficulty;
     [SerializeField] private bool _difficultyVisibility;
-    [SerializeField] private List<Ability> _abilities = new List<Ability>();
     [SerializeField] private bool[] _abilityVisibilities = new bool[3];
-    [SerializeField] private Hunter[] _huntersToDispatch = new Hunter[4];
     [SerializeField] private Sprite[] _spriteFrames;
 
     private bool _isDispatching = false;
+    private bool _isExamining = false;
     private SpriteRenderer _progressSprite;
 
     public float DefaultPower { get { return _defaultPower; } set { _defaultPower = value; } }
@@ -54,9 +23,7 @@ public class Portal : Construction
     public bool DangerVisibility { get { return _dangerVisibility; } set { _dangerVisibility = value; } }
     public bool DifficultyVisibility { get { return _difficultyVisibility; } set { _difficultyVisibility = value; } }
 
-    public List<Ability> Abilities { get { return _abilities; } set { _abilities = value; } }
     public bool[] AbilityVisibilities => _abilityVisibilities;
-    public Hunter[] HuntersToDispatch => _huntersToDispatch;
 
 
     public char Rank
@@ -84,6 +51,14 @@ public class Portal : Construction
     {
         base.Awake();
         _progressSprite = transform.Find("Progress").GetComponent<SpriteRenderer>();
+
+        _onInteracted.AddListener((id) =>
+         {
+             if (id == "examine")
+             {
+                 Examine();
+             }
+         });
     }
 
     protected override void Start()
@@ -92,22 +67,21 @@ public class Portal : Construction
         StartCoroutine(AnimateRoutine());
     }
 
-    public void Dispatch()
+    public void Dispatch(Hunter[] hunters)
     {
 
-        StartCoroutine(DispatchRoutine());
+        StartCoroutine(DispatchRoutine(hunters));
     }
 
-    private IEnumerator DispatchRoutine()
+    private IEnumerator DispatchRoutine(Hunter[] hunters)
     {
         UILogger.Instance.Log(UILogger.LogType.Info, $"파견이 시작되었습니다.");
 
         _isDispatching = true;
 
-        foreach (var hunter in _huntersToDispatch)
+        foreach (var hunter in hunters)
         {
-            if (hunter)
-                hunter.IsDispatched = true;
+            hunter.IsDispatched = true;
         }
 
         _progressSprite.enabled = true;
@@ -121,26 +95,20 @@ public class Portal : Construction
         }
         _progressSprite.enabled = false;
 
-        var combatPowerTotal = 0f;
-        for (int i = 0; i < _huntersToDispatch.Length; i++)
+        for (int i = 0; i < hunters.Length; i++)
         {
-            var hunter = _huntersToDispatch[i];
-            if (hunter)
+            var hunter = hunters[i];
+            var deathProbability = CalcHunterDeathProbability(hunter);
+            if (Random.value < deathProbability)
             {
-                combatPowerTotal += hunter.CombatPower;
-                var deathProbability = CalcHunterDeathProbability(hunter);
-                if (Random.value < deathProbability)
-                {
-                    UILogger.Instance.Log(UILogger.LogType.Error, $"{hunter.DisplayName}가 파견중 사망했습니다.");
-                    HunterManager.Instance.RemoveHunter(hunter);
-                }
-                hunter.IsDispatched = false;
-                _huntersToDispatch[i] = null;
+                UILogger.Instance.Log(UILogger.LogType.Error, $"{hunter.DisplayName}가 파견중 사망했습니다.");
+                HunterManager.Instance.RemoveHunter(hunter);
             }
+            hunter.IsDispatched = false;
         }
 
-        var success = (combatPowerTotal / _defaultPower) - (combatPowerTotal / _defaultPower / 6);
-        if (success > Random.value)
+        var success = CalcDispatchSuccessProbability(hunters);
+        if (Random.value <= success)
         {
             UILogger.Instance.Log(UILogger.LogType.Info, $"파견이 성공적으로 완료되었습니다.");
             ConstructionManager.Instance.DestroyConstruction(this);
@@ -153,9 +121,61 @@ public class Portal : Construction
         _isDispatching = false;
     }
 
+    public void Examine()
+    {
+        StartCoroutine(ExamineRoutine());
+    }
+
+    public IEnumerator ExamineRoutine()
+    {
+        UILogger.Instance.Log(UILogger.LogType.Info, $"탐색이 시작되었습니다.");
+
+        _isExamining = true;
+
+        GameManager.Instance.Money -= Random.Range(30, 70);
+
+        _progressSprite.enabled = true;
+        var startTime = Time.time;
+        var nextTime = startTime + 2;
+        while (Time.time < nextTime)
+        {
+            var progressValue = (Time.time - startTime) / (nextTime - startTime);
+            _progressSprite.material.SetFloat("_Value", progressValue);
+            yield return null;
+        }
+        _progressSprite.enabled = false;
+
+        UILogger.Instance.Log(UILogger.LogType.Info, $"탐색이 완료되었습니다.");
+
+        if (!PowerVisibility)
+        {
+            PowerVisibility = Random.value < 0.5f;
+        }
+        if (!DangerVisibility)
+        {
+            DangerVisibility = Random.value < 0.5f;
+        }
+        if (!DifficultyVisibility)
+        {
+            DifficultyVisibility = Random.value < 0.5f;
+        }
+
+        _isExamining = false;
+    }
+
     public float CalcHunterDeathProbability(Hunter hunter)
     {
         return 1 - Mathf.Clamp01(hunter.Viability / _defaultDanger);
+    }
+
+    public float CalcDispatchSuccessProbability(Hunter[] hunters)
+    {
+        var combatPowerTotal = 0f;
+        for (int i = 0; i < hunters.Length; i++)
+        {
+            combatPowerTotal += hunters[i].CombatPower;
+        }
+        return (combatPowerTotal / _defaultPower) - (combatPowerTotal / _defaultPower / 6);
     }
 
     private IEnumerator AnimateRoutine()

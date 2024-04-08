@@ -3,13 +3,18 @@ using UnityEngine;
 
 public class PortalGenerator : MonoBehaviour
 {
+    int nextHour = 5;
 
     private void Start()
     {
-        AddRandomPortal();
-        Timer.Instance.Day.OnChanged.AddListener(() =>
+        Timer.Instance.Hour.OnChanged.AddListener(() =>
         {
-            AddRandomPortal();
+            var hour = Timer.Instance.Hour.total;
+            if (hour >= nextHour)
+            {
+                nextHour = hour + Random.Range(50, 100);
+                AddRandomPortal();
+            }
         });
     }
 
@@ -41,16 +46,6 @@ public class PortalGenerator : MonoBehaviour
         newPortal.DefaultPower = Random.Range(powerMin, powerMax);
         newPortal.DefaultDanger = Random.Range(dangerMin, dangerMax);
         newPortal.DefaultDifficulty = Random.Range(difficultyMin, difficultyMax);
-
-        var abilityCount = System.Enum.GetNames(typeof(Portal.Ability)).Length;
-        for (int i = 0; i < 3; i++)
-        {
-            var choose = Random.Range(-1, abilityCount);
-            if (choose != -1)
-            {
-                newPortal.Abilities.Add((Portal.Ability)choose);
-            }
-        }
 
         UILogger.Instance.Log(UILogger.LogType.Info, $"({cellPos.x}, {cellPos.y})에 포탈이 생성되었습니다.");
     }

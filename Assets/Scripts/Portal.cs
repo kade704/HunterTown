@@ -33,13 +33,12 @@ public class Portal : Construction
     public const float LushForestVar = 0.03f;
 
 
-    [SerializeField] private int _defaultPower;
+    [SerializeField] private float _defaultPower;
     [SerializeField] private bool _powerVisibility;
-    [SerializeField] private int _defaultDanger;
+    [SerializeField] private float _defaultDanger;
     [SerializeField] private bool _dangerVisibility;
-    [SerializeField] private int _portalMaze;
-    [SerializeField] private int _portalBaseMaze;
-    [SerializeField] private bool _mazeVisibility;
+    [SerializeField] private float _defaultDifficulty;
+    [SerializeField] private bool _difficultyVisibility;
     [SerializeField] private List<Ability> _abilities = new List<Ability>();
     [SerializeField] private bool[] _abilityVisibilities = new bool[3];
     [SerializeField] private Hunter[] _huntersToDispatch = new Hunter[4];
@@ -48,16 +47,38 @@ public class Portal : Construction
     private bool _isDispatching = false;
     private SpriteRenderer _progressSprite;
 
-    public int DefaultPower { get { return _defaultPower; } set { _defaultPower = value; } }
-    public int DefaultDanger { get { return _defaultDanger; } set { _defaultDanger = value; } }
+    public float DefaultPower { get { return _defaultPower; } set { _defaultPower = value; } }
+    public float DefaultDanger { get { return _defaultDanger; } set { _defaultDanger = value; } }
+    public float DefaultDifficulty { get { return _defaultDifficulty; } set { _defaultDifficulty = value; } }
     public bool PowerVisibility { get { return _powerVisibility; } set { _powerVisibility = value; } }
     public bool DangerVisibility { get { return _dangerVisibility; } set { _dangerVisibility = value; } }
-    public bool MazeVisibility { get { return _mazeVisibility; } set { _mazeVisibility = value; } }
+    public bool DifficultyVisibility { get { return _difficultyVisibility; } set { _difficultyVisibility = value; } }
 
     public List<Ability> Abilities { get { return _abilities; } set { _abilities = value; } }
     public bool[] AbilityVisibilities => _abilityVisibilities;
     public Hunter[] HuntersToDispatch => _huntersToDispatch;
 
+
+    public char Rank
+    {
+        get
+        {
+            if (_defaultPower <= 75)
+                return 'F';
+            else if (_defaultPower <= 150)
+                return 'D';
+            else if (_defaultPower <= 300)
+                return 'D';
+            else if (_defaultPower <= 500)
+                return 'C';
+            else if (_defaultPower <= 700)
+                return 'B';
+            else if (_defaultPower <= 999)
+                return 'A';
+            else
+                return 'S';
+        }
+    }
 
     protected override void Awake()
     {
@@ -100,11 +121,13 @@ public class Portal : Construction
         }
         _progressSprite.enabled = false;
 
+        var combatPowerTotal = 0f;
         for (int i = 0; i < _huntersToDispatch.Length; i++)
         {
             var hunter = _huntersToDispatch[i];
             if (hunter)
             {
+                combatPowerTotal += hunter.CombatPower;
                 var deathProbability = CalcHunterDeathProbability(hunter);
                 if (Random.value < deathProbability)
                 {
@@ -114,6 +137,17 @@ public class Portal : Construction
                 hunter.IsDispatched = false;
                 _huntersToDispatch[i] = null;
             }
+        }
+
+        var success = (combatPowerTotal / _defaultPower) - (combatPowerTotal / _defaultPower / 6);
+        if (success > Random.value)
+        {
+            UILogger.Instance.Log(UILogger.LogType.Info, $"파견이 성공적으로 완료되었습니다.");
+            ConstructionManager.Instance.DestroyConstruction(this);
+        }
+        else
+        {
+            UILogger.Instance.Log(UILogger.LogType.Error, $"파견이 실패했습니다.");
         }
 
         _isDispatching = false;

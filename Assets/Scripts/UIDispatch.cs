@@ -10,6 +10,10 @@ public class UIDispatch : UIPanel
     private UIHunterSlot _hunterSlotRef;
     private Transform _hunterSlotParent;
     private Image _cursor;
+    private Text _powerText;
+    private Text _dangerText;
+    private Text _difficultyText;
+    private Text _rankText;
     private Hunter _draggingHunter;
     private Button _dispatchButton;
     private List<UIHunterSlot> _hunterSlots = new();
@@ -42,12 +46,21 @@ public class UIDispatch : UIPanel
             }
         });
         _hunterInfo = transform.Find("HunterInfo").GetComponent<UIHunterInfo>();
+        _powerText = transform.Find("PowerText").GetComponent<Text>();
+        _dangerText = transform.Find("DangerText").GetComponent<Text>();
+        _difficultyText = transform.Find("DifficultyText").GetComponent<Text>();
+        _rankText = transform.Find("RankText").GetComponent<Text>();
 
         UIManager.Instance.OnConstructionInteracted.AddListener((id, construction) =>
         {
             if (id == "dispatch")
             {
                 _targetPortal = construction as Portal;
+
+                _powerText.text = "능력치: " + _targetPortal.DefaultPower.ToString("F1");
+                _dangerText.text = "위험도: " + _targetPortal.DefaultDanger.ToString("F1");
+                _difficultyText.text = "복잡도: " + _targetPortal.DefaultDifficulty.ToString("F1");
+                _rankText.text = _targetPortal.Rank.ToString();
 
                 _hunterSlots.Clear();
                 foreach (Transform child in _hunterSlotParent)

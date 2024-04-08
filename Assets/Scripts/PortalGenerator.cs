@@ -6,17 +6,11 @@ public class PortalGenerator : MonoBehaviour
 
     private void Start()
     {
-        StartCoroutine(AddRandomPortalRoutine());
-    }
-
-    private IEnumerator AddRandomPortalRoutine()
-    {
-        yield return new WaitForSeconds(1);
-        while (true)
+        AddRandomPortal();
+        Timer.Instance.Day.OnChanged.AddListener(() =>
         {
             AddRandomPortal();
-            yield return new WaitForSeconds(60);
-        }
+        });
     }
 
     private void AddRandomPortal()
@@ -26,13 +20,27 @@ public class PortalGenerator : MonoBehaviour
         Vector2Int cellPos;
         do
         {
-            cellPos = new Vector2Int(Random.Range(-5, 5), Random.Range(-5, 5));
+            cellPos = new Vector2Int(Random.Range(-10, 10), Random.Range(-10, 10));
         } while (ConstructionManager.Instance.GetConstructionAt(cellPos) != null);
 
 
         var newPortal = ConstructionManager.Instance.BuildConstruction(portal, cellPos) as Portal;
-        newPortal.DefaultPower = Random.Range(5, 15);
-        newPortal.DefaultDanger = Random.Range(20, 100);
+
+        var day = Timer.Instance.Day.total;
+        var month = Timer.Instance.Month.total;
+
+        var powerMin = 50f + (day * day / (25 * ((1 + 10) - (10 * 1.2f)))) * 0.8f;
+        var powerMax = 50f + (day * day / (25 * ((1 + 10) - (10 * 1.2f)))) * 1.2f;
+
+        var dangerMin = 15f + (day * day / (100 * ((1 + 10) - (10 * 1.2f)))) * 0.8f;
+        var dangerMax = 15f + (day * day / (100 * ((1 + 10) - (10 * 1.2f)))) * 1.2f;
+
+        var difficultyMin = 10 + (month * month + (10 * 0.5f));
+        var difficultyMax = 10 + (month * month + 5 + (10 * 0.5f));
+
+        newPortal.DefaultPower = Random.Range(powerMin, powerMax);
+        newPortal.DefaultDanger = Random.Range(dangerMin, dangerMax);
+        newPortal.DefaultDifficulty = Random.Range(difficultyMin, difficultyMax);
 
         var abilityCount = System.Enum.GetNames(typeof(Portal.Ability)).Length;
         for (int i = 0; i < 3; i++)

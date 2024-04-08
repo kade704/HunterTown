@@ -131,6 +131,11 @@ public class ConstructionManager : MonoBehaviour, IDeserializable, ISerializable
     public void DestroyConstruction(Vector2Int cellPos)
     {
         var construction = GetConstructionAt(cellPos);
+        if (!construction)
+        {
+            Debug.LogError("Construction not found at this position: " + cellPos);
+            return;
+        }
 
         var size = construction.Size;
         for (int y = 0; y < size.y; y++)
@@ -146,6 +151,17 @@ public class ConstructionManager : MonoBehaviour, IDeserializable, ISerializable
         Destroy(construction.gameObject);
 
         _onConstructionDestroyed.Invoke();
+    }
+
+    public void DestroyConstruction(Construction construction)
+    {
+        if (!construction)
+        {
+            Debug.LogError("Construction is null");
+            return;
+        }
+
+        DestroyConstruction(construction.CellPos);
     }
 
     public bool CheckConstructionBuildable(Construction constructionPrefab, Vector2Int cellPos)

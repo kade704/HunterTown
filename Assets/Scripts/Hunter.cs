@@ -87,7 +87,8 @@ public class Hunter : MonoBehaviour
             {
                 while (Vector3.Distance(transform.position, path[index].transform.position) > 0.01)
                 {
-                    transform.position = Vector3.MoveTowards(transform.position, path[index].transform.position, Time.deltaTime);
+                    var speed = Timer.Instance.TimeScale;
+                    transform.position = Vector3.MoveTowards(transform.position, path[index].transform.position, Time.deltaTime * speed);
                     yield return null;
                 }
                 index++;

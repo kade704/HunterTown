@@ -1,27 +1,84 @@
 using System.Collections;
+using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Portal : Construction
 {
-    [SerializeField] private float _defaultPower;
-    [SerializeField] private bool _powerVisibility;
-    [SerializeField] private float _defaultDanger;
-    [SerializeField] private bool _dangerVisibility;
-    [SerializeField] private float _defaultDifficulty;
-    [SerializeField] private bool _difficultyVisibility;
-    [SerializeField] private bool[] _abilityVisibilities = new bool[3];
     [SerializeField] private Sprite[] _spriteFrames;
 
+    private float _defaultPower;
+    private float _defaultDanger;
+    private float _defaultDifficulty;
+    private Ability[] _abilities = new Ability[3];
+    private bool _powerVisibility = false;
+    private bool _dangerVisibility = false;
+    private bool _difficultyVisibility = false;
+    private bool[] _abilityVisibilities = new bool[3];
     private bool _isDispatching = false;
     private bool _isExamining = false;
     private SpriteRenderer _progressSprite;
 
-    public float DefaultPower { get { return _defaultPower; } set { _defaultPower = value; } }
-    public float DefaultDanger { get { return _defaultDanger; } set { _defaultDanger = value; } }
-    public float DefaultDifficulty { get { return _defaultDifficulty; } set { _defaultDifficulty = value; } }
-    public bool PowerVisibility { get { return _powerVisibility; } set { _powerVisibility = value; } }
-    public bool DangerVisibility { get { return _dangerVisibility; } set { _dangerVisibility = value; } }
-    public bool DifficultyVisibility { get { return _difficultyVisibility; } set { _difficultyVisibility = value; } }
+    public float Power
+    {
+        get
+        {
+            var power = _defaultPower;
+            if (ContainAbility("false_evolution"))
+            {
+                power *= 0.9f;
+            }
+            else if (ContainAbility("battle_creatures"))
+            {
+                power *= 1.2f;
+            }
+            return power;
+        }
+        set { _defaultPower = value; }
+    }
+
+    public float Danger
+    {
+        get
+        {
+            var danger = _defaultDanger;
+            if (ContainAbility("peaceful_gate"))
+            {
+                danger *= 0.9f;
+            }
+            else if (ContainAbility("toxic_atmosphere"))
+            {
+                danger *= 1.2f;
+            }
+            return danger;
+        }
+        set { _defaultDanger = value; }
+    }
+    public float Difficulty
+    {
+        get
+        {
+            var difficulty = _defaultDifficulty;
+            if (ContainAbility("landmark"))
+            {
+                difficulty *= 0.9f;
+            }
+            else if (ContainAbility("maze"))
+            {
+                difficulty *= 1.2f;
+            }
+            return difficulty;
+        }
+        set { _defaultDifficulty = value; }
+    }
+    public Ability[] Abilities
+    {
+        get { return _abilities; }
+        set { _abilities = value; }
+    }
+    public bool PowerVisibility => _powerVisibility;
+    public bool DangerVisibility => _dangerVisibility;
+    public bool DifficultyVisibility => _difficultyVisibility;
 
     public bool[] AbilityVisibilities => _abilityVisibilities;
 
@@ -112,6 +169,16 @@ public class Portal : Construction
         {
             UILogger.Instance.Log(UILogger.LogType.Info, $"파견이 성공적으로 완료되었습니다.");
             ConstructionManager.Instance.DestroyConstruction(this);
+            var earnedMoney = Random.Range(100f, 200f);
+            if (ContainAbility("crystal_portal"))
+            {
+                earnedMoney *= 1.2f;
+            }
+            else if (ContainAbility("badlands"))
+            {
+                earnedMoney *= 0.5f;
+            }
+            GameManager.Instance.Money += (int)earnedMoney;
         }
         else
         {
@@ -147,17 +214,37 @@ public class Portal : Construction
 
         UILogger.Instance.Log(UILogger.LogType.Info, $"탐색이 완료되었습니다.");
 
-        if (!PowerVisibility)
+        if (ContainAbility("understood_world"))
         {
-            PowerVisibility = Random.value < 0.5f;
+            _powerVisibility = true;
+            _dangerVisibility = true;
+            _difficultyVisibility = true;
+            for (int i = 0; i < 3; i++)
+            {
+                _abilityVisibilities[i] = true;
+            }
         }
-        if (!DangerVisibility)
+        else
         {
-            DangerVisibility = Random.value < 0.5f;
-        }
-        if (!DifficultyVisibility)
-        {
-            DifficultyVisibility = Random.value < 0.5f;
+            if (!_powerVisibility)
+            {
+                _powerVisibility = Random.value < 0.5f;
+            }
+            if (!_dangerVisibility)
+            {
+                _dangerVisibility = Random.value < 0.5f;
+            }
+            if (!_difficultyVisibility)
+            {
+                _difficultyVisibility = Random.value < 0.5f;
+            }
+            for (int i = 0; i < 3; i++)
+            {
+                if (!_abilityVisibilities[i])
+                {
+                    _abilityVisibilities[i] = Random.value < 0.5f;
+                }
+            }
         }
 
         _isExamining = false;
@@ -165,7 +252,12 @@ public class Portal : Construction
 
     public float CalcHunterDeathProbability(Hunter hunter)
     {
-        return 1 - Mathf.Clamp01(hunter.Viability / _defaultDanger);
+        var probability = 1 - Mathf.Clamp01(hunter.Viability / _defaultDanger);
+        if (ContainAbility("hunters"))
+        {
+            probability *= 1.1f;
+        }
+        return probability;
     }
 
     public float CalcDispatchSuccessProbability(Hunter[] hunters)
@@ -175,7 +267,24 @@ public class Portal : Construction
         {
             combatPowerTotal += hunters[i].CombatPower;
         }
-        return (combatPowerTotal / _defaultPower) - (combatPowerTotal / _defaultPower / 6);
+        var probability = (combatPowerTotal / _defaultPower) - (combatPowerTotal / _defaultPower / 6);
+        if (ContainAbility("strong_boss"))
+        {
+            probability *= 0.95f;
+        }
+        return probability;
+    }
+
+    public bool ContainAbility(string id)
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            if (_abilities[i] && _abilities[i].ID == id)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     private IEnumerator AnimateRoutine()

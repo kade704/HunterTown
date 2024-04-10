@@ -19,8 +19,11 @@ public class UIDispatch : UIPanel
     private Button _dispatchButton;
     private List<UIHunterSlot> _hunterSlots = new();
     private UIDispatchSlot[] _dispatchSlots;
+    private UIAbilitySlot[] _abilitySlots;
     private UIHunterInfo _hunterInfo;
     private UIHunterSlot _hunterSlotOverPointer;
+    private UIAbilityInfo _abilityInfo;
+    private UIAbilitySlot _abilitySlotOverPointer;
 
     public Portal TargetPortal => _targetPortal;
 
@@ -47,6 +50,8 @@ public class UIDispatch : UIPanel
                 HidePanel();
             }
         });
+        _abilityInfo = transform.Find("AbilityInfo").GetComponent<UIAbilityInfo>();
+        _abilitySlots = transform.GetComponentsInChildren<UIAbilitySlot>();
         _hunterInfo = transform.Find("HunterInfo").GetComponent<UIHunterInfo>();
         _powerText = transform.Find("PowerText").GetComponent<Text>();
         _dangerText = transform.Find("DangerText").GetComponent<Text>();
@@ -60,9 +65,9 @@ public class UIDispatch : UIPanel
             {
                 _targetPortal = construction as Portal;
 
-                _powerText.text = "능력치: " + (_targetPortal.PowerVisibility ? _targetPortal.DefaultPower.ToString("F1") : "???");
-                _dangerText.text = "위험도: " + (_targetPortal.DangerVisibility ? _targetPortal.DefaultDanger.ToString("F1") : "???");
-                _difficultyText.text = "복잡도: " + (_targetPortal.DifficultyVisibility ? _targetPortal.DefaultDifficulty.ToString("F1") : "???");
+                _powerText.text = "능력치: " + (_targetPortal.PowerVisibility ? _targetPortal.Power.ToString("F1") : "???");
+                _dangerText.text = "위험도: " + (_targetPortal.DangerVisibility ? _targetPortal.Danger.ToString("F1") : "???");
+                _difficultyText.text = "복잡도: " + (_targetPortal.DifficultyVisibility ? _targetPortal.Difficulty.ToString("F1") : "???");
                 _rankText.text = _targetPortal.Rank.ToString();
 
                 _hunterSlots.Clear();
@@ -81,6 +86,14 @@ public class UIDispatch : UIPanel
                 foreach (var dispatchSlot in _dispatchSlots)
                 {
                     dispatchSlot.Hunter = null;
+                }
+
+                for (int i = 0; i < 3; i++)
+                {
+                    var abilitySlot = _abilitySlots[i];
+
+                    abilitySlot.Ability = _targetPortal.Abilities[i];
+                    abilitySlot.Hidden = !_targetPortal.AbilityVisibilities[i];
                 }
 
                 ShowPanel();
@@ -141,6 +154,24 @@ public class UIDispatch : UIPanel
         if (_hunterSlotOverPointer)
         {
             _hunterInfo.transform.position = Input.mousePosition;
+        }
+
+        var abilitySlotOverPointer = UIManager.GetUIObjectTypeOverPointer<UIAbilitySlot>();
+        if (abilitySlotOverPointer != _abilitySlotOverPointer)
+        {
+            if (abilitySlotOverPointer && !abilitySlotOverPointer.Hidden)
+            {
+                _abilityInfo.Ability = abilitySlotOverPointer.Ability;
+            }
+            else
+            {
+                _abilityInfo.Ability = null;
+            }
+            _abilitySlotOverPointer = abilitySlotOverPointer;
+        }
+        if (_abilitySlotOverPointer)
+        {
+            _abilityInfo.transform.position = Input.mousePosition;
         }
 
         if (_targetPortal)

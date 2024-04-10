@@ -1,20 +1,17 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using UnityEditor;
 using UnityEngine;
 
-public class HunterManager : MonoBehaviour
+public class HunterManager : Singleton<HunterManager>
 {
-    private static HunterManager _instance;
+    [SerializeField] private string[] _hunterNames;
     private List<Hunter> _hunters = new();
+    private List<string> _hunterNamesLeft = new();
 
-    public static HunterManager Instance => _instance;
     public Hunter[] Hunters => _hunters.ToArray();
 
-    private void Awake()
+    protected override void Awake()
     {
-        _instance = this;
+        _hunterNamesLeft.AddRange(_hunterNames);
     }
 
     private void Start()
@@ -27,7 +24,6 @@ public class HunterManager : MonoBehaviour
         AddRandomHunter();
     }
 
-    static int hunterCount = 1;
     public void AddRandomHunter()
     {
         var hunterPrefab = Resources.Load<Hunter>("Hunter");
@@ -36,11 +32,16 @@ public class HunterManager : MonoBehaviour
         var stat = 13 + (day * day / 1500);
         var hp = Random.Range(0, stat + 1 - 6) + 3;
         var damage = stat - hp;
-        newHunter.DisplayName = "헌터" + hunterCount++;
+
+        var nameIdx = Random.Range(0, _hunterNamesLeft.Count);
+        var name = _hunterNamesLeft[nameIdx];
+        _hunterNamesLeft.RemoveAt(nameIdx);
+
+        newHunter.DisplayName = name;
         newHunter.DefaultHp = hp;
         newHunter.DefaultDamage = damage;
         _hunters.Add(newHunter);
-        UILogger.Instance.Log(UILogger.LogType.Info, $"{newHunter.DisplayName}가 마을에 이주했습니다.");
+        UILogger.Instance.Log(UILogger.LogType.Info, $"<b>{newHunter.DisplayName}</b> 이(가) 마을에 이주했습니다.");
     }
 
     public void RemoveHunter(Hunter hunter)

@@ -152,9 +152,8 @@ public class Portal : Construction
         }
         _progressSprite.enabled = false;
 
-        for (int i = 0; i < hunters.Length; i++)
+        foreach (var hunter in hunters)
         {
-            var hunter = hunters[i];
             var deathProbability = CalcHunterDeathProbability(hunter);
             if (Random.value < deathProbability)
             {
@@ -169,7 +168,7 @@ public class Portal : Construction
         {
             UILogger.Instance.Log(UILogger.LogType.Info, $"파견이 성공적으로 완료되었습니다.");
             ConstructionManager.Instance.DestroyConstruction(this);
-            var earnedMoney = Random.Range(100f, 200f);
+            var earnedMoney = Power * 10f;
             if (ContainAbility("crystal_portal"))
             {
                 earnedMoney *= 1.2f;
@@ -179,6 +178,16 @@ public class Portal : Construction
                 earnedMoney *= 0.5f;
             }
             GameManager.Instance.Money += (int)earnedMoney;
+
+            foreach (var hunter in hunters)
+            {
+                var reward = GetHunterDispatchReward();
+                var damage = Random.Range(0, reward);
+                var hp = reward - damage;
+
+                hunter.DefaultDamage += damage;
+                hunter.DefaultHp += hp;
+            }
         }
         else
         {
@@ -296,5 +305,20 @@ public class Portal : Construction
             frameIndex = (frameIndex + 1) % _spriteFrames.Length;
             yield return new WaitForSeconds(0.3f);
         }
+    }
+
+    private int GetHunterDispatchReward()
+    {
+        return Rank switch
+        {
+            'F' => Random.Range(1, 3),
+            'E' => Random.Range(2, 4),
+            'D' => Random.Range(3, 5),
+            'C' => Random.Range(4, 6),
+            'B' => Random.Range(5, 8),
+            'A' => Random.Range(7, 9),
+            'S' => Random.Range(8, 10),
+            _ => 0,
+        };
     }
 }

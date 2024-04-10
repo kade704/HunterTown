@@ -33,7 +33,7 @@ public class UIDispatchSlot : MonoBehaviour
             if (value)
             {
                 _name.text = value.DisplayName;
-                _sprite.sprite = value.Sprite;
+                _sprite.sprite = value.Thumbnail;
                 _sprite.enabled = true;
 
                 if (_uiDispatch.TargetPortal.DangerVisibility)

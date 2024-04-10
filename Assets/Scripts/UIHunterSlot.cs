@@ -36,7 +36,7 @@ public class UIHunterSlot : MonoBehaviour
         set
         {
             _name.text = value.DisplayName;
-            _sprite.sprite = value.Sprite;
+            _sprite.sprite = value.Thumbnail;
             _hunter = value;
         }
         get

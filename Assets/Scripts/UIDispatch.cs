@@ -113,7 +113,7 @@ public class UIDispatch : UIPanel
             if (clickedHunterSlot && clickedHunterSlot.Enable)
             {
                 _cursor.enabled = true;
-                _cursor.sprite = clickedHunterSlot.Hunter.Sprite;
+                _cursor.sprite = clickedHunterSlot.Hunter.Thumbnail;
                 _draggingHunter = clickedHunterSlot.Hunter;
             }
         }

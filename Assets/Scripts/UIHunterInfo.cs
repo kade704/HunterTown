@@ -23,8 +23,8 @@ public class UIHunterInfo : UIPanel
             if (value)
             {
                 _name.text = value.DisplayName;
-                _hp.text = "HP: " + value.DefaultHp;
-                _damage.text = "Damage: " + value.DefaultDamage;
+                _hp.text = "생존력: " + value.DefaultHp;
+                _damage.text = "공격력: " + value.DefaultDamage;
 
                 ShowPanel();
             }

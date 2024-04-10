@@ -4,30 +4,39 @@ using UnityEngine.UI;
 public class UITimer : MonoBehaviour
 {
     private Text _timeText;
-    private Button _pauseButton;
-    private Button _resumeButton;
-    private Button _fastButton;
+    private Toggle _pauseButton;
+    private Toggle _resumeButton;
+    private Toggle _fastButton;
 
     private void Awake()
     {
         _timeText = transform.Find("TimeText").GetComponent<Text>();
 
-        _pauseButton = transform.Find("PauseButton").GetComponent<Button>();
-        _pauseButton.onClick.AddListener(() =>
+        _pauseButton = transform.Find("SpeedButtons/PauseButton").GetComponent<Toggle>();
+        _pauseButton.onValueChanged.AddListener((active) =>
         {
-            Timer.Instance.Pause();
+            if (active)
+            {
+                Timer.Instance.Pause();
+            }
         });
 
-        _resumeButton = transform.Find("ResumeButton").GetComponent<Button>();
-        _resumeButton.onClick.AddListener(() =>
+        _resumeButton = transform.Find("SpeedButtons/ResumeButton").GetComponent<Toggle>();
+        _resumeButton.onValueChanged.AddListener((active) =>
         {
-            Timer.Instance.Resume();
+            if (active)
+            {
+                Timer.Instance.Resume();
+            }
         });
 
-        _fastButton = transform.Find("FastButton").GetComponent<Button>();
-        _fastButton.onClick.AddListener(() =>
+        _fastButton = transform.Find("SpeedButtons/FastButton").GetComponent<Toggle>();
+        _fastButton.onValueChanged.AddListener((active) =>
         {
-            Timer.Instance.Fast();
+            if (active)
+            {
+                Timer.Instance.Fast();
+            }
         });
     }
     private void Update()

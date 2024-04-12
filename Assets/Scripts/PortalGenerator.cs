@@ -71,6 +71,6 @@ public class PortalGenerator : MonoBehaviour
             }
         }
 
-        UILogger.Instance.Log(UILogger.LogType.Info, $"포탈이 <b>({cellPos.x}, {cellPos.y})</b>위치에 생성되었습니다.");
+        UILogger.Instance.Log(UILogger.LogType.Warning, $"포탈이 <b>({cellPos.x}, {cellPos.y})</b>위치에 생성되었습니다.");
     }
 }

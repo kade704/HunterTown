@@ -17,7 +17,9 @@ public class Portal : Construction
     private bool[] _abilityVisibilities = new bool[3];
     private bool _isDispatching = false;
     private bool _isExamining = false;
+    private bool _isWave = false;
     private SpriteRenderer _progressSprite;
+    private ParticleSystem _fireParticle;
 
     public float Power
     {
@@ -108,6 +110,7 @@ public class Portal : Construction
     {
         base.Awake();
         _progressSprite = transform.Find("Progress").GetComponent<SpriteRenderer>();
+        _fireParticle = transform.Find("Fire").GetComponent<ParticleSystem>();
 
         _onInteracted.AddListener((id) =>
          {
@@ -122,6 +125,15 @@ public class Portal : Construction
     {
         base.Start();
         StartCoroutine(AnimateRoutine());
+
+        var waveDay = Timer.Instance.Day.total + WaveTime;
+        Timer.Instance.Day.OnChanged.AddListener(() =>
+        {
+            if (Timer.Instance.Day.total >= waveDay && !_isWave)
+            {
+                Wave();
+            }
+        });
     }
 
     public void Dispatch(Hunter[] hunters)
@@ -157,7 +169,7 @@ public class Portal : Construction
             var deathProbability = CalcHunterDeathProbability(hunter);
             if (Random.value < deathProbability)
             {
-                UILogger.Instance.Log(UILogger.LogType.Error, $"{hunter.DisplayName}가 파견중 사망했습니다.");
+                UILogger.Instance.Log(UILogger.LogType.Error, $"{hunter.DisplayName} 이(가) 파견중 사망했습니다.");
                 HunterManager.Instance.RemoveHunter(hunter);
             }
             hunter.IsDispatched = false;
@@ -181,7 +193,7 @@ public class Portal : Construction
 
             foreach (var hunter in hunters)
             {
-                var reward = GetHunterDispatchReward();
+                var reward = HunterDispatchReward;
                 var damage = Random.Range(0, reward);
                 var hp = reward - damage;
 
@@ -259,6 +271,13 @@ public class Portal : Construction
         _isExamining = false;
     }
 
+    public void Wave()
+    {
+        _isWave = true;
+        _fireParticle.Play();
+        UILogger.Instance.Log(UILogger.LogType.Error, "포탈 웨이브가 시작되었습니다!");
+    }
+
     public float CalcHunterDeathProbability(Hunter hunter)
     {
         var probability = 1 - Mathf.Clamp01(hunter.Viability / _defaultDanger);
@@ -307,18 +326,39 @@ public class Portal : Construction
         }
     }
 
-    private int GetHunterDispatchReward()
+    private int HunterDispatchReward
     {
-        return Rank switch
+        get
         {
-            'F' => Random.Range(1, 3),
-            'E' => Random.Range(2, 4),
-            'D' => Random.Range(3, 5),
-            'C' => Random.Range(4, 6),
-            'B' => Random.Range(5, 8),
-            'A' => Random.Range(7, 9),
-            'S' => Random.Range(8, 10),
-            _ => 0,
-        };
+            return Rank switch
+            {
+                'F' => Random.Range(1, 3),
+                'E' => Random.Range(2, 4),
+                'D' => Random.Range(3, 5),
+                'C' => Random.Range(4, 6),
+                'B' => Random.Range(5, 8),
+                'A' => Random.Range(7, 9),
+                'S' => Random.Range(8, 10),
+                _ => 0,
+            };
+        }
+    }
+
+    private int WaveTime
+    {
+        get
+        {
+            return Rank switch
+            {
+                'F' => Random.Range(21, 35),
+                'E' => Random.Range(28, 42),
+                'D' => Random.Range(35, 49),
+                'C' => Random.Range(42, 56),
+                'B' => Random.Range(49, 63),
+                'A' => Random.Range(56, 70),
+                'S' => Random.Range(63, 77),
+                _ => 0,
+            };
+        }
     }
 }

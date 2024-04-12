@@ -31,8 +31,7 @@ public class UILogger : Singleton<UILogger>
         messageBox.Icon.sprite = GetLogIconSprite(type);
         messageBox.Msg.text = message;
 
-        if (type == LogType.Error)
-            messageBox.BgColor = new Color(1, 0.5f, 0.5f); ;
+        messageBox.BgColor = GetLogColor(type);
     }
 
     private Sprite GetLogIconSprite(LogType type)
@@ -52,5 +51,20 @@ public class UILogger : Singleton<UILogger>
         }
 
         return Resources.Load<Sprite>(path);
+    }
+
+    private Color GetLogColor(LogType type)
+    {
+        switch (type)
+        {
+            case LogType.Info:
+                return new Color(0, 1, 0.5f);
+            case LogType.Warning:
+                return new Color(1, 1, 0.5f);
+            case LogType.Error:
+                return new Color(1, 0.5f, 0.5f);
+        }
+
+        return Color.white;
     }
 }

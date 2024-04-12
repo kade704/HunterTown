@@ -83,7 +83,7 @@ public class Timer : Singleton<Timer>
 
     public void Fast()
     {
-        _timeScale = 5;
+        _timeScale = 10;
 
         StopAllCoroutines();
         StartCoroutine(TimerRoutine());

@@ -1,7 +1,8 @@
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
-public class GameManager : MonoBehaviour
+public class GameManager : Singleton<GameManager>
 {
     [SerializeField] private int _money;
 
@@ -30,5 +31,39 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         Money = _money;
+    }
+
+    public void NewGame()
+    {
+        SceneManager.LoadScene("Game");
+    }
+
+    public void LoadGame()
+    {
+        SceneManager.LoadScene("Game");
+    }
+
+    public void SaveGame()
+    {
+        if (SceneManager.GetActiveScene().name != "Game")
+        {
+            Debug.LogWarning("You can only save the game while playing.");
+            return;
+        }
+
+        
+
+        Debug.Log("Save Game");
+    }
+
+    public void ShowOptions()
+    {
+        Debug.Log("Show Options");
+    }
+
+
+    public void ExitGame()
+    {
+        Application.Quit();
     }
 }

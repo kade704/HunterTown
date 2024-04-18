@@ -12,15 +12,17 @@ public class Construction : MonoBehaviour
     [SerializeField] protected bool _buildable;
     [SerializeField] protected bool _destroyable;
     [SerializeField] protected ConstructionInteraction[] _interactions;
+    
     protected UnityEvent<string> _onInteracted = new();
-
     protected UnityEvent _onClicked = new();
+    protected ConstructionGridMap _constructionGridMap;
     protected SpriteRenderer _spriteRenderer;
     protected Vector2Int _cellPos;
     protected int _defaultOrder;
 
     public string Id => _id;
     public Vector2Int CellPos { get { return _cellPos; } set { _cellPos = value; } }
+    public ConstructionGridMap ConstructionGridMap { get { return _constructionGridMap; } set { _constructionGridMap = value; } }
     public UnityEvent<string> OnInteracted => _onInteracted;
     public UnityEvent OnClicked => _onClicked;
     public int Cost => _cost;
@@ -49,8 +51,8 @@ public class Construction : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (ConstructionManager.Instance.GetConstructionAt(CellPos) == this)
-            ConstructionManager.Instance.DestroyConstruction(CellPos);
+        if (_constructionGridMap.GetConstructionAt(CellPos) == this)
+            _constructionGridMap.DestroyConstruction(CellPos);
     }
 
     public void SetOutline(bool outline)

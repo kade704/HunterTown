@@ -19,7 +19,7 @@ public class UIConstructionInfo : UIPanel
         _interactionButtonsParent = transform.Find("InteractionButtons");
         _interactionButtonRef = transform.Find("InteractionButtonRef").GetComponent<UIInteractionButton>();
 
-        ConstructionManager.Instance.OnConstructionClicked.AddListener(OnConstructionClicked);
+        //ConstructionGridMap.Instance.OnConstructionClicked.AddListener(OnConstructionClicked);
     }
 
     private void OnConstructionClicked(Construction construction)

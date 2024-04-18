@@ -179,7 +179,7 @@ public class Portal : Construction
         if (Random.value <= success)
         {
             UILogger.Instance.Log(UILogger.LogType.Info, $"파견이 성공적으로 완료되었습니다.");
-            ConstructionManager.Instance.DestroyConstruction(this);
+            _constructionGridMap.DestroyConstruction(this);
             var earnedMoney = Power * 10f;
             if (ContainAbility("crystal_portal"))
             {

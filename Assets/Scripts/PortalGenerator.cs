@@ -6,10 +6,12 @@ public class PortalGenerator : MonoBehaviour
 {
     private Ability[] _portalAbilities;
     private int _nextSpawnHour = 5;
+    private ConstructionGridMap _constructionGridMap;
 
     private void Awake()
     {
         _portalAbilities = Resources.LoadAll<Ability>("Abilities");
+        _constructionGridMap = FindObjectOfType<ConstructionGridMap>();
     }
 
     private void Start()
@@ -33,10 +35,10 @@ public class PortalGenerator : MonoBehaviour
         do
         {
             cellPos = new Vector2Int(Random.Range(-10, 10), Random.Range(-10, 10));
-        } while (ConstructionManager.Instance.GetConstructionAt(cellPos) != null);
+        } while (_constructionGridMap.GetConstructionAt(cellPos) != null);
 
 
-        var newPortal = ConstructionManager.Instance.BuildConstruction(portal, cellPos) as Portal;
+        var newPortal = _constructionGridMap.BuildConstruction(portal, cellPos) as Portal;
 
         var day = Timer.Instance.Day.total;
         var month = Timer.Instance.Month.total;

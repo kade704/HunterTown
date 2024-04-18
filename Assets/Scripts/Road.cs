@@ -46,14 +46,22 @@ public class Road : Construction
     protected override void Start()
     {
         UpdateSprite();
+
+        _constructionGridMap.OnConstructionBuilded.AddListener((construction) =>
+        {
+            if (construction is Road)
+            {
+                UpdateSprite();
+            }
+        });
     }
 
     public void UpdateSprite()
     {
-        var east = ConstructionManager.Instance.IsRoadExistAt(new Vector2Int(_cellPos.x + 1, _cellPos.y));
-        var west = ConstructionManager.Instance.IsRoadExistAt(new Vector2Int(_cellPos.x - 1, _cellPos.y));
-        var north = ConstructionManager.Instance.IsRoadExistAt(new Vector2Int(_cellPos.x, _cellPos.y + 1));
-        var south = ConstructionManager.Instance.IsRoadExistAt(new Vector2Int(_cellPos.x, _cellPos.y - 1));
+        var east = _constructionGridMap.IsRoadExistAt(new Vector2Int(_cellPos.x + 1, _cellPos.y));
+        var west = _constructionGridMap.IsRoadExistAt(new Vector2Int(_cellPos.x - 1, _cellPos.y));
+        var north = _constructionGridMap.IsRoadExistAt(new Vector2Int(_cellPos.x, _cellPos.y + 1));
+        var south = _constructionGridMap.IsRoadExistAt(new Vector2Int(_cellPos.x, _cellPos.y - 1));
 
         if (south && west && north && east)
         {

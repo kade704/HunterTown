@@ -101,16 +101,16 @@ MonoBehaviour:
   _id: house2
   _cost: 123
   _displayName: "\uC8FC\uD0DD2"
-  _icon: {fileID: 1430292771, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
+  _icon: {fileID: -1750879985, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
   _size: {x: 1, y: 1}
   _buildable: 1
   _destroyable: 1
   _interactions: []
   _spriteDirection:
-    _east: {fileID: 0}
-    _south: {fileID: 0}
-    _west: {fileID: 0}
-    _north: {fileID: 0}
+    _east: {fileID: -1750879985, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
+    _south: {fileID: -1750879985, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
+    _west: {fileID: -1750879985, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
+    _north: {fileID: -1750879985, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
   _direction: 0
 --- !u!60 &4436391697399867256
 PolygonCollider2D:

@@ -103,7 +103,7 @@ MonoBehaviour:
   _displayName: "\uBCF8\uBD80"
   _icon: {fileID: 1828060907, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
   _size: {x: 2, y: 2}
-  _buildable: 1
+  _buildable: 0
   _destroyable: 0
   _interactions: []
   _spriteDirection:

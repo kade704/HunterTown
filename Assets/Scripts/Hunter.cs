@@ -10,6 +10,7 @@ public class Hunter : MonoBehaviour
     [SerializeField] private float _defaultHp;
     [SerializeField] private float _defaultDamage;
     private bool _isDispatched = false;
+    private ConstructionGridMap _constructionGridMap;
     private SpriteRenderer _clothSprite;
     private SpriteRenderer _hairSprite;
     private SpriteRenderer _leftSleeveSprite;
@@ -60,6 +61,7 @@ public class Hunter : MonoBehaviour
     {
         _animator = GetComponent<Animator>();
         _sortingGroup = GetComponent<SortingGroup>();
+        _constructionGridMap = FindObjectOfType<ConstructionGridMap>();
 
         _spriteRoot = transform.Find("Root");
         _clothSprite = transform.Find("Root/BodySet/P_Body/Body/P_ClothBody/ClothBody").GetComponent<SpriteRenderer>();
@@ -70,7 +72,7 @@ public class Hunter : MonoBehaviour
 
     private void Start()
     {
-        var _roads = ConstructionManager.Instance.Constructions.FilterCast<Road>().ToArray();
+        var _roads = _constructionGridMap.Constructions.FilterCast<Road>().ToArray();
 
         Road start = null;
         if (_roads.Length > 0)
@@ -93,7 +95,7 @@ public class Hunter : MonoBehaviour
     {
         yield return new WaitForSeconds(Random.Range(3, 10));
 
-        var _roads = ConstructionManager.Instance.Constructions.FilterCast<Road>().ToArray();
+        var _roads = _constructionGridMap.Constructions.FilterCast<Road>().ToArray();
         Road target = null;
         if (_roads.Length > 0)
         {

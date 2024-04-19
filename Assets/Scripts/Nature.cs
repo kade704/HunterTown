@@ -1,13 +1,17 @@
 using UnityEngine;
 
-public class Nature : Construction
+public class Nature : MonoBehaviour
 {
     [SerializeField] private Sprite[] _randomSprites;
+    private SpriteRenderer _spriteRenderer;
 
-
-    protected override void Start()
+    private void Awake()
     {
-        base.Start();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+    }
+
+    private void Start()
+    {
         var idx = Random.Range(0, _randomSprites.Length - 1);
         _spriteRenderer.sprite = _randomSprites[idx];
     }

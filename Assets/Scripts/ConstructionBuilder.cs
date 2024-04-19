@@ -5,8 +5,9 @@ public class ConstructionBuilder : MonoBehaviour
 {
     private Construction _constructionToBuild;
     private ConstructionGridMap _constructionGridMap;
-    private Building.Direction _buildDirection;
+    private Rotatable.Direction _buildDirection;
     private GridCursor _gridCursor;
+    private bool _isDestructionMode = false;
     private UnityEvent _onEnterBuildMode = new UnityEvent();
     private UnityEvent _onExitBuildMode = new UnityEvent();
 
@@ -30,6 +31,19 @@ public class ConstructionBuilder : MonoBehaviour
         }
     }
 
+    public void SetDestructionMode(bool value)
+    {
+        _isDestructionMode = value;
+        if (_isDestructionMode)
+        {
+            _onEnterBuildMode.Invoke();
+        }
+        else
+        {
+            _onExitBuildMode.Invoke();
+        }
+    }
+
     private void Awake()
     {
         _gridCursor = FindObjectOfType<GridCursor>();
@@ -40,22 +54,22 @@ public class ConstructionBuilder : MonoBehaviour
     {
         if (_constructionToBuild)
         {
-            var buildable = CheckBuildable(_gridCursor.CellPos, _buildDirection);
+            var buildable = CheckBuildable();
 
             var cursorSprite = _constructionToBuild.Icon;
-            if (_constructionToBuild is Building)
+            if (_constructionToBuild.GetComponent<Rotatable>() != null)
             {
-                cursorSprite = (_constructionToBuild as Building).GetSpriteFromDirection(_buildDirection);
+                cursorSprite = _constructionToBuild.GetComponent<Rotatable>().GetSpriteFromDirection(_buildDirection);
             }
             _gridCursor.Sprite = cursorSprite;
-            _gridCursor.Color = !buildable ? Color.red : Color.white;
+            _gridCursor.Color = !buildable ? new Color(1.0f, 0.0f, 0.0f, 0.8f) : new Color(0.0f, 1.0f, 0.5f, 0.8f);
 
             if (Input.GetMouseButtonDown(0) && !UIManager.IsUIObjectOverPointer() && buildable)
             {
                 var newConstruction = _constructionGridMap.BuildConstruction(_constructionToBuild, _gridCursor.CellPos);
-                if (newConstruction is Building)
+                if (newConstruction.GetComponent<Rotatable>() != null)
                 {
-                    (newConstruction as Building).Direction_ = _buildDirection;
+                    newConstruction.GetComponent<Rotatable>().Direction_ = _buildDirection;
                 }
 
                 GameManager.Instance.Money -= _constructionToBuild.Cost;
@@ -64,70 +78,68 @@ public class ConstructionBuilder : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Escape) || Input.GetMouseButtonDown(1))
             {
                 _gridCursor.Sprite = null;
+                _gridCursor.Color = Color.white;
                 ConstructionToBuild = null;
             }
 
             if (Input.GetKeyDown(KeyCode.R))
             {
                 _buildDirection += 1;
-                if (_buildDirection >= (Building.Direction)4) _buildDirection = 0;
+                if (_buildDirection >= (Rotatable.Direction)4) _buildDirection = 0;
             }
         }
-        else
+
+        if (_isDestructionMode)
         {
-            // if (Input.GetMouseButtonDown(0))
-            // {
-            //     if (UIManager.IsUIObjectOverPointer()) return;
-
-            //     _constructionSelected = GetConstructionOverPointer();
-            //     OnConstructionClicked.Invoke(_constructionSelected);
-
-            //     if (_constructionSelected)
-            //     {
-            //         _constructionSelected.OnClicked.Invoke();
-            //     }
-            // }
+            if (Input.GetMouseButtonDown(0) && !UIManager.IsUIObjectOverPointer())
+            {
+                var construction = _constructionGridMap.GetConstructionAt(_gridCursor.CellPos);
+                if (construction)
+                {
+                    GameManager.Instance.Money += construction.Cost / 2;
+                    Destroy(construction.gameObject);
+                }
+            }
         }
     }
 
-    private bool CheckBuildable(Vector2Int cellpos, Building.Direction direction)
+    private bool CheckBuildable()
     {
-        var result = true;
-        if (_constructionGridMap.IsConstructionExistAt(cellpos))
+        if (_constructionGridMap.IsConstructionExistAt(_gridCursor.CellPos))
         {
-            result = false;
+            return false;
         }
-        if (_constructionToBuild is Building)
+        if (_constructionToBuild.GetComponent<Rotatable>() != null)
         {
-            if (direction == Building.Direction.SOUTH)
+            if (_buildDirection == Rotatable.Direction.SOUTH)
             {
-                if (!_constructionGridMap.IsRoadExistAt(new Vector2Int(cellpos.x - 1, cellpos.y)))
+                if (!_constructionGridMap.GetConstructionAt(new Vector2Int(_gridCursor.CellPos.x - 1, _gridCursor.CellPos.y))?.GetComponent<Road>())
                 {
-                    result = false;
+                    return false;
                 }
             }
-            else if (direction == Building.Direction.NORTH)
+            else if (_buildDirection == Rotatable.Direction.NORTH)
             {
-                if (!_constructionGridMap.IsRoadExistAt(new Vector2Int(cellpos.x + 1, cellpos.y)))
+                if (!_constructionGridMap.GetConstructionAt(new Vector2Int(_gridCursor.CellPos.x + 1, _gridCursor.CellPos.y))?.GetComponent<Road>())
                 {
-                    result = false;
+                    return false;
                 }
             }
-            else if (direction == Building.Direction.EAST)
+            else if (_buildDirection == Rotatable.Direction.EAST)
             {
-                if (!_constructionGridMap.IsRoadExistAt(new Vector2Int(cellpos.x, cellpos.y - 1)))
+                if (!_constructionGridMap.GetConstructionAt(new Vector2Int(_gridCursor.CellPos.x, _gridCursor.CellPos.y - 1))?.GetComponent<Road>())
                 {
-                    result = false;
+                    return false;
                 }
             }
-            else if (direction == Building.Direction.WEST)
+            else if (_buildDirection == Rotatable.Direction.WEST)
             {
-                if (!_constructionGridMap.IsRoadExistAt(new Vector2Int(cellpos.x, cellpos.y + 1)))
+                if (!_constructionGridMap.GetConstructionAt(new Vector2Int(_gridCursor.CellPos.x, _gridCursor.CellPos.y + 1))?.GetComponent<Road>())
                 {
-                    result = false;
+                    return false;
                 }
             }
         }
-        return result;
+        return true;
     }
 }

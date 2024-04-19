@@ -1,17 +1,11 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class UIManager : Singleton<UIManager>
 {
-    private UnityEvent<string, Construction> _onConstructionInteracted = new();
-
-
-    public UnityEvent<string, Construction> OnConstructionInteracted => _onConstructionInteracted;
 
     protected override void Awake()
     {

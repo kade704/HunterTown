@@ -1,10 +1,11 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIMessageBox : UIPanel
+[RequireComponent(typeof(UIFade))]
+public class UIMessageBox : MonoBehaviour
 {
+    private UIFade _fade;
     private Image _bg;
     private Image _icon;
     private Text _msg;
@@ -16,10 +17,9 @@ public class UIMessageBox : UIPanel
         set => _bg.color = value;
     }
 
-    protected override void Awake()
+    private void Awake()
     {
-        base.Awake();
-
+        _fade = GetComponent<UIFade>();
         _bg = GetComponent<Image>();
         _icon = transform.Find("Icon").GetComponent<Image>();
         _msg = transform.Find("Msg").GetComponent<Text>();
@@ -33,7 +33,7 @@ public class UIMessageBox : UIPanel
     private IEnumerator LifeTimeRoutine()
     {
         yield return new WaitForSeconds(5f);
-        HidePanel();
+        _fade.FadeOut();
         yield return new WaitForSeconds(1f);
         Destroy(gameObject);
     }

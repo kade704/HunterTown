@@ -1,15 +1,17 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIAbilityInfo : UIPanel
+[RequireComponent(typeof(UIFade))]
+public class UIAbilityInfo : MonoBehaviour
 {
+    private UIFade _fade;
     private Text _name;
     private Text _effect;
     private Text _description;
 
-    protected override void Awake()
+    private void Awake()
     {
-        base.Awake();
+        _fade = GetComponent<UIFade>();
 
         _name = transform.Find("Name").GetComponent<Text>();
         _effect = transform.Find("Effect").GetComponent<Text>();
@@ -27,11 +29,11 @@ public class UIAbilityInfo : UIPanel
                 _effect.color = value.Advantage ? Color.blue : Color.red;
                 _description.text = value.Description;
 
-                ShowPanel();
+                _fade.FadeIn();
             }
             else
             {
-                HidePanel();
+                _fade.FadeOut();
             }
         }
     }

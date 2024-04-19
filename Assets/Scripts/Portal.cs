@@ -1,9 +1,9 @@
 using System.Collections;
-using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.AI;
 
-public class Portal : Construction
+[RequireComponent(typeof(Construction))]
+[RequireComponent(typeof(SpriteRenderer))]
+public class Portal : MonoBehaviour
 {
     [SerializeField] private Sprite[] _spriteFrames;
 
@@ -18,6 +18,8 @@ public class Portal : Construction
     private bool _isDispatching = false;
     private bool _isExamining = false;
     private bool _isWave = false;
+    private Construction _construction;
+    private SpriteRenderer _spriteRenderer;
     private SpriteRenderer _progressSprite;
     private ParticleSystem _fireParticle;
 
@@ -83,7 +85,7 @@ public class Portal : Construction
     public bool DifficultyVisibility => _difficultyVisibility;
 
     public bool[] AbilityVisibilities => _abilityVisibilities;
-
+    public Construction Construction => _construction;
 
     public char Rank
     {
@@ -106,24 +108,24 @@ public class Portal : Construction
         }
     }
 
-    protected override void Awake()
+    private void Awake()
     {
-        base.Awake();
+        _construction = GetComponent<Construction>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
         _progressSprite = transform.Find("Progress").GetComponent<SpriteRenderer>();
         _fireParticle = transform.Find("Fire").GetComponent<ParticleSystem>();
 
-        _onInteracted.AddListener((id) =>
-         {
-             if (id == "examine")
-             {
-                 Examine();
-             }
-         });
+        // _onInteracted.AddListener((id) =>
+        //  {
+        //      if (id == "examine")
+        //      {
+        //          Examine();
+        //      }
+        //  });
     }
 
-    protected override void Start()
+    private void Start()
     {
-        base.Start();
         StartCoroutine(AnimateRoutine());
 
         var waveDay = Timer.Instance.Day.total + WaveTime;
@@ -164,13 +166,14 @@ public class Portal : Construction
         }
         _progressSprite.enabled = false;
 
+        var HunterSpawner = FindObjectOfType<HunterSpawner>();
         foreach (var hunter in hunters)
         {
             var deathProbability = CalcHunterDeathProbability(hunter);
             if (Random.value < deathProbability)
             {
                 UILogger.Instance.Log(UILogger.LogType.Error, $"{hunter.DisplayName} 이(가) 파견중 사망했습니다.");
-                HunterManager.Instance.RemoveHunter(hunter);
+                HunterSpawner.RemoveHunter(hunter);
             }
             hunter.IsDispatched = false;
         }
@@ -179,7 +182,7 @@ public class Portal : Construction
         if (Random.value <= success)
         {
             UILogger.Instance.Log(UILogger.LogType.Info, $"파견이 성공적으로 완료되었습니다.");
-            _constructionGridMap.DestroyConstruction(this);
+            _construction.ConstructionGridMap.DestroyConstruction(_construction);
             var earnedMoney = Power * 10f;
             if (ContainAbility("crystal_portal"))
             {

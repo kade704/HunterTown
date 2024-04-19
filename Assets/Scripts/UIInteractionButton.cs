@@ -9,7 +9,7 @@ public class UIInteractionButton : MonoBehaviour
 
     public Button.ButtonClickedEvent OnClick => _button.onClick;
 
-    public ConstructionInteraction Interaction
+    public Interaction Interaction
     {
         set
         {

@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class UIDispatchSlot : MonoBehaviour
 {
-    private UIDispatch _uiDispatch;
+    private UIDispatchPanel _dispatchPanel;
     private Text _name;
     private Image _sprite;
     private Hunter _hunter;
@@ -14,7 +14,7 @@ public class UIDispatchSlot : MonoBehaviour
 
     private void Awake()
     {
-        _uiDispatch = GetComponentInParent<UIDispatch>();
+        _dispatchPanel = GetComponentInParent<UIDispatchPanel>();
         _name = transform.Find("Name").GetComponent<Text>();
         _sprite = transform.Find("Sprite").GetComponent<Image>();
         _deathProbability = transform.Find("DeathProbability").GetComponent<Text>();
@@ -36,9 +36,9 @@ public class UIDispatchSlot : MonoBehaviour
                 _sprite.sprite = value.Thumbnail;
                 _sprite.enabled = true;
 
-                if (_uiDispatch.TargetPortal.DangerVisibility)
+                if (_dispatchPanel.TargetPortal.DangerVisibility)
                 {
-                    var deathProbabilityPercent = (int)(_uiDispatch.TargetPortal.CalcHunterDeathProbability(value) * 100);
+                    var deathProbabilityPercent = (int)(_dispatchPanel.TargetPortal.CalcHunterDeathProbability(value) * 100);
                     _deathProbability.text = $"사망 확률: {deathProbabilityPercent}%";
                 }
                 else
@@ -54,7 +54,7 @@ public class UIDispatchSlot : MonoBehaviour
             }
 
             _hunter = value;
-            _uiDispatch.RefreshHunterSlot();
+            _dispatchPanel.RefreshHunterSlot();
         }
         get
         {

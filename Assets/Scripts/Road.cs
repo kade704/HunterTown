@@ -1,7 +1,9 @@
 using System;
+using System.Linq;
 using UnityEngine;
 
-public class Road : Construction
+[RequireComponent(typeof(Construction))]
+public class Road : MonoBehaviour
 {
     [Serializable]
     public struct SpriteRule
@@ -42,26 +44,45 @@ public class Road : Construction
     }
 
     [SerializeField] private SpriteRule _spriteRule;
+    private Construction _construction;
+    private SpriteRenderer _spriteRenderer;
+    private Road[] _neighbors = new Road[4];
+    public Construction Construction => _construction;
+    public Road[] Neighbors => _neighbors;
 
-    protected override void Start()
+    private void Awake()
     {
+        _construction = GetComponent<Construction>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+    }
+
+    private void Start()
+    {
+        UpdateNeighbors();
         UpdateSprite();
 
-        _constructionGridMap.OnConstructionBuilded.AddListener((construction) =>
+        _construction.ConstructionGridMap.OnConstructionBuilded.AddListener((construction) =>
         {
-            if (construction is Road)
+            var road = construction.GetComponent<Road>();
+            if (road != null)
             {
-                UpdateSprite();
+                var xDiff = Mathf.Abs(_construction.CellPos.x - road.Construction.CellPos.x);
+                var yDiff = Mathf.Abs(_construction.CellPos.y - road.Construction.CellPos.y);
+                if (xDiff <= 1 && yDiff <= 1)
+                {
+                    UpdateNeighbors();
+                    UpdateSprite();
+                }
             }
         });
     }
 
     public void UpdateSprite()
     {
-        var east = _constructionGridMap.IsRoadExistAt(new Vector2Int(_cellPos.x + 1, _cellPos.y));
-        var west = _constructionGridMap.IsRoadExistAt(new Vector2Int(_cellPos.x - 1, _cellPos.y));
-        var north = _constructionGridMap.IsRoadExistAt(new Vector2Int(_cellPos.x, _cellPos.y + 1));
-        var south = _constructionGridMap.IsRoadExistAt(new Vector2Int(_cellPos.x, _cellPos.y - 1));
+        var east = _neighbors[1];
+        var west = _neighbors[0];
+        var north = _neighbors[3];
+        var south = _neighbors[2];
 
         if (south && west && north && east)
         {
@@ -126,6 +147,18 @@ public class Road : Construction
         else
         {
             _spriteRenderer.sprite = _spriteRule.None;
+        }
+    }
+
+    public void UpdateNeighbors()
+    {
+        var x = new[] { -1, 1, 0, 0 };
+        var y = new[] { 0, 0, -1, 1 };
+
+        for (var i = 0; i < 4; i++)
+        {
+            var cellPos = new Vector2Int(_construction.CellPos.x + x[i], _construction.CellPos.y + y[i]);
+            _neighbors[i] = _construction.ConstructionGridMap.GetConstructionAt(cellPos)?.GetComponent<Road>();
         }
     }
 }

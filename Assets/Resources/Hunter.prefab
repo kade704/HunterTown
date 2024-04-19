@@ -2377,6 +2377,8 @@ GameObject:
   - component: {fileID: 8053417791932188995}
   - component: {fileID: 6220940011814422774}
   - component: {fileID: 7018670336668674498}
+  - component: {fileID: 1720262372711644873}
+  - component: {fileID: 8826893060352688572}
   m_Layer: 6
   m_Name: Hunter
   m_TagString: Untagged
@@ -2449,6 +2451,57 @@ MonoBehaviour:
   _displayName: 
   _defaultHp: 0
   _defaultDamage: 0
+--- !u!114 &1720262372711644873
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6450463278522870409}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97ef4819a08424d4e866a2ae3dc5977e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interactions:
+  - _id: follow
+    _displayName: "\uB530\uB77C\uAC00\uAE30"
+    _icon: {fileID: 0}
+--- !u!70 &8826893060352688572
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6450463278522870409}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0.2}
+  m_Size: {x: 0.3, y: 0.5}
+  m_Direction: 0
 --- !u!1 &6726580067629398306
 GameObject:
   m_ObjectHideFlags: 0

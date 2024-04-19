@@ -2,23 +2,24 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [RequireComponent(typeof(SpriteRenderer))]
+[RequireComponent(typeof(Interactable))]
 public class Construction : MonoBehaviour
 {
-    [SerializeField] protected string _id;
-    [SerializeField] protected int _cost;
-    [SerializeField] protected string _displayName;
-    [SerializeField] protected Sprite _icon;
-    [SerializeField] protected Vector2Int _size;
-    [SerializeField] protected bool _buildable;
-    [SerializeField] protected bool _destroyable;
-    [SerializeField] protected ConstructionInteraction[] _interactions;
-    
-    protected UnityEvent<string> _onInteracted = new();
-    protected UnityEvent _onClicked = new();
-    protected ConstructionGridMap _constructionGridMap;
-    protected SpriteRenderer _spriteRenderer;
-    protected Vector2Int _cellPos;
-    protected int _defaultOrder;
+    [SerializeField] private string _id;
+    [SerializeField] private int _cost;
+    [SerializeField] private string _displayName;
+    [SerializeField] private Sprite _icon;
+    [SerializeField] private Vector2Int _size;
+    [SerializeField] private bool _buildable;
+    [SerializeField] private bool _destroyable;
+
+    private UnityEvent<string> _onInteracted = new();
+    private UnityEvent _onClicked = new();
+    private ConstructionGridMap _constructionGridMap;
+    private SpriteRenderer _spriteRenderer;
+    private Interactable _interactable;
+    private Vector2Int _cellPos;
+    private int _defaultOrder;
 
     public string Id => _id;
     public Vector2Int CellPos { get { return _cellPos; } set { _cellPos = value; } }
@@ -32,19 +33,20 @@ public class Construction : MonoBehaviour
 
     public bool Buildable => _buildable;
     public bool Destroyable => _destroyable;
-    public ConstructionInteraction[] Interactions => _interactions;
 
-    protected virtual void Awake()
+    private void Awake()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
+        _interactable = GetComponent<Interactable>();
         _defaultOrder = _spriteRenderer.sortingOrder;
     }
 
-    protected virtual void Start()
+    private void Start()
     {
+        _interactable.DisplayName = _displayName;
     }
 
-    protected virtual void Update()
+    private void Update()
     {
         _spriteRenderer.sortingOrder = _defaultOrder - Mathf.FloorToInt(transform.position.y * 10);
     }

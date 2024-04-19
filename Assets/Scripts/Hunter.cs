@@ -1,16 +1,18 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Sirenix.Utilities;
 using UnityEngine;
 using UnityEngine.Rendering;
 
+[RequireComponent(typeof(Interactable))]
 public class Hunter : MonoBehaviour
 {
     [SerializeField] private string _displayName;
     [SerializeField] private float _defaultHp;
     [SerializeField] private float _defaultDamage;
     private bool _isDispatched = false;
-    private ConstructionGridMap _constructionGridMap;
+    private Interactable _interactable;
     private SpriteRenderer _clothSprite;
     private SpriteRenderer _hairSprite;
     private SpriteRenderer _leftSleeveSprite;
@@ -27,11 +29,11 @@ public class Hunter : MonoBehaviour
 
     public bool IsDispatched { get { return _isDispatched; } set { _isDispatched = value; } }
     public Sprite Thumbnail { get { return _thumbnail; } set { _thumbnail = value; } }
-    public Sprite ClothSprite { set { _clothSprite.sprite = value; } }
-    public Sprite HairSprite { set { _hairSprite.sprite = value; } }
-    public Sprite LeftSleeveSprite { set { _leftSleeveSprite.sprite = value; } }
-    public Sprite RightSleeveSprite { set { _rightSleeveSprite.sprite = value; } }
-    public Color HairColor { set { _hairSprite.color = value; } }
+    public Sprite ClothSprite { get { return _clothSprite.sprite; } set { _clothSprite.sprite = value; } }
+    public Sprite HairSprite { get { return _hairSprite.sprite; } set { _hairSprite.sprite = value; } }
+    public Sprite LeftSleeveSprite { get { return _leftSleeveSprite.sprite; } set { _leftSleeveSprite.sprite = value; } }
+    public Sprite RightSleeveSprite { get { return _rightSleeveSprite.sprite; } set { _rightSleeveSprite.sprite = value; } }
+    public Color HairColor { get { return _hairSprite.color; } set { _hairSprite.color = value; } }
 
     public bool Dispatch
     {
@@ -60,8 +62,8 @@ public class Hunter : MonoBehaviour
     private void Awake()
     {
         _animator = GetComponent<Animator>();
+        _interactable = GetComponent<Interactable>();
         _sortingGroup = GetComponent<SortingGroup>();
-        _constructionGridMap = FindObjectOfType<ConstructionGridMap>();
 
         _spriteRoot = transform.Find("Root");
         _clothSprite = transform.Find("Root/BodySet/P_Body/Body/P_ClothBody/ClothBody").GetComponent<SpriteRenderer>();
@@ -72,7 +74,9 @@ public class Hunter : MonoBehaviour
 
     private void Start()
     {
-        var _roads = _constructionGridMap.Constructions.FilterCast<Road>().ToArray();
+        _interactable.DisplayName = _displayName;
+
+        var _roads = FindObjectsOfType<Road>();
 
         Road start = null;
         if (_roads.Length > 0)
@@ -95,13 +99,13 @@ public class Hunter : MonoBehaviour
     {
         yield return new WaitForSeconds(Random.Range(3, 10));
 
-        var _roads = _constructionGridMap.Constructions.FilterCast<Road>().ToArray();
+        var _roads = FindObjectsOfType<Road>();
         Road target = null;
         if (_roads.Length > 0)
         {
             target = _roads[Random.Range(0, _roads.Length)];
 
-            var path = PathFinder.SearchPath(start, target, _roads);
+            var path = SearchPath(start, target);
 
             int index = 0;
 
@@ -111,7 +115,7 @@ public class Hunter : MonoBehaviour
                 while (Vector3.Distance(transform.position, path[index].transform.position) > 0.01)
                 {
                     var speed = Timer.Instance.TimeScale;
-                    var velocity = (path[index].transform.position - transform.position).normalized * Time.deltaTime * speed;
+                    var velocity = speed * Time.deltaTime * (path[index].transform.position - transform.position).normalized;
                     _spriteRoot.localScale = new Vector3(velocity.x < 0 ? 0.5f : -0.5f, 0.5f, 1);
                     transform.position += velocity;
                     _animator.SetFloat("RunState", 0.5f);
@@ -124,6 +128,54 @@ public class Hunter : MonoBehaviour
         _animator.SetFloat("RunState", 0);
 
         StartCoroutine(MoveRoutine(target));
+    }
+
+    public static Road[] SearchPath(Road start, Road end)
+    {
+        static int heuristic(Vector2Int a, Vector2Int b)
+        {
+            return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y);
+        }
+
+        var costs = new Dictionary<Road, int>();
+        var queue = new PriorityQueue<Road>();
+        var visited = new HashSet<Road>();
+        var parent = new Dictionary<Road, Road>();
+
+        queue.Enqueue(start, heuristic(start.Construction.CellPos, end.Construction.CellPos));
+        costs[start] = 0;
+
+        while (queue.Count > 0)
+        {
+            var current = queue.Dequeue();
+            var cost = costs.ContainsKey(current) ? costs[current] : int.MaxValue;
+            visited.Add(current);
+
+            if (current == end)
+            {
+                var path = new List<Road>();
+                while (current != start)
+                {
+                    path.Add(current);
+                    current = parent[current];
+                }
+                path.Add(start);
+                path.Reverse();
+                return path.ToArray();
+            }
+
+            foreach (var neighbor in current.Neighbors.FilterCast<Road>())
+            {
+                if (visited.Contains(neighbor)) continue;
+
+                var newCost = cost + 1 + heuristic(neighbor.Construction.CellPos, end.Construction.CellPos);
+                queue.Enqueue(neighbor, newCost);
+                costs[neighbor] = newCost;
+                parent[neighbor] = current;
+            }
+        }
+
+        return null;
     }
 
     public IEnumerator CaptureThumbnailRoutine(int resolution = 512)

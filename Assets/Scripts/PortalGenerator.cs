@@ -29,7 +29,7 @@ public class PortalGenerator : MonoBehaviour
 
     private void SpawnRandomPortal()
     {
-        var portal = Resources.Load<Portal>("Constructions/Portal");
+        var portalPrefab = Resources.Load<Construction>("Constructions/Portal");
 
         Vector2Int cellPos;
         do
@@ -37,8 +37,7 @@ public class PortalGenerator : MonoBehaviour
             cellPos = new Vector2Int(Random.Range(-10, 10), Random.Range(-10, 10));
         } while (_constructionGridMap.GetConstructionAt(cellPos) != null);
 
-
-        var newPortal = _constructionGridMap.BuildConstruction(portal, cellPos) as Portal;
+        var newPortal = _constructionGridMap.BuildConstruction(portalPrefab, cellPos).GetComponent<Portal>();
 
         var day = Timer.Instance.Day.total;
         var month = Timer.Instance.Month.total;

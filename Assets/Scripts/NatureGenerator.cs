@@ -23,7 +23,7 @@ public class NatureGenerator : MonoBehaviour
                 continue;
 
             var naturePrefab = naturePrefabs[idx];
-            _constructionGridMap.BuildConstruction(naturePrefab, cellPos);
+            _constructionGridMap.BuildConstruction(naturePrefab.GetComponent<Construction>(), cellPos);
         }
     }
 

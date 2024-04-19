@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 2660333454604414352}
   - component: {fileID: 3198675734480499489}
   - component: {fileID: 7087091939544490503}
+  - component: {fileID: 8793037254633386506}
+  - component: {fileID: 4496104136203293403}
   m_Layer: 0
   m_Name: Rock
   m_TagString: Untagged
@@ -98,14 +100,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62dfcdaa51e00d74da3361c22edbd40e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _id: rock
-  _cost: 0
-  _displayName: "\uB3CC"
-  _icon: {fileID: 0}
-  _size: {x: 0, y: 0}
-  _buildable: 0
-  _destroyable: 1
-  _interactions: []
   _randomSprites:
   - {fileID: 1551026703, guid: 6dfc58489ce1232428a875becd10b09d, type: 3}
   - {fileID: -1357548120, guid: 6dfc58489ce1232428a875becd10b09d, type: 3}
@@ -163,3 +157,36 @@ PolygonCollider2D:
       - {x: 0.078125, y: 0.24312496}
       - {x: 0.046875, y: 0.32124996}
   m_UseDelaunayMesh: 0
+--- !u!114 &8793037254633386506
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3563334950588874875}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97ef4819a08424d4e866a2ae3dc5977e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _displayName: 
+  _interactions: []
+--- !u!114 &4496104136203293403
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3563334950588874875}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2a2a8b318f6c374486e542eee07495b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _id: rock
+  _cost: 0
+  _displayName: "\uB3CC"
+  _icon: {fileID: 0}
+  _size: {x: 1, y: 1}
+  _buildable: 0
+  _destroyable: 1

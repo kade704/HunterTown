@@ -1,15 +1,17 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIHunterInfo : UIPanel
+[RequireComponent(typeof(UIFade))]
+public class UIHunterInfo : MonoBehaviour
 {
+    private UIFade _fade;
     private Text _name;
     private Text _hp;
     private Text _damage;
 
-    protected override void Awake()
+    private void Awake()
     {
-        base.Awake();
+        _fade = GetComponent<UIFade>();
 
         _name = transform.Find("Name").GetComponent<Text>();
         _hp = transform.Find("HP").GetComponent<Text>();
@@ -26,11 +28,11 @@ public class UIHunterInfo : UIPanel
                 _hp.text = "생존력: " + value.DefaultHp;
                 _damage.text = "공격력: " + value.DefaultDamage;
 
-                ShowPanel();
+                _fade.FadeIn();
             }
             else
             {
-                HidePanel();
+                _fade.FadeOut();
             }
         }
     }

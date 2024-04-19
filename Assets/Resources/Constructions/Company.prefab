@@ -10,8 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 8421618749796088221}
   - component: {fileID: 3837164055075723868}
-  - component: {fileID: 3978110596730065000}
   - component: {fileID: 9069034565343753918}
+  - component: {fileID: 999620401962331837}
+  - component: {fileID: 3978110596730065000}
+  - component: {fileID: -3402884614236335201}
   m_Layer: 0
   m_Name: Company
   m_TagString: Untagged
@@ -86,32 +88,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &3978110596730065000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5935477144362420533}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a5e25823fcaa94141ad9f3937c6253b5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _id: company
-  _cost: 1
-  _displayName: "\uBCF8\uBD80"
-  _icon: {fileID: 1828060907, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
-  _size: {x: 2, y: 2}
-  _buildable: 0
-  _destroyable: 0
-  _interactions: []
-  _spriteDirection:
-    _east: {fileID: -1540560302, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
-    _south: {fileID: 0}
-    _west: {fileID: 791452545, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
-    _north: {fileID: -2056867373, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
-  _direction: 0
 --- !u!60 &9069034565343753918
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -184,3 +160,56 @@ PolygonCollider2D:
       - {x: 0.8125, y: 0.20781231}
       - {x: 0.828125, y: 0.3796873}
   m_UseDelaunayMesh: 0
+--- !u!114 &999620401962331837
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5935477144362420533}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2a2a8b318f6c374486e542eee07495b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _id: company
+  _cost: 0
+  _displayName: "\uBCF8\uBD80"
+  _icon: {fileID: 1430292771, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
+  _size: {x: 2, y: 2}
+  _buildable: 0
+  _destroyable: 0
+--- !u!114 &3978110596730065000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5935477144362420533}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5e25823fcaa94141ad9f3937c6253b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _spriteDirection:
+    _east: {fileID: 1430292771, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
+    _south: {fileID: 1430292771, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
+    _west: {fileID: 1430292771, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
+    _north: {fileID: 1430292771, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
+--- !u!114 &-3402884614236335201
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5935477144362420533}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97ef4819a08424d4e866a2ae3dc5977e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _displayName: "\uBCF8\uBD80"
+  _interactions:
+  - _id: employment
+    _displayName: "\uACE0\uC6A9"
+    _icon: {fileID: 0}

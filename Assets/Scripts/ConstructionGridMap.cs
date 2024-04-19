@@ -171,9 +171,20 @@ public class ConstructionGridMap : MonoBehaviour, IDeserializable, ISerializable
         return GetConstructionAt(cellPos) != null;
     }
 
-    public bool IsRoadExistAt(Vector2Int cellPos)
+    public JToken Serialize()
     {
-        return GetConstructionAt(cellPos) is Road;
+        var constructions = new JArray();
+        foreach (var construction in _constructions)
+        {
+            var obj = new JObject
+            {
+                ["id"] = construction.Id,
+                ["posX"] = construction.CellPos.x,
+                ["posY"] = construction.CellPos.y
+            };
+            constructions.Add(obj);
+        }
+        return constructions;
     }
 
     public void Deserialize(JToken token)
@@ -192,21 +203,5 @@ public class ConstructionGridMap : MonoBehaviour, IDeserializable, ISerializable
             }
             BuildConstruction(constructionPrefab, pos);
         }
-    }
-
-    public JToken Serialize()
-    {
-        var constructions = new JArray();
-        foreach (var construction in _constructions)
-        {
-            var obj = new JObject
-            {
-                ["id"] = construction.Id,
-                ["posX"] = construction.CellPos.x,
-                ["posY"] = construction.CellPos.y
-            };
-            constructions.Add(obj);
-        }
-        return constructions;
     }
 }

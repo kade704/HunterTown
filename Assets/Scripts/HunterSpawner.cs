@@ -8,38 +8,34 @@ public class HunterSpawner : MonoBehaviour, ISerializable, IDeserializable
     [SerializeField] private string[] _hunterNames;
     private List<Hunter> _hunters = new();
     private List<string> _hunterNamesLeft = new();
-    private Sprite[] _clothSprites;
-    private Sprite[] _leftSleeveSprites;
-    private Sprite[] _rightSleeveSprites;
     private Sprite[] _hairSprites;
+    private Sprite[] _clothSprites;
+    private Sprite[] _pantSprites;
 
     public Hunter[] Hunters => _hunters.ToArray();
 
     private void Awake()
     {
-        var clothGroup = Resources.LoadAll<Sprite>("SPUM/SPUM_Sprites/Items/2_Cloth");
-        _clothSprites = clothGroup.Where(x => x.name == "Body").ToArray();
-        _leftSleeveSprites = clothGroup.Where(x => x.name == "Left").ToArray();
-        _rightSleeveSprites = clothGroup.Where(x => x.name == "Right").ToArray();
-        _hairSprites = Resources.LoadAll<Sprite>("SPUM/SPUM_Sprites/Items/0_Hair");
+        _hairSprites = Resources.LoadAll<Sprite>("Hunters/Hairs");
+        _clothSprites = Resources.LoadAll<Sprite>("Hunters/Clothes");
+        _pantSprites = Resources.LoadAll<Sprite>("Hunters/Pants");
+
         _hunterNamesLeft.AddRange(_hunterNames);
     }
 
-    private void Start()
+    private void Update()
     {
-        AddRandomHunter();
-        AddRandomHunter();
-        AddRandomHunter();
-        AddRandomHunter();
-        AddRandomHunter();
-        AddRandomHunter();
+        if (Input.GetKeyDown(KeyCode.F4))
+        {
+            AddRandomHunter();
+        }
     }
 
     public void AddRandomHunter()
     {
         var hunterPrefab = Resources.Load<Hunter>("Hunter");
         var newHunter = Instantiate(hunterPrefab, transform);
-        var day = Timer.Instance.Day.total;
+        var day = GameManager.Instance.GetSystem<TimeSystem>().Day.Total;
         var stat = 13 + (day * day / 1500);
         var hp = Random.Range(0, stat + 1 - 6) + 3;
         var damage = stat - hp;
@@ -52,14 +48,20 @@ public class HunterSpawner : MonoBehaviour, ISerializable, IDeserializable
         newHunter.DefaultHp = hp;
         newHunter.DefaultDamage = damage;
 
-        newHunter.ClothSprite = _clothSprites[Random.Range(0, _clothSprites.Length)];
         newHunter.HairSprite = _hairSprites[Random.Range(0, _hairSprites.Length)];
-        newHunter.LeftSleeveSprite = _leftSleeveSprites[Random.Range(0, _leftSleeveSprites.Length)];
-        newHunter.RightSleeveSprite = _rightSleeveSprites[Random.Range(0, _rightSleeveSprites.Length)];
         newHunter.HairColor = Random.ColorHSV(0, 1, 0.4f, 0.6f, 0.5f, 1f);
 
+        var clothIdx = Random.Range(1, 12);
+        newHunter.BodySprite = _clothSprites.Where(s => s.name == $"Cloth{clothIdx}_Body").FirstOrDefault();
+        newHunter.LeftSleeveSprite = _clothSprites.Where(s => s.name == $"Cloth{clothIdx}_Left").FirstOrDefault();
+        newHunter.RightSleeveSprite = _clothSprites.Where(s => s.name == $"Cloth{clothIdx}_Right").FirstOrDefault();
+
+        var pantIdx = Random.Range(1, 4);
+        newHunter.LeftPantSprite = _pantSprites.Where(s => s.name == $"Pant{pantIdx}_Left").FirstOrDefault();
+        newHunter.RightPantSprite = _pantSprites.Where(s => s.name == $"Pant{pantIdx}_Right").FirstOrDefault();
+
         _hunters.Add(newHunter);
-        UILogger.Instance.Log(UILogger.LogType.Info, $"<b>{newHunter.DisplayName}</b> 이(가) 마을에 이주했습니다.");
+        GameManager.Instance.GetSystem<LoggerSystem>().LogInfo($"<b>{newHunter.DisplayName}</b> 이(가) 마을에 이주했습니다.");
     }
 
     public void RemoveHunter(Hunter hunter)
@@ -76,11 +78,15 @@ public class HunterSpawner : MonoBehaviour, ISerializable, IDeserializable
             var obj = new JObject
             {
                 ["name"] = hunter.DisplayName,
+                ["hp"] = hunter.DefaultHp,
+                ["damage"] = hunter.DefaultDamage,
                 ["hair"] = hunter.HairSprite.name,
-                ["cloth"] = hunter.ClothSprite.name,
+                ["cloth"] = hunter.BodySprite.name,
                 ["leftSleeve"] = hunter.LeftSleeveSprite.name,
                 ["rightSleeve"] = hunter.RightSleeveSprite.name,
-                ["hairColor"] = hunter.HairColor.ToString()
+                ["leftPant"] = hunter.LeftPantSprite.name,
+                ["rightPant"] = hunter.RightPantSprite.name,
+                ["hairColor"] = ColorUtility.ToHtmlStringRGB(hunter.HairColor),
             };
             hunters.Add(obj);
         }
@@ -99,14 +105,19 @@ public class HunterSpawner : MonoBehaviour, ISerializable, IDeserializable
 
         foreach (var obj in token)
         {
-            var name = obj["name"].Value<string>();
-            var hair = obj["hair"].Value<string>();
-            var cloth = obj["cloth"].Value<string>();
-            var leftSleeve = obj["leftSleeve"].Value<string>();
-            var rightSleeve = obj["rightSleeve"].Value<string>();
-            var hairColor = obj["hairColor"].Value<string>();
+            var hunterPrefab = Resources.Load<Hunter>("Hunter");
+            var newHunter = Instantiate(hunterPrefab, transform);
 
-            
+            newHunter.DisplayName = obj["name"].Value<string>();
+            newHunter.DefaultHp = obj["hp"].Value<float>();
+            newHunter.DefaultDamage = obj["damage"].Value<float>();
+            newHunter.BodySprite = _clothSprites.Where(s => s.name == obj["cloth"].Value<string>()).FirstOrDefault();
+            newHunter.LeftSleeveSprite = _clothSprites.Where(s => s.name == obj["leftSleeve"].Value<string>()).FirstOrDefault();
+            newHunter.RightSleeveSprite = _clothSprites.Where(s => s.name == obj["rightSleeve"].Value<string>()).FirstOrDefault();
+            newHunter.LeftPantSprite = _pantSprites.Where(s => s.name == obj["leftPant"].Value<string>()).FirstOrDefault();
+            newHunter.RightPantSprite = _pantSprites.Where(s => s.name == obj["rightPant"].Value<string>()).FirstOrDefault();
+            newHunter.HairSprite = _hairSprites.Where(s => s.name == obj["hair"].Value<string>()).FirstOrDefault();
+            newHunter.HairColor = ColorUtility.TryParseHtmlString(obj["hairColor"].Value<string>(), out var color) ? color : Color.white;
         }
     }
 }

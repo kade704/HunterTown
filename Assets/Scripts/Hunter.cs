@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Sirenix.Utilities;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -13,10 +14,12 @@ public class Hunter : MonoBehaviour
     [SerializeField] private float _defaultDamage;
     private bool _isDispatched = false;
     private Interactable _interactable;
-    private SpriteRenderer _clothSprite;
+    private SpriteRenderer _bodySprite;
     private SpriteRenderer _hairSprite;
     private SpriteRenderer _leftSleeveSprite;
     private SpriteRenderer _rightSleeveSprite;
+    private SpriteRenderer _leftPantSprite;
+    private SpriteRenderer _rightPantSprite;
     private SortingGroup _sortingGroup;
     private Transform _spriteRoot;
     private Animator _animator;
@@ -29,10 +32,12 @@ public class Hunter : MonoBehaviour
 
     public bool IsDispatched { get { return _isDispatched; } set { _isDispatched = value; } }
     public Sprite Thumbnail { get { return _thumbnail; } set { _thumbnail = value; } }
-    public Sprite ClothSprite { get { return _clothSprite.sprite; } set { _clothSprite.sprite = value; } }
+    public Sprite BodySprite { get { return _bodySprite.sprite; } set { _bodySprite.sprite = value; } }
     public Sprite HairSprite { get { return _hairSprite.sprite; } set { _hairSprite.sprite = value; } }
     public Sprite LeftSleeveSprite { get { return _leftSleeveSprite.sprite; } set { _leftSleeveSprite.sprite = value; } }
     public Sprite RightSleeveSprite { get { return _rightSleeveSprite.sprite; } set { _rightSleeveSprite.sprite = value; } }
+    public Sprite LeftPantSprite { get { return _leftPantSprite.sprite; } set { _leftPantSprite.sprite = value; } }
+    public Sprite RightPantSprite { get { return _rightPantSprite.sprite; } set { _rightPantSprite.sprite = value; } }
     public Color HairColor { get { return _hairSprite.color; } set { _hairSprite.color = value; } }
 
     public bool Dispatch
@@ -66,26 +71,21 @@ public class Hunter : MonoBehaviour
         _sortingGroup = GetComponent<SortingGroup>();
 
         _spriteRoot = transform.Find("Root");
-        _clothSprite = transform.Find("Root/BodySet/P_Body/Body/P_ClothBody/ClothBody").GetComponent<SpriteRenderer>();
+        _bodySprite = transform.Find("Root/BodySet/P_Body/Body/P_ClothBody/ClothBody").GetComponent<SpriteRenderer>();
         _hairSprite = transform.Find("Root/BodySet/P_Body/HeadSet/P_Head/P_Hair/7_Hair").GetComponent<SpriteRenderer>();
         _leftSleeveSprite = transform.Find("Root/BodySet/P_Body/ArmSet/ArmL/P_LArm/P_Arm/20_L_Arm/P_LCArm/21_LCArm").GetComponent<SpriteRenderer>();
         _rightSleeveSprite = transform.Find("Root/BodySet/P_Body/ArmSet/ArmR/P_RArm/P_Arm/-20_R_Arm/P_RCArm/-19_RCArm").GetComponent<SpriteRenderer>();
+        _leftPantSprite = transform.Find("Root/P_LFoot/P_LCloth/_4L_Cloth").GetComponent<SpriteRenderer>();
+        _rightPantSprite = transform.Find("Root/P_RFoot/P_RCloth/_9R_Cloth").GetComponent<SpriteRenderer>();
     }
 
     private void Start()
     {
         _interactable.DisplayName = _displayName;
 
-        var _roads = FindObjectsOfType<Road>();
 
-        Road start = null;
-        if (_roads.Length > 0)
-        {
-            start = _roads[Random.Range(0, _roads.Length)];
-            transform.position = start.transform.position;
-        }
         CaptureThumbnailRoutine();
-        StartCoroutine(MoveRoutine(start));
+        StartCoroutine(MoveRoutine());
         StartCoroutine(CaptureThumbnailRoutine());
     }
 
@@ -95,39 +95,55 @@ public class Hunter : MonoBehaviour
         _spriteRoot.gameObject.SetActive(!_isDispatched);
     }
 
-    private IEnumerator MoveRoutine(Road start)
+    private IEnumerator MoveRoutine()
     {
-        yield return new WaitForSeconds(Random.Range(3, 10));
+        var timeSystem = GameManager.Instance.GetSystem<TimeSystem>();
+        var roads = FindObjectsOfType<Road>();
+        Road start = roads[Random.Range(0, roads.Length)];
+        transform.position = start.transform.position;
 
-        var _roads = FindObjectsOfType<Road>();
-        Road target = null;
-        if (_roads.Length > 0)
+        while (true)
         {
-            target = _roads[Random.Range(0, _roads.Length)];
-
-            var path = SearchPath(start, target);
-
-            int index = 0;
-
-            while (index < path.Length)
+            var moveTime = timeSystem.Hour.Total + Random.Range(5, 15);
+            while (timeSystem.Hour.Total < moveTime)
             {
-                if (!path[index]) break;
-                while (Vector3.Distance(transform.position, path[index].transform.position) > 0.01)
-                {
-                    var speed = Timer.Instance.TimeScale;
-                    var velocity = speed * Time.deltaTime * (path[index].transform.position - transform.position).normalized;
-                    _spriteRoot.localScale = new Vector3(velocity.x < 0 ? 0.5f : -0.5f, 0.5f, 1);
-                    transform.position += velocity;
-                    _animator.SetFloat("RunState", 0.5f);
-                    yield return null;
-                }
-                index++;
+                yield return null;
             }
+
+            Road target = null;
+            if (roads.Length > 0)
+            {
+                target = roads[Random.Range(0, roads.Length)];
+
+                var path = SearchPath(start, target);
+
+                int index = 0;
+
+                while (index < path.Length)
+                {
+                    if (!path[index]) break;
+
+                    while (Vector2.Distance(transform.position, path[index].transform.position) > 0.1f)
+                    {
+                        var speed = timeSystem.TimeScale * 0.6f;
+                        var dir = (path[index].transform.position - transform.position).normalized;
+                        var velocity = speed * Time.deltaTime * dir;
+
+                        _spriteRoot.localScale = new Vector3(velocity.x < 0 ? 0.5f : -0.5f, 0.5f, 1);
+
+                        transform.position += velocity;
+
+                        _animator.SetFloat("RunState", 0.5f);
+                        yield return null;
+                    }
+                    index++;
+                }
+            }
+            start = target;
+
+            _animator.SetFloat("RunState", 0);
+
         }
-
-        _animator.SetFloat("RunState", 0);
-
-        StartCoroutine(MoveRoutine(target));
     }
 
     public static Road[] SearchPath(Road start, Road end)

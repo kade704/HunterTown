@@ -16,9 +16,9 @@ public class PortalGenerator : MonoBehaviour
 
     private void Start()
     {
-        Timer.Instance.Hour.OnChanged.AddListener(() =>
+        GameManager.Instance.GetSystem<TimeSystem>().Hour.OnChanged.AddListener(() =>
         {
-            var hour = Timer.Instance.Hour.total;
+            var hour = GameManager.Instance.GetSystem<TimeSystem>().Hour.Total;
             if (hour >= _nextSpawnHour)
             {
                 _nextSpawnHour = hour + Random.Range(50, 100);
@@ -39,8 +39,8 @@ public class PortalGenerator : MonoBehaviour
 
         var newPortal = _constructionGridMap.BuildConstruction(portalPrefab, cellPos).GetComponent<Portal>();
 
-        var day = Timer.Instance.Day.total;
-        var month = Timer.Instance.Month.total;
+        var day = GameManager.Instance.GetSystem<TimeSystem>().Day.Total;
+        var month = GameManager.Instance.GetSystem<TimeSystem>().Month.Total;
 
         var difficulty = 5f;
 
@@ -72,6 +72,6 @@ public class PortalGenerator : MonoBehaviour
             }
         }
 
-        UILogger.Instance.Log(UILogger.LogType.Warning, $"포탈이 <b>({cellPos.x}, {cellPos.y})</b>위치에 생성되었습니다.");
+        GameManager.Instance.GetSystem<LoggerSystem>().LogWarning($"포탈이 <b>({cellPos.x}, {cellPos.y})</b>위치에 생성되었습니다.");
     }
 }

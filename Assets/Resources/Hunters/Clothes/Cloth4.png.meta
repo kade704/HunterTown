@@ -1,15 +1,18 @@
 fileFormatVersion: 2
-guid: a245b2dee0fc3e545bba101b5e1d32b0
+guid: 39d1a605d4c700d46a40258ffa718b3e
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6657482867516515422
-    second: Left
-  - first:
-      213: -1701842369826841683
+      213: 5974945691945990517
     second: Right
+  - first:
+      213: -5138849381010601345
+    second: Body
+  - first:
+      213: -9059333892809613461
+    second: Left
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -26,11 +29,12 @@ TextureImporter:
     externalNormalMap: 0
     heightScale: 0.25
     normalMapFilter: 0
+    flipGreenChannel: 0
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
-  ignoreMasterTextureLimit: 0
+  ignoreMipmapLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -69,6 +73,8 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -80,6 +86,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -92,11 +99,12 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: iPhone
-    maxTextureSize: 128
+    maxTextureSize: 64
     resizeAlgorithm: 0
     textureFormat: 4
     textureCompression: 1
@@ -104,6 +112,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 1
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
@@ -116,19 +125,33 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Left
+      name: Cloth4_Right
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 4
-        height: 7
+        x: 4
+        y: 16
+        width: 5
+        height: 5
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -136,20 +159,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2abdd67da9edb93a0800000000000000
-      internalID: -6657482867516515422
+      spriteID: 579f0b043754be250800000000000000
+      internalID: 5974945691945990517
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Right
+      name: Cloth4_Body
       rect:
         serializedVersion: 2
-        x: 6
-        y: 0
-        width: 4
-        height: 7
+        x: 10
+        y: 11
+        width: 12
+        height: 10
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -157,8 +180,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: dab13c2a167d168e0800000000000000
-      internalID: -1701842369826841683
+      spriteID: f7a80aaf6b32fa8b0800000000000000
+      internalID: -5138849381010601345
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cloth4_Left
+      rect:
+        serializedVersion: 2
+        x: 23
+        y: 16
+        width: 5
+        height: 5
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b6f1d69a2d7c64280800000000000000
+      internalID: -9059333892809613461
       vertices: []
       indices: 
       edges: []
@@ -174,11 +218,11 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Right: -1701842369826841683
-      Left: -6657482867516515422
-  spritePackingTag: 
+      Cloth4_Body: -5138849381010601345
+      Cloth4_Left: -9059333892809613461
+      Cloth4_Right: 5974945691945990517
+  mipmapLimitGroupName: 
   pSDRemoveMatte: 0
-  pSDShowRemoveMatteOption: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 

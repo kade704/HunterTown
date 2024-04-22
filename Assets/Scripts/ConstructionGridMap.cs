@@ -8,9 +8,7 @@ public class ConstructionGridMap : MonoBehaviour, IDeserializable, ISerializable
 {
     private Dictionary<Vector2Int, Construction> _constructionMap = new();
     private List<Construction> _constructions = new();
-    private Construction _constructionSelected;
     private Grid _isometricGrid;
-    private GridCursor _constructionCursor;
 
 
     private UnityEvent<Construction> _onConstructionClicked = new();
@@ -32,35 +30,9 @@ public class ConstructionGridMap : MonoBehaviour, IDeserializable, ISerializable
 
     private void Awake()
     {
-        _constructionCursor = FindObjectOfType<GridCursor>();
-
         _constructionPrefabs = Resources.LoadAll<Construction>("Constructions");
 
         _isometricGrid = GetComponent<Grid>();
-    }
-
-    private void Start()
-    {
-        var json = Resources.Load<TextAsset>("Map").text;
-        Deserialize(JToken.Parse(json));
-    }
-
-    private void Update()
-    {
-    }
-
-    private Construction GetConstructionOverPointer()
-    {
-        var cursor = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
-        var colliders = Physics2D.OverlapPointAll(cursor);
-        foreach (var collider in colliders)
-        {
-            var construction = collider.GetComponent<Construction>();
-            if (construction) return construction;
-        }
-
-        return null;
     }
 
     public Vector2 CellToWorld(Vector2Int cellPos)
@@ -189,6 +161,13 @@ public class ConstructionGridMap : MonoBehaviour, IDeserializable, ISerializable
 
     public void Deserialize(JToken token)
     {
+        foreach (var construction in _constructions)
+        {
+            Destroy(construction.gameObject);
+        }
+
+        _constructionMap.Clear();
+
         foreach (var construction in token)
         {
             var name = construction["id"].Value<string>();

@@ -9,12 +9,12 @@ public class NatureGenerator : MonoBehaviour
         _constructionGridMap = FindObjectOfType<ConstructionGridMap>();
     }
 
-    void Start()
+    public void SpawnRandomNatures(int amount)
     {
         var naturePrefabs = Resources.LoadAll<Nature>("Constructions");
 
         var count = 0;
-        while (count++ < 20)
+        while (count++ < amount)
         {
             var idx = Random.Range(0, naturePrefabs.Length);
             var cellPos = new Vector2Int(Random.Range(-10, 10), Random.Range(-10, 10));

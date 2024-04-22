@@ -1,51 +1,47 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class UILogger : Singleton<UILogger>
+public class UILogger : MonoBehaviour
 {
-    public enum LogType
-    {
-        Info,
-        Warning,
-        Error
-    }
+
 
     private Transform _messageBoxParent;
     private UIMessageBox _messageBoxRef;
 
-    protected override void Awake()
+    private void Awake()
     {
-        base.Awake();
-
         _messageBoxParent = transform.Find("MessageBoxes");
         _messageBoxRef = transform.Find("MessageBoxRef").GetComponent<UIMessageBox>();
+
+        GameManager.Instance.GetSystem<LoggerSystem>().OnLog.AddListener((message) =>
+        {
+            Log(message);
+        });
     }
 
 
-    public void Log(LogType type, string message)
+    private void Log(LoggerSystem.Message message)
     {
         var messageBox = Instantiate(_messageBoxRef, _messageBoxParent);
         messageBox.transform.SetAsFirstSibling();
         messageBox.gameObject.SetActive(true);
-        messageBox.Icon.sprite = GetLogIconSprite(type);
-        messageBox.Msg.text = message;
+        messageBox.Icon.sprite = GetLogIconSprite(message.type);
+        messageBox.Msg.text = message.content;
 
-        messageBox.BgColor = GetLogColor(type);
+        messageBox.BgColor = GetLogColor(message.type);
     }
 
-    private Sprite GetLogIconSprite(LogType type)
+    private Sprite GetLogIconSprite(LoggerSystem.LogType type)
     {
         string path = "";
         switch (type)
         {
-            case LogType.Info:
+            case LoggerSystem.LogType.Info:
                 path = "Icons/Info";
                 break;
-            case LogType.Warning:
+            case LoggerSystem.LogType.Warning:
                 path = "Icons/Warning";
                 break;
-            case LogType.Error:
+            case LoggerSystem.LogType.Error:
                 path = "Icons/Error";
                 break;
         }
@@ -53,15 +49,15 @@ public class UILogger : Singleton<UILogger>
         return Resources.Load<Sprite>(path);
     }
 
-    private Color GetLogColor(LogType type)
+    private Color GetLogColor(LoggerSystem.LogType type)
     {
         switch (type)
         {
-            case LogType.Info:
+            case LoggerSystem.LogType.Info:
                 return new Color(0, 1, 0.5f);
-            case LogType.Warning:
+            case LoggerSystem.LogType.Warning:
                 return new Color(1, 1, 0.5f);
-            case LogType.Error:
+            case LoggerSystem.LogType.Error:
                 return new Color(1, 0.5f, 0.5f);
         }
 

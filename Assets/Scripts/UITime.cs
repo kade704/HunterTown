@@ -3,6 +3,7 @@ using UnityEngine.UI;
 
 public class UITimer : MonoBehaviour
 {
+    private TimeSystem _timeSystem;
     private Text _timeText;
     private Toggle _pauseButton;
     private Toggle _resumeButton;
@@ -10,6 +11,7 @@ public class UITimer : MonoBehaviour
 
     private void Awake()
     {
+        _timeSystem = GameManager.Instance.GetSystem<TimeSystem>();
         _timeText = transform.Find("TimeText").GetComponent<Text>();
 
         _pauseButton = transform.Find("SpeedButtons/PauseButton").GetComponent<Toggle>();
@@ -17,7 +19,7 @@ public class UITimer : MonoBehaviour
         {
             if (active)
             {
-                Timer.Instance.Pause();
+                _timeSystem.Pause();
             }
         });
 
@@ -26,7 +28,7 @@ public class UITimer : MonoBehaviour
         {
             if (active)
             {
-                Timer.Instance.Resume();
+                _timeSystem.Resume();
             }
         });
 
@@ -35,19 +37,20 @@ public class UITimer : MonoBehaviour
         {
             if (active)
             {
-                Timer.Instance.Fast();
+                _timeSystem.Fast();
             }
         });
-    }
-    private void Update()
-    {
-        var year = Timer.Instance.Year.current;
-        var month = Timer.Instance.Month.current;
-        var day = Timer.Instance.Day.current;
-        var hour = Timer.Instance.Hour.current;
 
-        var clock = (hour < 12 ? "오전" : "오후") + " " + (hour % 12 == 0 ? "12" : hour % 12) + ":00";
+        _timeSystem.Hour.OnChanged.AddListener(() =>
+        {
+            var year = _timeSystem.Year.Current;
+            var month = _timeSystem.Month.Current;
+            var day = _timeSystem.Day.Current;
+            var hour = _timeSystem.Hour.Current;
 
-        _timeText.text = $"{year}년 {month}월 {day}일   {clock}";
+            var clock = (hour < 12 ? "오전" : "오후") + " " + (hour % 12 == 0 ? "12" : hour % 12) + ":00";
+
+            _timeText.text = $"{year}년 {month}월 {day}일   {clock}";
+        });
     }
 }

@@ -128,10 +128,10 @@ public class Portal : MonoBehaviour
     {
         StartCoroutine(AnimateRoutine());
 
-        var waveDay = Timer.Instance.Day.total + WaveTime;
-        Timer.Instance.Day.OnChanged.AddListener(() =>
+        var waveDay = GameManager.Instance.GetSystem<TimeSystem>().Day.Total + WaveTime;
+        GameManager.Instance.GetSystem<TimeSystem>().Day.OnChanged.AddListener(() =>
         {
-            if (Timer.Instance.Day.total >= waveDay && !_isWave)
+            if (GameManager.Instance.GetSystem<TimeSystem>().Day.Total >= waveDay && !_isWave)
             {
                 Wave();
             }
@@ -146,7 +146,7 @@ public class Portal : MonoBehaviour
 
     private IEnumerator DispatchRoutine(Hunter[] hunters)
     {
-        UILogger.Instance.Log(UILogger.LogType.Info, $"파견이 시작되었습니다.");
+        GameManager.Instance.GetSystem<LoggerSystem>().LogInfo($"파견이 시작되었습니다.");
 
         _isDispatching = true;
 
@@ -172,7 +172,7 @@ public class Portal : MonoBehaviour
             var deathProbability = CalcHunterDeathProbability(hunter);
             if (Random.value < deathProbability)
             {
-                UILogger.Instance.Log(UILogger.LogType.Error, $"{hunter.DisplayName} 이(가) 파견중 사망했습니다.");
+                GameManager.Instance.GetSystem<LoggerSystem>().LogError($"{hunter.DisplayName} 이(가) 파견중 사망했습니다.");
                 HunterSpawner.RemoveHunter(hunter);
             }
             hunter.IsDispatched = false;
@@ -181,7 +181,7 @@ public class Portal : MonoBehaviour
         var success = CalcDispatchSuccessProbability(hunters);
         if (Random.value <= success)
         {
-            UILogger.Instance.Log(UILogger.LogType.Info, $"파견이 성공적으로 완료되었습니다.");
+            GameManager.Instance.GetSystem<LoggerSystem>().LogInfo($"파견이 성공적으로 완료되었습니다.");
             _construction.ConstructionGridMap.DestroyConstruction(_construction);
             var earnedMoney = Power * 10f;
             if (ContainAbility("crystal_portal"))
@@ -206,7 +206,7 @@ public class Portal : MonoBehaviour
         }
         else
         {
-            UILogger.Instance.Log(UILogger.LogType.Error, $"파견이 실패했습니다.");
+            GameManager.Instance.GetSystem<LoggerSystem>().LogError($"파견이 실패했습니다.");
         }
 
         _isDispatching = false;
@@ -219,7 +219,7 @@ public class Portal : MonoBehaviour
 
     public IEnumerator ExamineRoutine()
     {
-        UILogger.Instance.Log(UILogger.LogType.Info, $"탐색이 시작되었습니다.");
+        GameManager.Instance.GetSystem<LoggerSystem>().LogInfo($"탐색이 시작되었습니다.");
 
         _isExamining = true;
 
@@ -236,7 +236,7 @@ public class Portal : MonoBehaviour
         }
         _progressSprite.enabled = false;
 
-        UILogger.Instance.Log(UILogger.LogType.Info, $"탐색이 완료되었습니다.");
+        GameManager.Instance.GetSystem<LoggerSystem>().LogInfo($"탐색이 완료되었습니다.");
 
         if (ContainAbility("understood_world"))
         {
@@ -278,7 +278,7 @@ public class Portal : MonoBehaviour
     {
         _isWave = true;
         _fireParticle.Play();
-        UILogger.Instance.Log(UILogger.LogType.Error, "포탈 웨이브가 시작되었습니다!");
+        GameManager.Instance.GetSystem<LoggerSystem>().LogError("포탈 웨이브가 시작되었습니다!");
     }
 
     public float CalcHunterDeathProbability(Hunter hunter)

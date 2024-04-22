@@ -4,13 +4,11 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class UIManager : Singleton<UIManager>
+public class UIManager : MonoBehaviour
 {
 
-    protected override void Awake()
+    private void Awake()
     {
-        base.Awake();
-
         var moneyText = transform.Find("MoneyText").GetComponent<Text>();
         GameManager.Instance.OnMoneyChanged.AddListener((money) =>
         {

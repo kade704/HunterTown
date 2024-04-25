@@ -10,8 +10,6 @@ public class ConstructionGridMap : MonoBehaviour, IDeserializable, ISerializable
     private List<Construction> _constructions = new();
     private Grid _isometricGrid;
 
-
-    private UnityEvent<Construction> _onConstructionClicked = new();
     private Construction[] _constructionPrefabs;
     private UnityEvent<Construction> _onConstructionBuilded = new();
     private UnityEvent<Construction> _onConstructionDestroyed = new();
@@ -19,9 +17,6 @@ public class ConstructionGridMap : MonoBehaviour, IDeserializable, ISerializable
     public Construction[] Constructions => _constructions.ToArray();
     public UnityEvent<Construction> OnConstructionBuilded => _onConstructionBuilded;
     public UnityEvent<Construction> OnConstructionDestroyed => _onConstructionDestroyed;
-
-
-    public UnityEvent<Construction> OnConstructionClicked => _onConstructionClicked;
 
     public Construction GetConstructionPrefab(string id)
     {

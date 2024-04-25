@@ -27,11 +27,11 @@ public class HunterSpawner : MonoBehaviour, ISerializable, IDeserializable
     {
         if (Input.GetKeyDown(KeyCode.F4))
         {
-            AddRandomHunter();
+            SpawnRandomHunter();
         }
     }
 
-    public void AddRandomHunter()
+    public void SpawnRandomHunter()
     {
         var hunterPrefab = Resources.Load<Hunter>("Hunter");
         var newHunter = Instantiate(hunterPrefab, transform);

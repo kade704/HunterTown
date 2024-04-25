@@ -48,6 +48,14 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        SceneManager.sceneLoaded += (scene, mode) =>
+        {
+            if (scene.name == "Game")
+            {
+                InitializeGame();
+            }
+        };
+
         Money = _money;
     }
 
@@ -74,23 +82,39 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene("Game");
     }
 
-    public void LoadGame()
+    private void InitializeGame()
     {
-        //SceneManager.LoadScene("Game");
-
         var savePath = Application.persistentDataPath + "/SaveData.json";
         if (!File.Exists(savePath))
         {
-            Debug.LogWarning("Save file not found.");
-            return;
+            Money = 1000;
+
+            var mapJson = Resources.Load<TextAsset>("Map").text;
+
+            var constructionGridMap = FindObjectOfType<ConstructionGridMap>();
+            constructionGridMap.Deserialize(JToken.Parse(mapJson));
+
+            var hunterSpawner = FindObjectOfType<HunterSpawner>();
+            hunterSpawner.SpawnRandomHunter();
+            hunterSpawner.SpawnRandomHunter();
+            hunterSpawner.SpawnRandomHunter();
+            hunterSpawner.SpawnRandomHunter();
+            hunterSpawner.SpawnRandomHunter();
         }
+        else
+        {
+            var saveData = JObject.Parse(File.ReadAllText(savePath));
+            Money = saveData["money"].Value<int>();
+            FindObjectOfType<HunterSpawner>().Deserialize(saveData["hunters"]);
+            FindObjectOfType<ConstructionGridMap>().Deserialize(saveData["constructions"]);
 
-        var saveData = JObject.Parse(File.ReadAllText(savePath));
-        Money = saveData["money"].Value<int>();
-        FindObjectOfType<HunterSpawner>().Deserialize(saveData["hunters"]);
-        FindObjectOfType<ConstructionGridMap>().Deserialize(saveData["constructions"]);
+            GetSystem<LoggerSystem>().LogInfo("게임 불러옴.");
+        }
+    }
 
-        GetSystem<LoggerSystem>().LogInfo("게임 불러옴.");
+    public void LoadGame()
+    {
+        SceneManager.LoadScene("Game");
     }
 
     public void SaveGame()

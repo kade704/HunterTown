@@ -2,43 +2,36 @@ using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private int _money;
-
     private static GameManager _instance;
     private Dictionary<string, MonoBehaviour> _systems = new();
-    private UnityEvent<int> _onMoneyChanged = new();
+
+    private bool _loadFromSave = false;
 
     public static GameManager Instance => _instance;
 
-    public UnityEvent<int> OnMoneyChanged => _onMoneyChanged;
 
-
-    public int Money
-    {
-        get { return _money; }
-        set
-        {
-            _money = value;
-            OnMoneyChanged.Invoke(value);
-        }
-    }
 
     public T GetSystem<T>() where T : MonoBehaviour
     {
         var systemType = typeof(T).Name;
         if (_systems.ContainsKey(systemType))
         {
-            return _systems[systemType].GetComponent<T>();
+            if (!_systems[systemType])
+            {
+                _systems[systemType] = FindObjectOfType<T>();
+            }
+            return _systems[systemType] as T;
         }
-
-        var system = gameObject.AddComponent<T>();
-        _systems.Add(systemType, system);
-        return system;
+        else
+        {
+            var system = FindObjectOfType<T>();
+            _systems.Add(systemType, system);
+            return system;
+        }
     }
 
     private void Awake()
@@ -53,19 +46,16 @@ public class GameManager : MonoBehaviour
             if (scene.name == "Game")
             {
                 InitializeGame();
+                GetSystem<AudioController>().PlayAmbience("CityAmbience");
             }
         };
 
-        Money = _money;
+        LoadOptions();
+        GoMenu();
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            SceneManager.LoadScene("Menu");
-        }
-
         if (Input.GetKeyDown(KeyCode.F1))
         {
             LoadGame();
@@ -79,22 +69,24 @@ public class GameManager : MonoBehaviour
 
     public void NewGame()
     {
+        _loadFromSave = false;
         SceneManager.LoadScene("Game");
     }
 
     private void InitializeGame()
     {
         var savePath = Application.persistentDataPath + "/SaveData.json";
-        if (!File.Exists(savePath))
+        if (!File.Exists(savePath) || !_loadFromSave)
         {
-            Money = 1000;
+            var player = GetSystem<Player>();
+            player.Money = 1000;
 
             var mapJson = Resources.Load<TextAsset>("Map").text;
 
-            var constructionGridMap = FindObjectOfType<ConstructionGridMap>();
+            var constructionGridMap = GetSystem<ConstructionGridMap>();
             constructionGridMap.Deserialize(JToken.Parse(mapJson));
 
-            var hunterSpawner = FindObjectOfType<HunterSpawner>();
+            var hunterSpawner = GetSystem<HunterSpawner>();
             hunterSpawner.SpawnRandomHunter();
             hunterSpawner.SpawnRandomHunter();
             hunterSpawner.SpawnRandomHunter();
@@ -104,9 +96,9 @@ public class GameManager : MonoBehaviour
         else
         {
             var saveData = JObject.Parse(File.ReadAllText(savePath));
-            Money = saveData["money"].Value<int>();
-            FindObjectOfType<HunterSpawner>().Deserialize(saveData["hunters"]);
-            FindObjectOfType<ConstructionGridMap>().Deserialize(saveData["constructions"]);
+            GetSystem<Player>().Deserialize(saveData["player"]);
+            GetSystem<HunterSpawner>().Deserialize(saveData["hunters"]);
+            GetSystem<ConstructionGridMap>().Deserialize(saveData["constructions"]);
 
             GetSystem<LoggerSystem>().LogInfo("게임 불러옴.");
         }
@@ -114,6 +106,7 @@ public class GameManager : MonoBehaviour
 
     public void LoadGame()
     {
+        _loadFromSave = true;
         SceneManager.LoadScene("Game");
     }
 
@@ -128,20 +121,50 @@ public class GameManager : MonoBehaviour
         var savePath = Application.persistentDataPath + "/SaveData.json";
         var root = new JObject
         {
-            ["money"] = Money,
-            ["hunters"] = FindObjectOfType<HunterSpawner>().Serialize(),
-            ["constructions"] = FindObjectOfType<ConstructionGridMap>().Serialize()
+            ["player"] = GetSystem<Player>().Serialize(),
+            ["hunters"] = GetSystem<HunterSpawner>().Serialize(),
+            ["constructions"] = GetSystem<ConstructionGridMap>().Serialize()
         };
         File.WriteAllText(savePath, root.ToString());
 
         GetSystem<LoggerSystem>().LogInfo("게임 저장됨.");
     }
 
-    public void ShowOptions()
+    public void SaveOptions()
     {
-        Debug.Log("Show Options");
+        var parser = new INIParser();
+        parser.Open(Application.persistentDataPath + "/Options.ini");
+        parser.WriteValue("Audio", "MasterVolume", GetSystem<AudioController>().MasterVolume.ToString());
+        parser.WriteValue("Audio", "MusicVolume", GetSystem<AudioController>().MusicVolume.ToString());
+        parser.WriteValue("Audio", "SFXVolume", GetSystem<AudioController>().SFXVolume.ToString());
+        parser.WriteValue("Audio", "AmbienceVolume", GetSystem<AudioController>().AmbienceVolume.ToString());
+        parser.Close();
+
+        Debug.Log("Options saved.");
     }
 
+    public void LoadOptions()
+    {
+        var parser = new INIParser();
+        parser.Open(Application.persistentDataPath + "/Options.ini");
+        GetSystem<AudioController>().MasterVolume = (float)parser.ReadValue("Audio", "MasterVolume", 1.0);
+        GetSystem<AudioController>().MusicVolume = (float)parser.ReadValue("Audio", "MusicVolume", 0.5);
+        GetSystem<AudioController>().SFXVolume = (float)parser.ReadValue("Audio", "SFXVolume", 0.8);
+        GetSystem<AudioController>().AmbienceVolume = (float)parser.ReadValue("Audio", "AmbienceVolume", 0.5);
+        parser.Close();
+
+        Debug.Log("Options loaded.");
+    }
+
+    public void GoMenu()
+    {
+        SceneManager.LoadScene("Menu");
+    }
+
+    public void GoOptions()
+    {
+        SceneManager.LoadScene("Options");
+    }
 
     public void ExitGame()
     {

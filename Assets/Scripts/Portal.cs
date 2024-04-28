@@ -192,7 +192,7 @@ public class Portal : MonoBehaviour
             {
                 earnedMoney *= 0.5f;
             }
-            GameManager.Instance.Money += (int)earnedMoney;
+            GameManager.Instance.GetSystem<Player>().Money += (int)earnedMoney;
 
             foreach (var hunter in hunters)
             {
@@ -223,7 +223,7 @@ public class Portal : MonoBehaviour
 
         _isExamining = true;
 
-        GameManager.Instance.Money -= Random.Range(30, 70);
+        GameManager.Instance.GetSystem<Player>().Money -= Random.Range(30, 70);
 
         _progressSprite.enabled = true;
         var startTime = Time.time;

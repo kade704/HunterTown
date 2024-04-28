@@ -72,7 +72,8 @@ public class ConstructionBuilder : MonoBehaviour
                     newConstruction.GetComponent<Rotatable>().Direction_ = _buildDirection;
                 }
 
-                GameManager.Instance.Money -= _constructionToBuild.Cost;
+                GameManager.Instance.GetSystem<Player>().Money -= _constructionToBuild.Cost;
+                GameManager.Instance.GetSystem<AudioController>().PlaySFX("Build");
             }
 
             if (Input.GetKeyDown(KeyCode.Escape) || Input.GetMouseButtonDown(1))
@@ -96,9 +97,16 @@ public class ConstructionBuilder : MonoBehaviour
                 var construction = _constructionGridMap.GetConstructionAt(_gridCursor.CellPos);
                 if (construction)
                 {
-                    GameManager.Instance.Money += construction.Cost / 2;
+                    GameManager.Instance.GetSystem<Player>().Money += construction.Cost / 2;
                     Destroy(construction.gameObject);
                 }
+            }
+
+            if (Input.GetKeyDown(KeyCode.Escape) || Input.GetMouseButtonDown(1))
+            {
+                _gridCursor.Sprite = null;
+                _gridCursor.Color = Color.white;
+                ConstructionToBuild = null;
             }
         }
     }

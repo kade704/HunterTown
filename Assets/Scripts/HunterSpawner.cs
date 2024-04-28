@@ -118,6 +118,8 @@ public class HunterSpawner : MonoBehaviour, ISerializable, IDeserializable
             newHunter.RightPantSprite = _pantSprites.Where(s => s.name == obj["rightPant"].Value<string>()).FirstOrDefault();
             newHunter.HairSprite = _hairSprites.Where(s => s.name == obj["hair"].Value<string>()).FirstOrDefault();
             newHunter.HairColor = ColorUtility.TryParseHtmlString(obj["hairColor"].Value<string>(), out var color) ? color : Color.white;
+
+            _hunters.Add(newHunter);
         }
     }
 }

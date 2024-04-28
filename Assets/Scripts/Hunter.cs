@@ -42,26 +42,17 @@ public class Hunter : MonoBehaviour
 
     public bool Dispatch
     {
-        set
-        {
-            _isDispatched = value;
-        }
+        set => _isDispatched = value;
     }
 
     public float Viability
     {
-        get
-        {
-            return DefaultHp + DefaultDamage * 0.8f;
-        }
+        get => DefaultHp + DefaultDamage * 0.8f;
     }
 
     public float CombatPower
     {
-        get
-        {
-            return DefaultDamage * 1.2f + DefaultHp * 0.5f;
-        }
+        get => DefaultDamage * 1.2f + DefaultHp * 0.5f;
     }
 
     private void Awake()
@@ -110,34 +101,34 @@ public class Hunter : MonoBehaviour
                 yield return null;
             }
 
-            Road target = null;
-            if (roads.Length > 0)
+            roads = FindObjectsOfType<Road>();
+            if (roads.Length == 0) continue;
+
+            Road target = roads[Random.Range(0, roads.Length)];
+
+            var path = SearchPath(start, target);
+            if (path == null) continue;
+
+            int index = 0;
+
+            while (index < path.Length)
             {
-                target = roads[Random.Range(0, roads.Length)];
+                if (!path[index]) break;
 
-                var path = SearchPath(start, target);
-
-                int index = 0;
-
-                while (index < path.Length)
+                while (Vector2.Distance(transform.position, path[index].transform.position) > 0.1f)
                 {
-                    if (!path[index]) break;
+                    var speed = timeSystem.TimeScale * 0.6f;
+                    var dir = (path[index].transform.position - transform.position).normalized;
+                    var velocity = speed * Time.deltaTime * dir;
 
-                    while (Vector2.Distance(transform.position, path[index].transform.position) > 0.1f)
-                    {
-                        var speed = timeSystem.TimeScale * 0.6f;
-                        var dir = (path[index].transform.position - transform.position).normalized;
-                        var velocity = speed * Time.deltaTime * dir;
+                    _spriteRoot.localScale = new Vector3(velocity.x < 0 ? 0.5f : -0.5f, 0.5f, 1);
 
-                        _spriteRoot.localScale = new Vector3(velocity.x < 0 ? 0.5f : -0.5f, 0.5f, 1);
+                    transform.position += velocity;
 
-                        transform.position += velocity;
-
-                        _animator.SetFloat("RunState", 0.5f);
-                        yield return null;
-                    }
-                    index++;
+                    _animator.SetFloat("RunState", 0.5f);
+                    yield return null;
                 }
+                index++;
             }
             start = target;
 

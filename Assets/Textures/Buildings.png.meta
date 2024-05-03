@@ -114,9 +114,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 355
+        y: 352
         width: 128
-        height: 157
+        height: 160
       alignment: 9
       pivot: {x: 0.5, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -131,13 +131,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: House1
+      name: SmallHouse
       rect:
         serializedVersion: 2
         x: 128
-        y: 369
+        y: 368
         width: 64
-        height: 53
+        height: 54
       alignment: 9
       pivot: {x: 0.5, y: 0.28}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -152,13 +152,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: House2
+      name: ModernHouse
       rect:
         serializedVersion: 2
         x: 192
-        y: 369
+        y: 368
         width: 64
-        height: 53
+        height: 54
       alignment: 9
       pivot: {x: 0.5, y: 0.28}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -168,6 +168,69 @@ TextureImporter:
       bones: []
       spriteID: b303d993c5b79cd47ba06036f3105f65
       internalID: -1750879985
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Apartment
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 368
+        width: 64
+        height: 77
+      alignment: 9
+      pivot: {x: 0.5000005, y: 0.18966159}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2fe068e9ffd7caf4c8a4a0224dc6d152
+      internalID: -1343409075
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Plaza
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 368
+        width: 64
+        height: 63
+      alignment: 9
+      pivot: {x: 0.5000005, y: 0.27297246}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bccd2f488bcd5d94cad72a7aa5f5401b
+      internalID: -873236447
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pool
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 368
+        width: 64
+        height: 63
+      alignment: 9
+      pivot: {x: 0.49727535, y: 0.26466686}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3cdd56e3a7cd6074f8ab75e9764039b7
+      internalID: 967448473
       vertices: []
       indices: 
       edges: []
@@ -183,6 +246,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
+      Apartment: -1343409075
       Buildings_3: -460201530
       Buildings_4: 1828060907
       Buildings_5: -1540560302
@@ -190,8 +254,10 @@ TextureImporter:
       Buildings_7: 791452545
       Buildings_8: 1317039629
       Company: 1430292771
-      House1: 1722864094
-      House2: -1750879985
+      ModernHouse: -1750879985
+      Plaza: -873236447
+      Pool: 967448473
+      SmallHouse: 1722864094
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

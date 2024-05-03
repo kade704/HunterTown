@@ -6,12 +6,12 @@ public class PortalGenerator : MonoBehaviour
 {
     private Ability[] _portalAbilities;
     private int _nextSpawnHour = 5;
-    private ConstructionGridMap _constructionGridMap;
+    private ConstructionGridmap _constructionGridMap;
 
     private void Awake()
     {
         _portalAbilities = Resources.LoadAll<Ability>("Abilities");
-        _constructionGridMap = FindObjectOfType<ConstructionGridMap>();
+        _constructionGridMap = FindObjectOfType<ConstructionGridmap>();
     }
 
     private void Start()

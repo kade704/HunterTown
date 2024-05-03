@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class NatureGenerator : MonoBehaviour
 {
-    private ConstructionGridMap _constructionGridMap;
+    private ConstructionGridmap _constructionGridMap;
 
     private void Awake()
     {
-        _constructionGridMap = FindObjectOfType<ConstructionGridMap>();
+        _constructionGridMap = FindObjectOfType<ConstructionGridmap>();
     }
 
     public void SpawnRandomNatures(int amount)

@@ -3,9 +3,8 @@ using UnityEngine.Events;
 
 public class ConstructionBuilder : MonoBehaviour
 {
-    private Construction _constructionToBuild;
-    private ConstructionGridMap _constructionGridMap;
-    private Rotatable.Direction _buildDirection;
+    private Construction _constructionPrefab;
+    private ConstructionGridmap _constructionGridMap;
     private GridCursor _gridCursor;
     private bool _isDestructionMode = false;
     private UnityEvent _onEnterBuildMode = new UnityEvent();
@@ -14,13 +13,13 @@ public class ConstructionBuilder : MonoBehaviour
     public UnityEvent OnEnterBuildMode => _onEnterBuildMode;
     public UnityEvent OnExitBuildMode => _onExitBuildMode;
 
-    public Construction ConstructionToBuild
+    public Construction ConstructionPrefab
     {
-        get { return _constructionToBuild; }
+        get { return _constructionPrefab; }
         set
         {
-            _constructionToBuild = value;
-            if (_constructionToBuild)
+            _constructionPrefab = value;
+            if (_constructionPrefab)
             {
                 _onEnterBuildMode.Invoke();
             }
@@ -47,32 +46,24 @@ public class ConstructionBuilder : MonoBehaviour
     private void Awake()
     {
         _gridCursor = FindObjectOfType<GridCursor>();
-        _constructionGridMap = FindObjectOfType<ConstructionGridMap>();
+        _constructionGridMap = FindObjectOfType<ConstructionGridmap>();
     }
 
     private void Update()
     {
-        if (_constructionToBuild)
+        if (_constructionPrefab)
         {
             var buildable = CheckBuildable();
 
-            var cursorSprite = _constructionToBuild.Icon;
-            if (_constructionToBuild.GetComponent<Rotatable>() != null)
-            {
-                cursorSprite = _constructionToBuild.GetComponent<Rotatable>().GetSpriteFromDirection(_buildDirection);
-            }
+            var cursorSprite = _constructionPrefab.DefaultSprite;
             _gridCursor.Sprite = cursorSprite;
             _gridCursor.Color = !buildable ? new Color(1.0f, 0.0f, 0.0f, 0.8f) : new Color(0.0f, 1.0f, 0.5f, 0.8f);
 
             if (Input.GetMouseButtonDown(0) && !UIManager.IsUIObjectOverPointer() && buildable)
             {
-                var newConstruction = _constructionGridMap.BuildConstruction(_constructionToBuild, _gridCursor.CellPos);
-                if (newConstruction.GetComponent<Rotatable>() != null)
-                {
-                    newConstruction.GetComponent<Rotatable>().Direction_ = _buildDirection;
-                }
+                _constructionGridMap.BuildConstruction(_constructionPrefab, _gridCursor.CellPos);
 
-                GameManager.Instance.GetSystem<Player>().Money -= _constructionToBuild.Cost;
+                GameManager.Instance.GetSystem<Player>().Money -= _constructionPrefab.Cost;
                 GameManager.Instance.GetSystem<AudioController>().PlaySFX("Build");
             }
 
@@ -80,13 +71,12 @@ public class ConstructionBuilder : MonoBehaviour
             {
                 _gridCursor.Sprite = null;
                 _gridCursor.Color = Color.white;
-                ConstructionToBuild = null;
+                ConstructionPrefab = null;
             }
 
             if (Input.GetKeyDown(KeyCode.R))
             {
-                _buildDirection += 1;
-                if (_buildDirection >= (Rotatable.Direction)4) _buildDirection = 0;
+
             }
         }
 
@@ -106,7 +96,7 @@ public class ConstructionBuilder : MonoBehaviour
             {
                 _gridCursor.Sprite = null;
                 _gridCursor.Color = Color.white;
-                ConstructionToBuild = null;
+                ConstructionPrefab = null;
             }
         }
     }
@@ -117,37 +107,23 @@ public class ConstructionBuilder : MonoBehaviour
         {
             return false;
         }
-        if (_constructionToBuild.GetComponent<Rotatable>() != null)
+
+        if (!_constructionPrefab.GetComponent<Road>())
         {
-            if (_buildDirection == Rotatable.Direction.SOUTH)
+            var x = new[] { 1, -1, 0, 0 };
+            var y = new[] { 0, 0, 1, -1 };
+            for (var i = 0; i < 4; i++)
             {
-                if (!_constructionGridMap.GetConstructionAt(new Vector2Int(_gridCursor.CellPos.x - 1, _gridCursor.CellPos.y))?.GetComponent<Road>())
+                var pos = new Vector2Int(_gridCursor.CellPos.x + x[i], _gridCursor.CellPos.y + y[i]);
+                if (_constructionGridMap.GetConstructionAt(pos)?.GetComponent<Road>())
                 {
-                    return false;
+                    return true;
                 }
             }
-            else if (_buildDirection == Rotatable.Direction.NORTH)
-            {
-                if (!_constructionGridMap.GetConstructionAt(new Vector2Int(_gridCursor.CellPos.x + 1, _gridCursor.CellPos.y))?.GetComponent<Road>())
-                {
-                    return false;
-                }
-            }
-            else if (_buildDirection == Rotatable.Direction.EAST)
-            {
-                if (!_constructionGridMap.GetConstructionAt(new Vector2Int(_gridCursor.CellPos.x, _gridCursor.CellPos.y - 1))?.GetComponent<Road>())
-                {
-                    return false;
-                }
-            }
-            else if (_buildDirection == Rotatable.Direction.WEST)
-            {
-                if (!_constructionGridMap.GetConstructionAt(new Vector2Int(_gridCursor.CellPos.x, _gridCursor.CellPos.y + 1))?.GetComponent<Road>())
-                {
-                    return false;
-                }
-            }
+
+            return false;
         }
+
         return true;
     }
 }

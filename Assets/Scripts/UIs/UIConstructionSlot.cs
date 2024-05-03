@@ -3,27 +3,22 @@ using UnityEngine.UI;
 
 public class UIConstructionSlot : MonoBehaviour
 {
+    [SerializeField] private Construction _constructionPrefab;
+
     private Button _button;
-    private Text _displayNameText;
-    private Image _iconImage;
-
-    public Button.ButtonClickedEvent OnClick => _button.onClick;
-
-    public Construction Construction
-    {
-        set
-        {
-            if (!value) return;
-
-            _displayNameText.text = value.DisplayName;
-            _iconImage.sprite = value.Icon;
-        }
-    }
+    private UIConstructionBuildPanel _constructionBuildPanel;
 
     private void Awake()
     {
         _button = GetComponent<Button>();
-        _displayNameText = transform.Find("DisplayNameText").GetComponent<Text>();
-        _iconImage = transform.Find("IconImage").GetComponent<Image>();
+        _constructionBuildPanel = FindObjectOfType<UIConstructionBuildPanel>();
+    }
+
+    private void Start()
+    {
+        _button.onClick.AddListener(() =>
+        {
+            _constructionBuildPanel.BuildConstruction(_constructionPrefab);
+        });
     }
 }

@@ -10,12 +10,11 @@ GameObject:
   m_Component:
   - component: {fileID: 4142113863155088889}
   - component: {fileID: 5910216084651400077}
-  - component: {fileID: 3565845757440208362}
-  - component: {fileID: 8494855508593197953}
-  - component: {fileID: 8870272267814787214}
-  - component: {fileID: 8661895948472644750}
+  - component: {fileID: 4436391697399867256}
+  - component: {fileID: 8646880615237549289}
+  - component: {fileID: -8048074963830222491}
   m_Layer: 0
-  m_Name: House1
+  m_Name: Apartment
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -77,7 +76,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 300
-  m_Sprite: {fileID: 1722864094, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
+  m_Sprite: {fileID: -1343409075, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -88,7 +87,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!60 &3565845757440208362
+--- !u!60 &4436391697399867256
 PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -123,8 +122,8 @@ PolygonCollider2D:
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.28}
-    oldSize: {x: 1, y: 0.828125}
+    pivot: {x: 0.5000005, y: 0.18966159}
+    oldSize: {x: 1, y: 1.203125}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -132,17 +131,18 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 0.234375, y: 0.54937506}
-      - {x: -0.09375, y: 0.54937506}
-      - {x: -0.375, y: 0.31500006}
-      - {x: -0.375, y: -0.07562494}
-      - {x: -0.171875, y: -0.20062494}
-      - {x: 0.140625, y: -0.20062494}
-      - {x: 0.421875, y: 0.033750057}
-      - {x: 0.421875, y: 0.25250006}
-      - {x: 0.3125, y: 0.45562506}
+    - - {x: 0.09374952, y: 0.8811884}
+      - {x: -0.23437548, y: 0.8811884}
+      - {x: -0.45312548, y: 0.7718134}
+      - {x: -0.5000005, y: 0.5530634}
+      - {x: -0.5000005, y: -0.1500616}
+      - {x: -0.28125048, y: -0.2281866}
+      - {x: 0.10937452, y: -0.2281866}
+      - {x: 0.49999952, y: -0.07193661}
+      - {x: 0.49999952, y: 0.3968134}
+      - {x: 0.42187452, y: 0.7561884}
   m_UseDelaunayMesh: 0
---- !u!114 &8494855508593197953
+--- !u!114 &8646880615237549289
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -154,31 +154,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2a2a8b318f6c374486e542eee07495b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _id: house1
+  _id: house2
   _cost: 30
-  _displayName: "\uC8FC\uD0DD1"
-  _icon: {fileID: 1722864094, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
-  _size: {x: 1, y: 1}
+  _displayName: "\uC544\uD30C\uD2B8"
+  _defaultSprite: {fileID: -1343409075, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
+  _size: {x: 0, y: 0}
   _buildable: 1
   _destroyable: 1
---- !u!114 &8870272267814787214
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2901527553759305183}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a5e25823fcaa94141ad9f3937c6253b5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _spriteDirection:
-    _east: {fileID: 1722864094, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
-    _south: {fileID: 1722864094, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
-    _west: {fileID: 1722864094, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
-    _north: {fileID: 1722864094, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
---- !u!114 &8661895948472644750
+--- !u!114 &-8048074963830222491
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -190,5 +173,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97ef4819a08424d4e866a2ae3dc5977e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _displayName: "\uC8FC\uD0DD1"
   _interactions: []

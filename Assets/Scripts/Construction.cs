@@ -8,14 +8,14 @@ public class Construction : MonoBehaviour
     [SerializeField] private string _id;
     [SerializeField] private int _cost;
     [SerializeField] private string _displayName;
-    [SerializeField] private Sprite _icon;
+    [SerializeField] private Sprite _defaultSprite;
     [SerializeField] private Vector2Int _size;
     [SerializeField] private bool _buildable;
     [SerializeField] private bool _destroyable;
 
     private UnityEvent<string> _onInteracted = new();
     private UnityEvent _onClicked = new();
-    private ConstructionGridMap _constructionGridMap;
+    private ConstructionGridmap _constructionGridMap;
     private SpriteRenderer _spriteRenderer;
     private Interactable _interactable;
     private Vector2Int _cellPos;
@@ -23,12 +23,12 @@ public class Construction : MonoBehaviour
 
     public string Id => _id;
     public Vector2Int CellPos { get { return _cellPos; } set { _cellPos = value; } }
-    public ConstructionGridMap ConstructionGridMap { get { return _constructionGridMap; } set { _constructionGridMap = value; } }
+    public ConstructionGridmap ConstructionGridMap { get { return _constructionGridMap; } set { _constructionGridMap = value; } }
     public UnityEvent<string> OnInteracted => _onInteracted;
     public UnityEvent OnClicked => _onClicked;
     public int Cost => _cost;
     public string DisplayName => _displayName;
-    public Sprite Icon => _icon;
+    public Sprite DefaultSprite => _defaultSprite;
     public Vector2Int Size => _size;
 
     public bool Buildable => _buildable;

@@ -1,62 +1,54 @@
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(UIFade))]
 public class UIConstructionBuildPanel : MonoBehaviour
 {
-    private UIFade _fade;
-    private Button _buildMenuButton;
+    [SerializeField] private Button _destructionButton;
+    [SerializeField] private UIFade _residencePanel;
+    [SerializeField] private UIFade _parkPanel;
+    [SerializeField] private UIFade _roadPanel;
+    [SerializeField] private Button _residenceButton;
+    [SerializeField] private Button _parkButton;
+    [SerializeField] private Button _roadButton;
 
-    private void Awake()
+    private void Start()
     {
-        _fade = GetComponent<UIFade>();
-
-        _buildMenuButton = transform.Find("../BuildOpenButton").GetComponent<Button>();
-        _buildMenuButton.onClick.AddListener(() =>
-        {
-            _fade.FadeIn();
-            _buildMenuButton.gameObject.SetActive(false);
-        });
-
-        var closeButton = transform.Find("CloseButton").GetComponent<Button>();
-        closeButton.onClick.AddListener(() =>
-        {
-            _fade.FadeOut();
-            _buildMenuButton.gameObject.SetActive(true);
-        });
-
-        var destructionButton = transform.Find("DestructionButton").GetComponent<Button>();
-        destructionButton.onClick.AddListener(() =>
+        _destructionButton.onClick.AddListener(() =>
         {
             var constructionBuilder = FindObjectOfType<ConstructionBuilder>();
             constructionBuilder.SetDestructionMode(true);
-            _fade.FadeOut();
         });
 
+        _residenceButton.onClick.AddListener(() =>
+        {
+            _residencePanel.FadeIn();
+            _parkPanel.FadeOut();
+            _roadPanel.FadeOut();
+        });
+
+        _parkButton.onClick.AddListener(() =>
+        {
+            _residencePanel.FadeOut();
+            _parkPanel.FadeIn();
+            _roadPanel.FadeOut();
+        });
+
+        _roadButton.onClick.AddListener(() =>
+        {
+            _residencePanel.FadeOut();
+            _parkPanel.FadeOut();
+            _roadPanel.FadeIn();
+        });
+    }
+
+    public void BuildConstruction(Construction constructionPrefab)
+    {
         var constructionBuilder = FindObjectOfType<ConstructionBuilder>();
+        constructionBuilder.ConstructionPrefab = constructionPrefab;
 
-        constructionBuilder.OnExitBuildMode.AddListener(() =>
-        {
-            _fade.FadeOut();
-            _buildMenuButton.gameObject.SetActive(true);
-        });
-
-        var group = transform.Find("Group");
-        var constructionSlotRef = transform.Find("ConstructionSlotRef").GetComponent<UIConstructionSlot>();
-
-        var constructions = Resources.LoadAll<Construction>("Constructions");
-
-        foreach (var construction in constructions)
-        {
-            if (!construction.Buildable) continue;
-
-            var constuctionSlot = Instantiate(constructionSlotRef, group);
-            constuctionSlot.Construction = construction;
-            constuctionSlot.OnClick.AddListener(() =>
-            {
-                _fade.FadeOut();
-                constructionBuilder.ConstructionToBuild = construction;
-            });
-        }
+        _residencePanel.FadeOut();
+        _parkPanel.FadeOut();
+        _roadPanel.FadeOut();
     }
 }

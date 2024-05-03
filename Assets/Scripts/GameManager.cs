@@ -83,7 +83,7 @@ public class GameManager : MonoBehaviour
 
             var mapJson = Resources.Load<TextAsset>("Map").text;
 
-            var constructionGridMap = GetSystem<ConstructionGridMap>();
+            var constructionGridMap = GetSystem<ConstructionGridmap>();
             constructionGridMap.Deserialize(JToken.Parse(mapJson));
 
             var hunterSpawner = GetSystem<HunterSpawner>();
@@ -98,7 +98,7 @@ public class GameManager : MonoBehaviour
             var saveData = JObject.Parse(File.ReadAllText(savePath));
             GetSystem<Player>().Deserialize(saveData["player"]);
             GetSystem<HunterSpawner>().Deserialize(saveData["hunters"]);
-            GetSystem<ConstructionGridMap>().Deserialize(saveData["constructions"]);
+            GetSystem<ConstructionGridmap>().Deserialize(saveData["constructions"]);
 
             GetSystem<LoggerSystem>().LogInfo("게임 불러옴.");
         }
@@ -123,7 +123,7 @@ public class GameManager : MonoBehaviour
         {
             ["player"] = GetSystem<Player>().Serialize(),
             ["hunters"] = GetSystem<HunterSpawner>().Serialize(),
-            ["constructions"] = GetSystem<ConstructionGridMap>().Serialize()
+            ["constructions"] = GetSystem<ConstructionGridmap>().Serialize()
         };
         File.WriteAllText(savePath, root.ToString());
 

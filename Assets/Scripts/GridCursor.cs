@@ -3,7 +3,7 @@ using UnityEngine;
 public class GridCursor : MonoBehaviour
 {
     private SpriteRenderer _spriteRenderer;
-    private ConstructionGridMap _constructionGridMap;
+    private ConstructionGridmap _constructionGridMap;
     private Vector2Int _cellPos;
     private Sprite _defaultCell;
 
@@ -34,7 +34,7 @@ public class GridCursor : MonoBehaviour
     private void Awake()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
-        _constructionGridMap = FindObjectOfType<ConstructionGridMap>();
+        _constructionGridMap = FindObjectOfType<ConstructionGridmap>();
         _defaultCell = _spriteRenderer.sprite;
     }
 

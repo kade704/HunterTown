@@ -4,7 +4,7 @@ using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class ConstructionGridMap : MonoBehaviour, IDeserializable, ISerializable
+public class ConstructionGridmap : MonoBehaviour, IDeserializable, ISerializable
 {
     private Dictionary<Vector2Int, Construction> _constructionMap = new();
     private List<Construction> _constructions = new();
@@ -27,7 +27,7 @@ public class ConstructionGridMap : MonoBehaviour, IDeserializable, ISerializable
     {
         _constructionPrefabs = Resources.LoadAll<Construction>("Constructions");
 
-        _isometricGrid = GetComponent<Grid>();
+        _isometricGrid = GetComponentInParent<Grid>();
     }
 
     public Vector2 CellToWorld(Vector2Int cellPos)

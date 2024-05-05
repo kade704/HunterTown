@@ -2,20 +2,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
-
-    private void Awake()
-    {
-        var moneyText = transform.Find("MoneyText").GetComponent<Text>();
-        GameManager.Instance.GetSystem<Player>().OnMoneyChanged.AddListener((money) =>
-        {
-            moneyText.text = "예산: " + money.ToString() + "원";
-        });
-    }
-
     public static GameObject[] GetUIObjectsOverPointer()
     {
         var eventData = new PointerEventData(EventSystem.current)

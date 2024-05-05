@@ -64,21 +64,31 @@ public class Road : MonoBehaviour
 
         _construction.ConstructionGridMap.OnConstructionBuilded.AddListener((construction) =>
         {
-            var road = construction.GetComponent<Road>();
-            if (road != null)
-            {
-                var xDiff = Mathf.Abs(_construction.CellPos.x - road.Construction.CellPos.x);
-                var yDiff = Mathf.Abs(_construction.CellPos.y - road.Construction.CellPos.y);
-                if (xDiff <= 1 && yDiff <= 1)
-                {
-                    UpdateNeighbors();
-                    UpdateSprite();
-                }
-            }
+            OnConstructionChanged(construction);
+        });
+
+        _construction.ConstructionGridMap.OnConstructionDestroyed.AddListener((construction) =>
+        {
+            OnConstructionChanged(construction);
         });
     }
 
-    public void UpdateSprite()
+    private void OnConstructionChanged(Construction construction)
+    {
+        var road = construction.GetComponent<Road>();
+        if (road != null)
+        {
+            var xDiff = Mathf.Abs(_construction.CellPos.x - road.Construction.CellPos.x);
+            var yDiff = Mathf.Abs(_construction.CellPos.y - road.Construction.CellPos.y);
+            if (xDiff <= 1 && yDiff <= 1)
+            {
+                UpdateNeighbors();
+                UpdateSprite();
+            }
+        }
+    }
+
+    private void UpdateSprite()
     {
         var east = _neighbors[1];
         var west = _neighbors[0];

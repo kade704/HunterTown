@@ -162,10 +162,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2a2a8b318f6c374486e542eee07495b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _id: portal
+  _id: '#portal'
   _cost: 0
   _displayName: "\uD3EC\uD0C8"
-  _icon: {fileID: 234716113, guid: 72d2df6d6d70d1742a1af329f58bee74, type: 3}
+  _description: "\uD5CC\uD130\uB97C \uD30C\uACAC\uC2DC\uD0AC\uC218 \uC788\uB2E4."
+  _defaultSprite: {fileID: 0}
   _size: {x: 1, y: 1}
   _buildable: 0
   _destroyable: 0
@@ -199,10 +200,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interactions:
-  - _id: dispatch
+  - _id: '#dispatch'
     _displayName: "\uD30C\uACAC"
     _icon: {fileID: 21300000, guid: fe88d6c1f83aa0144843a76a67ed6376, type: 3}
-  - _id: examine
+  - _id: '#examine'
     _displayName: "\uD0D0\uC0C9"
     _icon: {fileID: 21300000, guid: 6f71cc46dc5110646a5eb39cd892b048, type: 3}
 --- !u!1 &2795131963742150527

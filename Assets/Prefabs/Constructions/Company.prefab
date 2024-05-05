@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 3837164055075723868}
   - component: {fileID: 9069034565343753918}
   - component: {fileID: 999620401962331837}
-  - component: {fileID: 3978110596730065000}
   - component: {fileID: -3402884614236335201}
   m_Layer: 0
   m_Name: Company
@@ -124,7 +123,7 @@ PolygonCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.1}
-    oldSize: {x: 2, y: 2.453125}
+    oldSize: {x: 2, y: 2.5}
     newSize: {x: 2, y: 2.453125}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -172,30 +171,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2a2a8b318f6c374486e542eee07495b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _id: company
+  _id: '#company'
   _cost: 0
   _displayName: "\uBCF8\uBD80"
-  _icon: {fileID: 1430292771, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
+  _description: "\uD5CC\uD130\uB4E4\uC744 \uAD00\uB9AC\uD558\uB294 \uC2DC\uC124\uC774\uB2E4."
+  _defaultSprite: {fileID: 0}
   _size: {x: 2, y: 2}
   _buildable: 0
   _destroyable: 0
---- !u!114 &3978110596730065000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5935477144362420533}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a5e25823fcaa94141ad9f3937c6253b5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _spriteDirection:
-    _east: {fileID: 1430292771, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
-    _south: {fileID: 1430292771, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
-    _west: {fileID: 1430292771, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
-    _north: {fileID: 1430292771, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
 --- !u!114 &-3402884614236335201
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -208,8 +191,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97ef4819a08424d4e866a2ae3dc5977e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _displayName: "\uBCF8\uBD80"
   _interactions:
-  - _id: employment
+  - _id: '#employment'
     _displayName: "\uACE0\uC6A9"
     _icon: {fileID: 0}

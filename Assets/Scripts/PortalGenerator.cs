@@ -1,16 +1,23 @@
 using System.Collections;
 using System.Linq;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class PortalGenerator : MonoBehaviour
 {
+    [AssetsOnly]
+    [SerializeField]
+    private Construction _portalPrefab;
+
+    [AssetSelector]
+    [SerializeField]
     private Ability[] _portalAbilities;
+
     private int _nextSpawnHour = 5;
     private ConstructionGridmap _constructionGridMap;
 
     private void Awake()
     {
-        _portalAbilities = Resources.LoadAll<Ability>("Abilities");
         _constructionGridMap = FindObjectOfType<ConstructionGridmap>();
     }
 
@@ -29,15 +36,13 @@ public class PortalGenerator : MonoBehaviour
 
     private void SpawnRandomPortal()
     {
-        var portalPrefab = Resources.Load<Construction>("Constructions/Portal");
-
         Vector2Int cellPos;
         do
         {
-            cellPos = new Vector2Int(Random.Range(-10, 10), Random.Range(-10, 10));
-        } while (_constructionGridMap.GetConstructionAt(cellPos) != null);
+            cellPos = new Vector2Int(Random.Range(0, 64), Random.Range(0, 64));
+        } while (!_constructionGridMap.CheckConstructionBuildable(_portalPrefab, cellPos));
 
-        var newPortal = _constructionGridMap.BuildConstruction(portalPrefab, cellPos).GetComponent<Portal>();
+        var newPortal = _constructionGridMap.BuildConstruction(_portalPrefab, cellPos).GetComponent<Portal>();
 
         var day = GameManager.Instance.GetSystem<TimeSystem>().Day.Total;
         var month = GameManager.Instance.GetSystem<TimeSystem>().Month.Total;

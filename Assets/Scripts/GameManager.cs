@@ -79,12 +79,18 @@ public class GameManager : MonoBehaviour
         if (!File.Exists(savePath) || !_loadFromSave)
         {
             var player = GetSystem<Player>();
-            player.Money = 1000;
-
-            var mapJson = Resources.Load<TextAsset>("Map").text;
+            player.Money = 10000;
+            player.Population = 0;
 
             var constructionGridMap = GetSystem<ConstructionGridmap>();
-            constructionGridMap.Deserialize(JToken.Parse(mapJson));
+            var street = GetSystem<ConstructionDatabase>().GetConstructionPrefab("#street");
+            var company = GetSystem<ConstructionDatabase>().GetConstructionPrefab("#company");
+            constructionGridMap.BuildConstruction(company, new Vector2Int(32, 32));
+            constructionGridMap.BuildConstruction(street, new Vector2Int(31, 31));
+            constructionGridMap.BuildConstruction(street, new Vector2Int(31, 32));
+            constructionGridMap.BuildConstruction(street, new Vector2Int(31, 33));
+            constructionGridMap.BuildConstruction(street, new Vector2Int(32, 31));
+            constructionGridMap.BuildConstruction(street, new Vector2Int(33, 31));
 
             var hunterSpawner = GetSystem<HunterSpawner>();
             hunterSpawner.SpawnRandomHunter();

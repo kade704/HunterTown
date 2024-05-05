@@ -159,9 +159,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2a2a8b318f6c374486e542eee07495b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _id: pool
+  _id: '#pool'
   _cost: 30
   _displayName: "\uC218\uC601\uC7A5"
+  _description: "\uC2DC\uBBFC\uB4E4\uC5D0 \uB180\uAC70\uB9AC\uB97C \uC81C\uACF5\uD55C\uB2E4"
   _defaultSprite: {fileID: 967448473, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
   _size: {x: 0, y: 0}
   _buildable: 1

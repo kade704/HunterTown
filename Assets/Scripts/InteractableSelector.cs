@@ -11,7 +11,7 @@ public class InteractableSelector : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && !UIManager.IsUIObjectOverPointer())
+        if (Input.GetMouseButtonDown(0) && !UIManager.IsUIObjectOverPointer() && GameManager.Instance.GetSystem<ConstructionBuilder>().IsBuildMode == false)
         {
             var interactable = GetInteractableOverPointer();
             _onInteractableSelected.Invoke(interactable);

@@ -154,9 +154,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2a2a8b318f6c374486e542eee07495b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _id: road
+  _id: '#street'
   _cost: 5
   _displayName: "\uB3C4\uB85C"
+  _description: "\uC0AC\uB78C\uB4E4\uC774 \uC9C0\uB098\uB2E4\uB2D0\uC218 \uC788\uB2E4."
   _defaultSprite: {fileID: -1927958277, guid: 9ce137b1be9c78d4683d4c1afb72be4e, type: 3}
   _size: {x: 1, y: 1}
   _buildable: 1

@@ -1,16 +1,15 @@
 using System.Collections.Generic;
-using System.Linq;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class ConstructionGridmap : MonoBehaviour, IDeserializable, ISerializable
 {
-    private Dictionary<Vector2Int, Construction> _constructionMap = new();
+    private const int GRID_SIZE = 64;
+    private Construction[,] _constructionMap = new Construction[GRID_SIZE, GRID_SIZE];
     private List<Construction> _constructions = new();
     private Grid _isometricGrid;
 
-    private Construction[] _constructionPrefabs;
     private UnityEvent<Construction> _onConstructionBuilded = new();
     private UnityEvent<Construction> _onConstructionDestroyed = new();
 
@@ -18,15 +17,9 @@ public class ConstructionGridmap : MonoBehaviour, IDeserializable, ISerializable
     public UnityEvent<Construction> OnConstructionBuilded => _onConstructionBuilded;
     public UnityEvent<Construction> OnConstructionDestroyed => _onConstructionDestroyed;
 
-    public Construction GetConstructionPrefab(string id)
-    {
-        return _constructionPrefabs.Where(c => c.Id == id).FirstOrDefault();
-    }
 
     private void Awake()
     {
-        _constructionPrefabs = Resources.LoadAll<Construction>("Constructions");
-
         _isometricGrid = GetComponentInParent<Grid>();
     }
 
@@ -67,7 +60,7 @@ public class ConstructionGridmap : MonoBehaviour, IDeserializable, ISerializable
             for (var x = 0; x < size.x; x++)
             {
                 var pos = cellPos + new Vector2Int(x, y);
-                _constructionMap[pos] = newConstruction;
+                _constructionMap[pos.y, pos.x] = newConstruction;
             }
         }
         _constructions.Add(newConstruction);
@@ -85,18 +78,18 @@ public class ConstructionGridmap : MonoBehaviour, IDeserializable, ISerializable
             return;
         }
 
-        _onConstructionDestroyed.Invoke(construction);
-
         var size = construction.Size;
         for (int y = 0; y < size.y; y++)
         {
             for (int x = 0; x < size.x; x++)
             {
                 var pos = construction.CellPos + new Vector2Int(x, y);
-                _constructionMap.Remove(pos);
+                _constructionMap[pos.y, pos.x] = null;
             }
         }
         _constructions.Remove(construction);
+
+        _onConstructionDestroyed.Invoke(construction);
 
         Destroy(construction.gameObject);
     }
@@ -120,8 +113,14 @@ public class ConstructionGridmap : MonoBehaviour, IDeserializable, ISerializable
             for (var x = 0; x < size.x; x++)
             {
                 var pos = cellPos + new Vector2Int(x, y);
-                if (_constructionMap.GetValueOrDefault(pos))
+                if (pos.x < 0 || pos.x >= GRID_SIZE || pos.y < 0 || pos.y >= GRID_SIZE)
+                {
                     return false;
+                }
+                if (_constructionMap[pos.y, pos.x] != null)
+                {
+                    return false;
+                }
             }
         }
 
@@ -130,7 +129,7 @@ public class ConstructionGridmap : MonoBehaviour, IDeserializable, ISerializable
 
     public Construction GetConstructionAt(Vector2Int cellPos)
     {
-        return _constructionMap.GetValueOrDefault(cellPos);
+        return _constructionMap[cellPos.y, cellPos.x];
     }
 
     public bool IsConstructionExistAt(Vector2Int cellPos)
@@ -145,7 +144,7 @@ public class ConstructionGridmap : MonoBehaviour, IDeserializable, ISerializable
         {
             var obj = new JObject
             {
-                ["id"] = construction.Id,
+                ["id"] = construction.ID,
                 ["posX"] = construction.CellPos.x,
                 ["posY"] = construction.CellPos.y
             };
@@ -161,18 +160,18 @@ public class ConstructionGridmap : MonoBehaviour, IDeserializable, ISerializable
             Destroy(construction.gameObject);
         }
 
-        _constructionMap.Clear();
+        _constructionMap = new Construction[GRID_SIZE, GRID_SIZE];
 
         foreach (var construction in token)
         {
-            var name = construction["id"].Value<string>();
+            var id = construction["id"].Value<string>();
             var posX = construction["posX"].Value<int>();
             var posY = construction["posY"].Value<int>();
             var pos = new Vector2Int(posX, posY);
-            var constructionPrefab = GetConstructionPrefab(name);
+            var constructionPrefab = GameManager.Instance.GetSystem<ConstructionDatabase>().GetConstructionPrefab(id);
             if (!constructionPrefab)
             {
-                Debug.LogError("Construction prefab not found: " + name);
+                Debug.LogError("Construction prefab not found: " + id);
                 continue;
             }
             BuildConstruction(constructionPrefab, pos);

@@ -1,14 +1,17 @@
+using UnityEditor.Overlays;
 using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(UIFade))]
 public class UIInteractablePanel : MonoBehaviour
 {
+    [SerializeField] private Text _name;
+    [SerializeField] private Text _description;
+    [SerializeField] private Transform _interactionButtonsParent;
+    [SerializeField] private UIInteractionButton _interactionButtonPrefab;
+
     private UIFade _panel;
-    private Text _nameText;
     private Interactable _selectedInteractable;
-    private Transform _interactionButtonsParent;
-    private UIInteractionButton _interactionButtonRef;
     private InteractableSelector _interactableSelector;
 
 
@@ -16,9 +19,6 @@ public class UIInteractablePanel : MonoBehaviour
     {
         _panel = GetComponent<UIFade>();
         _interactableSelector = FindObjectOfType<InteractableSelector>();
-        _nameText = transform.Find("NameBG/NameText").GetComponent<Text>();
-        _interactionButtonsParent = transform.Find("InteractionButtons");
-        _interactionButtonRef = transform.Find("InteractionButtonRef").GetComponent<UIInteractionButton>();
 
         var InteractableSelector = FindObjectOfType<InteractableSelector>();
         InteractableSelector.OnInteractableSelected.AddListener(OnInteractableClicked);
@@ -35,7 +35,8 @@ public class UIInteractablePanel : MonoBehaviour
         {
             _panel.FadeIn(20);
 
-            _nameText.text = interactable.DisplayName;
+            _name.text = interactable.DisplayName;
+            _description.text = interactable.Description;
 
             foreach (Transform interactionButton in _interactionButtonsParent)
             {
@@ -44,7 +45,7 @@ public class UIInteractablePanel : MonoBehaviour
 
             foreach (var interaction in interactable.Interactions)
             {
-                var interactionButton = Instantiate(_interactionButtonRef, _interactionButtonsParent);
+                var interactionButton = Instantiate(_interactionButtonPrefab, _interactionButtonsParent);
                 interactionButton.Interaction = interaction;
                 interactionButton.OnClick.AddListener(() =>
                 {
@@ -54,6 +55,7 @@ public class UIInteractablePanel : MonoBehaviour
                     _panel.FadeOut(20);
                 });
             }
+            LayoutRebuilder.ForceRebuildLayoutImmediate(GetComponent<RectTransform>());
 
             _selectedInteractable = interactable;
             _selectedInteractable.SetOutline(true);

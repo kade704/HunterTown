@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4436391697399867256}
   - component: {fileID: 8646880615237549289}
   - component: {fileID: -8048074963830222491}
+  - component: {fileID: -126376017957432389}
   m_Layer: 0
   m_Name: Apartment
   m_TagString: Untagged
@@ -154,11 +155,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2a2a8b318f6c374486e542eee07495b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _id: house2
-  _cost: 30
+  _id: '#apartment'
+  _cost: 1500
   _displayName: "\uC544\uD30C\uD2B8"
+  _description: "\uC5EC\uB7EC\uBA85\uC758 \uC2DC\uBBFC\uC744 \uC218\uC6A9\uD560\uC218
+    \uC788\uB2E4.\n(\uC2DC\uBBFC \uC218\uC6A9 + 20)"
   _defaultSprite: {fileID: -1343409075, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
-  _size: {x: 0, y: 0}
+  _size: {x: 1, y: 1}
   _buildable: 1
   _destroyable: 1
 --- !u!114 &-8048074963830222491
@@ -174,3 +177,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interactions: []
+--- !u!114 &-126376017957432389
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2901527553759305183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba4f49db3c17b484dbae92a9e0ea6fda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _populationIncrease: 20

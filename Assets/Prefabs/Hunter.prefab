@@ -2464,7 +2464,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interactions:
-  - _id: follow
+  - _id: '#follow'
     _displayName: "\uB530\uB77C\uAC00\uAE30"
     _icon: {fileID: 0}
 --- !u!70 &8826893060352688572

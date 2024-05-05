@@ -927,6 +927,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 4da75fd7440446a41af9fabccf4ab011, type: 3}
   _sfxClips:
   - {fileID: 8300000, guid: abf2c464a574c2e4c92e70b52e81913e, type: 3}
+  - {fileID: 8300000, guid: 35f5eeb386d50d64ca66565918564aeb, type: 3}
   _audioMixer: {fileID: 24100000, guid: 54163f6716d4424429872e64d99760d2, type: 2}
   _musicSource: {fileID: 1671749881}
   _sfxSource: {fileID: 1671749880}

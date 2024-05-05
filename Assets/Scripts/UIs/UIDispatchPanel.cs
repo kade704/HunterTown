@@ -64,7 +64,7 @@ public class UIDispatchPanel : MonoBehaviour
         var interactableSelector = FindObjectOfType<InteractableSelector>();
         interactableSelector.OnInteractableInteracted.AddListener((interactable, interaction) =>
         {
-            if (interaction.ID == "dispatch")
+            if (interaction.ID == "#dispatch")
             {
                 Initialize(interactable.GetComponent<Portal>());
                 _fade.FadeIn();

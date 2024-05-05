@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class HunterSpawner : MonoBehaviour, ISerializable, IDeserializable
 {
+    [SerializeField] private Hunter _hunterPrefab;
     [SerializeField] private string[] _hunterNames;
     private List<Hunter> _hunters = new();
     private List<string> _hunterNamesLeft = new();
@@ -33,8 +34,7 @@ public class HunterSpawner : MonoBehaviour, ISerializable, IDeserializable
 
     public void SpawnRandomHunter()
     {
-        var hunterPrefab = Resources.Load<Hunter>("Hunter");
-        var newHunter = Instantiate(hunterPrefab, transform);
+        var newHunter = Instantiate(_hunterPrefab, transform);
         var day = GameManager.Instance.GetSystem<TimeSystem>().Day.Total;
         var stat = 13 + (day * day / 1500);
         var hp = Random.Range(0, stat + 1 - 6) + 3;
@@ -86,7 +86,7 @@ public class HunterSpawner : MonoBehaviour, ISerializable, IDeserializable
                 ["rightSleeve"] = hunter.RightSleeveSprite.name,
                 ["leftPant"] = hunter.LeftPantSprite.name,
                 ["rightPant"] = hunter.RightPantSprite.name,
-                ["hairColor"] = ColorUtility.ToHtmlStringRGB(hunter.HairColor),
+                ["hairColor"] = '#' + ColorUtility.ToHtmlStringRGB(hunter.HairColor),
             };
             hunters.Add(obj);
         }
@@ -105,8 +105,7 @@ public class HunterSpawner : MonoBehaviour, ISerializable, IDeserializable
 
         foreach (var obj in token)
         {
-            var hunterPrefab = Resources.Load<Hunter>("Hunter");
-            var newHunter = Instantiate(hunterPrefab, transform);
+            var newHunter = Instantiate(_hunterPrefab, transform);
 
             newHunter.DisplayName = obj["name"].Value<string>();
             newHunter.DefaultHp = obj["hp"].Value<float>();

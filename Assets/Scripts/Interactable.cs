@@ -19,6 +19,7 @@ public class Interactable : MonoBehaviour
     [SerializeField] private Interaction[] _interactions;
 
     private string _displayName;
+    private string _description;
     private SpriteRenderer[] _spriteRenderers;
     private UnityEvent<Interaction> _onInteracted = new();
 
@@ -27,6 +28,11 @@ public class Interactable : MonoBehaviour
     {
         get { return _displayName; }
         set { _displayName = value; }
+    }
+    public string Description
+    {
+        get { return _description; }
+        set { _description = value; }
     }
     public UnityEvent<Interaction> OnInteracted => _onInteracted;
 

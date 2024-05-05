@@ -169,7 +169,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97ef4819a08424d4e866a2ae3dc5977e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _displayName: 
   _interactions: []
 --- !u!114 &4496104136203293403
 MonoBehaviour:
@@ -183,10 +182,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2a2a8b318f6c374486e542eee07495b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _id: rock
+  _id: '#rock'
   _cost: 0
   _displayName: "\uB3CC"
-  _icon: {fileID: 0}
+  _description: 
+  _defaultSprite: {fileID: 0}
   _size: {x: 1, y: 1}
   _buildable: 0
   _destroyable: 1

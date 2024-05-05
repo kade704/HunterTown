@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3565845757440208362}
   - component: {fileID: 8494855508593197953}
   - component: {fileID: 8661895948472644750}
+  - component: {fileID: -6851594000809429196}
   m_Layer: 0
   m_Name: SmallHouse
   m_TagString: Untagged
@@ -153,9 +154,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2a2a8b318f6c374486e542eee07495b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _id: small_house
-  _cost: 30
+  _id: '#small_house'
+  _cost: 300
   _displayName: "\uC791\uC740\uC9D1"
+  _description: "\uCD08\uB77C\uD55C \uC9D1\uC774\uB2E4.\n(\uC2DC\uBBFC \uC218\uC6A9
+    + 5)"
   _defaultSprite: {fileID: 1722864094, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
   _size: {x: 1, y: 1}
   _buildable: 1
@@ -173,3 +176,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interactions: []
+--- !u!114 &-6851594000809429196
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2901527553759305183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba4f49db3c17b484dbae92a9e0ea6fda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _populationIncrease: 5

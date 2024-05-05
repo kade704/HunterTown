@@ -73,6 +73,16 @@ public class Hunter : MonoBehaviour
     private void Start()
     {
         _interactable.DisplayName = _displayName;
+        _interactable.Description = $"방어력: {Viability}\n공격력: {CombatPower}";
+
+        _interactable.OnInteracted.AddListener((interaction) =>
+        {
+            if (interaction.ID == "#follow")
+            {
+                GameManager.Instance.GetSystem<FollowCamera>().SetEnabled(true);
+                GameManager.Instance.GetSystem<FollowCamera>().SetTarget(transform);
+            }
+        });
 
 
         CaptureThumbnailRoutine();
@@ -109,21 +119,21 @@ public class Hunter : MonoBehaviour
             var path = SearchPath(start, target);
             if (path == null) continue;
 
+            var pathPos = path.Select(road => (Vector2)road.transform.position).ToArray();
+
             int index = 0;
 
-            while (index < path.Length)
+            while (index < pathPos.Length)
             {
-                if (!path[index]) break;
-
-                while (Vector2.Distance(transform.position, path[index].transform.position) > 0.1f)
+                while (Vector2.Distance(transform.position, pathPos[index]) > 0.1f)
                 {
                     var speed = timeSystem.TimeScale * 0.6f;
-                    var dir = (path[index].transform.position - transform.position).normalized;
+                    var dir = (pathPos[index] - (Vector2)transform.position).normalized;
                     var velocity = speed * Time.deltaTime * dir;
 
                     _spriteRoot.localScale = new Vector3(velocity.x < 0 ? 0.5f : -0.5f, 0.5f, 1);
 
-                    transform.position += velocity;
+                    transform.position += (Vector3)velocity;
 
                     _animator.SetFloat("RunState", 0.5f);
                     yield return null;
@@ -131,9 +141,13 @@ public class Hunter : MonoBehaviour
                 index++;
             }
             start = target;
+            if (!start)
+            {
+                start = roads[Random.Range(0, roads.Length)];
+                transform.position = start.transform.position;
+            }
 
             _animator.SetFloat("RunState", 0);
-
         }
     }
 

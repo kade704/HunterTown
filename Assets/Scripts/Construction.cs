@@ -97,4 +97,6 @@ public class Construction : MonoBehaviour
     {
         _spriteRenderer.material.SetFloat("_Outline", outline ? 1 : 0);
     }
+
+
 }

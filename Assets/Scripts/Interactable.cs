@@ -20,7 +20,7 @@ public class Interactable : MonoBehaviour
 
     private string _displayName;
     private string _description;
-    private SpriteRenderer[] _spriteRenderers;
+    private SpriteRenderer _spriteRenderer;
     private UnityEvent<Interaction> _onInteracted = new();
 
     public Interaction[] Interactions => _interactions;
@@ -34,18 +34,17 @@ public class Interactable : MonoBehaviour
         get { return _description; }
         set { _description = value; }
     }
+
+    public SpriteRenderer SpriteRenderer => _spriteRenderer;
     public UnityEvent<Interaction> OnInteracted => _onInteracted;
 
     private void Awake()
     {
-        _spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     public void SetOutline(bool value)
     {
-        foreach (var spriteRenderer in _spriteRenderers)
-        {
-            spriteRenderer.material.SetFloat("_Outline", value ? 1 : 0);
-        }
+        _spriteRenderer.material.SetFloat("_Outline", value ? 1 : 0);
     }
 }

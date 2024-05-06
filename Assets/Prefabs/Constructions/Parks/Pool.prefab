@@ -164,7 +164,7 @@ MonoBehaviour:
   _displayName: "\uC218\uC601\uC7A5"
   _description: "\uC2DC\uBBFC\uB4E4\uC5D0 \uB180\uAC70\uB9AC\uB97C \uC81C\uACF5\uD55C\uB2E4"
   _defaultSprite: {fileID: 967448473, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
-  _size: {x: 0, y: 0}
+  _size: {x: 1, y: 1}
   _buildable: 1
   _destroyable: 1
 --- !u!114 &-8048074963830222491

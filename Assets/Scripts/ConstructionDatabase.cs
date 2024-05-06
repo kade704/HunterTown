@@ -10,4 +10,6 @@ public class ConstructionDatabase : MonoBehaviour
     {
         return _constructionPrefabs.Where(c => c.ID == id).FirstOrDefault();
     }
+
+    public Construction[] ConstructionPrefabs => _constructionPrefabs;
 }

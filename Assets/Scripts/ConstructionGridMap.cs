@@ -3,9 +3,10 @@ using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
+[ExecuteInEditMode]
 public class ConstructionGridmap : MonoBehaviour, IDeserializable, ISerializable
 {
-    private const int GRID_SIZE = 64;
+    public const int GRID_SIZE = 64;
     private Construction[,] _constructionMap = new Construction[GRID_SIZE, GRID_SIZE];
     private List<Construction> _constructions = new();
     private Grid _isometricGrid;
@@ -22,6 +23,8 @@ public class ConstructionGridmap : MonoBehaviour, IDeserializable, ISerializable
     {
         _isometricGrid = GetComponentInParent<Grid>();
     }
+
+
 
     public Vector2 CellToWorld(Vector2Int cellPos)
     {
@@ -91,7 +94,7 @@ public class ConstructionGridmap : MonoBehaviour, IDeserializable, ISerializable
 
         _onConstructionDestroyed.Invoke(construction);
 
-        Destroy(construction.gameObject);
+        DestroyImmediate(construction.gameObject);
     }
 
     public void DestroyConstruction(Construction construction)
@@ -139,7 +142,7 @@ public class ConstructionGridmap : MonoBehaviour, IDeserializable, ISerializable
 
     public JToken Serialize()
     {
-        var constructions = new JArray();
+        var data = new JArray();
         foreach (var construction in _constructions)
         {
             var obj = new JObject
@@ -148,9 +151,17 @@ public class ConstructionGridmap : MonoBehaviour, IDeserializable, ISerializable
                 ["posX"] = construction.CellPos.x,
                 ["posY"] = construction.CellPos.y
             };
-            constructions.Add(obj);
+
+            var serializables = construction.GetComponents<ISerializable>();
+            foreach (var serializable in serializables)
+            {
+                print(serializable);
+                //obj.Add(serializable.Serialize());
+            }
+
+            data.Add(obj);
         }
-        return constructions;
+        return data;
     }
 
     public void Deserialize(JToken token)

@@ -22,11 +22,17 @@ public class InteractableSelector : MonoBehaviour
     {
         var position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         var colliders = Physics2D.OverlapPointAll(position);
+
+
+        Interactable frontInteractable = null;
         foreach (var collider in colliders)
         {
             var interactable = collider.GetComponent<Interactable>();
-            if (interactable) return interactable;
+            if (frontInteractable == null || interactable.SpriteRenderer.sortingOrder > frontInteractable.SpriteRenderer.sortingOrder)
+            {
+                frontInteractable = interactable;
+            }
         }
-        return null;
+        return frontInteractable;
     }
 }

@@ -13,12 +13,13 @@ public class CameraMovement : MonoBehaviour
     [SerializeField]
     private Vector2 _zoomLimits;
 
+    [SerializeField]
+    private float _moveSpeed;
+
 
     private Camera _camera;
     private float _zoomCurr;
     private float _zoomTarget;
-    private Vector2 _dragOrigin;
-    private bool _isUIClicked;
 
     private void Awake()
     {
@@ -30,7 +31,7 @@ public class CameraMovement : MonoBehaviour
         _zoomTarget = _zoomCurr = _camera.orthographicSize;
     }
 
-    private void Update()
+    private void LateUpdate()
     {
         var scroll = Input.mouseScrollDelta.y;
         if (scroll != 0)
@@ -50,30 +51,10 @@ public class CameraMovement : MonoBehaviour
 
         _camera.orthographicSize = _zoomCurr;
 
-        if (Input.GetMouseButtonDown(0))
-        {
-            if (UIManager.IsUIObjectOverPointer())
-            {
-                _isUIClicked = true;
-            }
-            else
-            {
-                _dragOrigin = _camera.ScreenToWorldPoint(Input.mousePosition);
+        var horizontal = Input.GetAxis("Horizontal");
+        var vertical = Input.GetAxis("Vertical");
 
-            }
-        }
-
-        if (Input.GetMouseButton(0) && !_isUIClicked)
-        {
-            var difference = _camera.ScreenToWorldPoint(Input.mousePosition) - transform.position;
-            var position = (Vector3)_dragOrigin - difference;
-            position.z = -10;
-            transform.position = position;
-        }
-
-        if (Input.GetMouseButtonUp(0))
-        {
-            _isUIClicked = false;
-        }
+        var velocity = new Vector3(horizontal, vertical, 0) * _moveSpeed * Time.deltaTime;
+        transform.position += velocity;
     }
 }

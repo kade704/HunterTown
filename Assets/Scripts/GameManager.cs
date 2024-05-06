@@ -80,7 +80,6 @@ public class GameManager : MonoBehaviour
         {
             var player = GetSystem<Player>();
             player.Money = 10000;
-            player.Population = 0;
 
             var constructionGridMap = GetSystem<ConstructionGridmap>();
             var street = GetSystem<ConstructionDatabase>().GetConstructionPrefab("#street");

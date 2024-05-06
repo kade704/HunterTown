@@ -189,4 +189,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba4f49db3c17b484dbae92a9e0ea6fda, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _populationIncrease: 20
+  _maxOccupancy: 20

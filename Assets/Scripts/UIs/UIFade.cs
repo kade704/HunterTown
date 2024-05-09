@@ -5,6 +5,9 @@ using UnityEngine;
 public class UIFade : MonoBehaviour
 {
     private CanvasGroup _canvasGroup;
+    private bool _isFadedIn = false;
+
+    public bool IsFadedIn => _isFadedIn;
 
     private void Awake()
     {
@@ -21,12 +24,13 @@ public class UIFade : MonoBehaviour
     {
         _canvasGroup.blocksRaycasts = true;
         _canvasGroup.interactable = true;
-        while (_canvasGroup.alpha <= 1)
+        while (_canvasGroup.alpha < 1)
         {
             _canvasGroup.alpha += Time.deltaTime * speed;
             yield return null;
         }
         _canvasGroup.alpha = 1;
+        _isFadedIn = true;
     }
 
     public void FadeOut(float speed = 10)
@@ -39,11 +43,12 @@ public class UIFade : MonoBehaviour
     {
         _canvasGroup.blocksRaycasts = false;
         _canvasGroup.interactable = false;
-        while (_canvasGroup.alpha >= 0)
+        while (_canvasGroup.alpha > 0)
         {
             _canvasGroup.alpha -= Time.deltaTime * speed;
             yield return null;
         }
         _canvasGroup.alpha = 0;
+        _isFadedIn = false;
     }
 }

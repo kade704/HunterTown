@@ -4,25 +4,17 @@ using UnityEngine.UI;
 
 public class UIDispatchSlot : MonoBehaviour
 {
+    [SerializeField] private Text _name;
+    [SerializeField] private Image _sprite;
+    [SerializeField] private Text _deathProbability;
+
     private UIDispatchPanel _dispatchPanel;
-    private Text _name;
-    private Image _sprite;
     private Hunter _hunter;
-    private Text _deathProbability;
-    private Button _removeButton;
     private int _index;
 
     private void Awake()
     {
         _dispatchPanel = GetComponentInParent<UIDispatchPanel>();
-        _name = transform.Find("Name").GetComponent<Text>();
-        _sprite = transform.Find("Sprite").GetComponent<Image>();
-        _deathProbability = transform.Find("DeathProbability").GetComponent<Text>();
-        _removeButton = transform.Find("RemoveButton").GetComponent<Button>();
-        _removeButton.onClick.AddListener(() =>
-        {
-            Hunter = null;
-        });
         _index = transform.GetSiblingIndex();
     }
 
@@ -54,7 +46,6 @@ public class UIDispatchSlot : MonoBehaviour
             }
 
             _hunter = value;
-            _dispatchPanel.RefreshHunterSlot();
         }
         get
         {

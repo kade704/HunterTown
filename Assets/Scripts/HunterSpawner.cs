@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class HunterSpawner : MonoBehaviour, ISerializable, IDeserializable
 {
@@ -12,8 +13,11 @@ public class HunterSpawner : MonoBehaviour, ISerializable, IDeserializable
     private Sprite[] _hairSprites;
     private Sprite[] _clothSprites;
     private Sprite[] _pantSprites;
+    private UnityEvent _onHuntersChanged = new();
 
     public Hunter[] Hunters => _hunters.ToArray();
+    public UnityEvent OnHuntersChanged => _onHuntersChanged;
+
 
     private void Awake()
     {
@@ -61,18 +65,22 @@ public class HunterSpawner : MonoBehaviour, ISerializable, IDeserializable
         newHunter.RightPantSprite = _pantSprites.Where(s => s.name == $"Pant{pantIdx}_Right").FirstOrDefault();
 
         _hunters.Add(newHunter);
+        _onHuntersChanged.Invoke();
+
         GameManager.Instance.GetSystem<LoggerSystem>().LogInfo($"<b>{newHunter.DisplayName}</b> 이(가) 마을에 이주했습니다.");
     }
 
     public void RemoveHunter(Hunter hunter)
     {
         _hunters.Remove(hunter);
+        _hunterNamesLeft.Add(hunter.DisplayName);
+        _onHuntersChanged.Invoke();
         Destroy(hunter.gameObject);
     }
 
     public JToken Serialize()
     {
-        var hunters = new JArray();
+        var token = new JArray();
         foreach (var hunter in _hunters)
         {
             var obj = new JObject
@@ -88,9 +96,9 @@ public class HunterSpawner : MonoBehaviour, ISerializable, IDeserializable
                 ["rightPant"] = hunter.RightPantSprite.name,
                 ["hairColor"] = '#' + ColorUtility.ToHtmlStringRGB(hunter.HairColor),
             };
-            hunters.Add(obj);
+            token.Add(obj);
         }
-        return hunters;
+        return token;
     }
 
     public void Deserialize(JToken token)
@@ -119,6 +127,8 @@ public class HunterSpawner : MonoBehaviour, ISerializable, IDeserializable
             newHunter.HairColor = ColorUtility.TryParseHtmlString(obj["hairColor"].Value<string>(), out var color) ? color : Color.white;
 
             _hunters.Add(newHunter);
+
+            _onHuntersChanged.Invoke();
         }
     }
 }

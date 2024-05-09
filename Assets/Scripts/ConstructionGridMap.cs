@@ -94,7 +94,7 @@ public class ConstructionGridmap : MonoBehaviour, IDeserializable, ISerializable
 
         _onConstructionDestroyed.Invoke(construction);
 
-        DestroyImmediate(construction.gameObject);
+        Destroy(construction.gameObject);
     }
 
     public void DestroyConstruction(Construction construction)

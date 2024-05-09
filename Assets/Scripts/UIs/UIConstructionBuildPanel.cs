@@ -14,59 +14,124 @@ public class UIConstructionBuildPanel : MonoBehaviour
     [SerializeField] private UIFade _informationPanel;
     [SerializeField] private Text _informationTitle;
     [SerializeField] private Text _informationDescription;
+    [SerializeField] private UIBuildButton _selectButton;
+    [SerializeField] private UIBuildButton _desctructButton;
+
+    private ConstructionBuilder _constructionBuilder;
+    private UIBuildButton[] _buildButtons;
+
+    private void Awake()
+    {
+        _constructionBuilder = FindObjectOfType<ConstructionBuilder>();
+        _buildButtons = GetComponentsInChildren<UIBuildButton>();
+    }
 
 
     private void Start()
     {
-        _destructionButton.onClick.AddListener(() =>
-        {
-            var constructionBuilder = FindObjectOfType<ConstructionBuilder>();
-            constructionBuilder.SetDestructionMode(true);
-
-            _residencePanel.FadeOut();
-            _parkPanel.FadeOut();
-            _roadPanel.FadeOut();
-        });
-
         _residenceButton.onClick.AddListener(() =>
         {
-            _residencePanel.FadeIn();
-            _parkPanel.FadeOut();
-            _roadPanel.FadeOut();
+            if (_residencePanel.IsFadedIn)
+            {
+                _residencePanel.FadeOut();
+            }
+            else
+            {
+                _residencePanel.FadeIn();
+                _parkPanel.FadeOut();
+                _roadPanel.FadeOut();
+            }
         });
 
         _parkButton.onClick.AddListener(() =>
         {
-            _residencePanel.FadeOut();
-            _parkPanel.FadeIn();
-            _roadPanel.FadeOut();
+            if (_parkPanel.IsFadedIn)
+            {
+                _parkPanel.FadeOut();
+            }
+            else
+            {
+                _residencePanel.FadeOut();
+                _parkPanel.FadeIn();
+                _roadPanel.FadeOut();
+            }
         });
 
         _roadButton.onClick.AddListener(() =>
         {
-            _residencePanel.FadeOut();
-            _parkPanel.FadeOut();
-            _roadPanel.FadeIn();
+            if (_roadPanel.IsFadedIn)
+            {
+                _roadPanel.FadeOut();
+            }
+            else
+            {
+                _residencePanel.FadeOut();
+                _parkPanel.FadeOut();
+                _roadPanel.FadeIn();
+            }
         });
-    }
 
-    public void BuildConstruction(Construction constructionPrefab)
-    {
-        var constructionBuilder = FindObjectOfType<ConstructionBuilder>();
-        constructionBuilder.ConstructionPrefab = constructionPrefab;
-
-        _residencePanel.FadeOut();
-        _parkPanel.FadeOut();
-        _roadPanel.FadeOut();
-    }
-
-    public void SetInformation(Construction construction)
-    {
-        if (construction)
+        foreach (var button in _buildButtons)
         {
-            _informationTitle.text = $"[{construction.DisplayName}] - {construction.Cost}G";
-            _informationDescription.text = construction.Description;
-            _informationPanel.FadeIn();
+            button.OnClick.AddListener(() =>
+            {
+                if (button == _selectButton)
+                {
+                    _constructionBuilder.BulidMode = ConstructionBuilder.BuildMode.Select;
+                    _residencePanel.FadeOut();
+                    _parkPanel.FadeOut();
+                    _roadPanel.FadeOut();
+
+                }
+                else if (button == _desctructButton)
+                {
+                    _constructionBuilder.BulidMode = ConstructionBuilder.BuildMode.Destruct;
+                    _residencePanel.FadeOut();
+                    _parkPanel.FadeOut();
+                    _roadPanel.FadeOut();
+                }
+                else
+                {
+                    _constructionBuilder.SelectedConstructionPrefab = button.ConstructionPrefab;
+                    _constructionBuilder.BulidMode = ConstructionBuilder.BuildMode.Construct;
+                }
+
+                foreach (var btn in _buildButtons)
+                {
+                    btn.Outline.enabled = false;
+                }
+                button.Outline.enabled = true;
+            });
+        }
+    }
+
+    private void Update()
+    {
+        var hoveredButton = UIManager.GetUIObjectTypeOverPointer<UIBuildButton>();
+        if (hoveredButton)
+        {
+            if (hoveredButton == _selectButton)
+            {
+                _informationTitle.text = "선택 모드";
+                _informationDescription.text = "건물을 선택할수 있습니다";
+                _informationPanel.FadeIn();
+                return;
+            }
+            else if (hoveredButton == _desctructButton)
+            {
+                _informationTitle.text = "파괴 모드";
+                _informationDescription.text = "건물을 파괴할수 있습니다";
+                _informationPanel.FadeIn();
+                return;
+            }
+            else if (hoveredButton.ConstructionPrefab)
+            {
+                var construction = hoveredButton.ConstructionPrefab;
+
+                _informationTitle.text = $"[{construction.DisplayName}] - {construction.Cost}G";
+                _informationDescription.text = construction.Description;
+                _informationPanel.FadeIn();
+            }
         }
         else
         {

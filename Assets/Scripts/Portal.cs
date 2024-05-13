@@ -138,22 +138,17 @@ public class Portal : MonoBehaviour
         });
     }
 
-    public void Dispatch(Hunter[] hunters)
+    public void Dispatch()
     {
 
-        StartCoroutine(DispatchRoutine(hunters));
+        StartCoroutine(DispatchRoutine());
     }
 
-    private IEnumerator DispatchRoutine(Hunter[] hunters)
+    private IEnumerator DispatchRoutine()
     {
         GameManager.Instance.GetSystem<LoggerSystem>().LogInfo($"파견이 시작되었습니다.");
 
         _isDispatching = true;
-
-        foreach (var hunter in hunters)
-        {
-            hunter.IsDispatched = true;
-        }
 
         _progressSprite.enabled = true;
         var startTime = Time.time;
@@ -167,7 +162,7 @@ public class Portal : MonoBehaviour
         _progressSprite.enabled = false;
 
         var HunterSpawner = FindObjectOfType<HunterSpawner>();
-        foreach (var hunter in hunters)
+        foreach (var hunter in _construction.VisitedHunters)
         {
             var deathProbability = CalcHunterDeathProbability(hunter);
             if (Random.value < deathProbability)
@@ -175,10 +170,9 @@ public class Portal : MonoBehaviour
                 GameManager.Instance.GetSystem<LoggerSystem>().LogError($"{hunter.DisplayName} 이(가) 파견중 사망했습니다.");
                 HunterSpawner.RemoveHunter(hunter);
             }
-            hunter.IsDispatched = false;
         }
 
-        var success = CalcDispatchSuccessProbability(hunters);
+        var success = CalcDispatchSuccessProbability(_construction.VisitedHunters.ToArray());
         if (Random.value <= success)
         {
             GameManager.Instance.GetSystem<LoggerSystem>().LogInfo($"파견이 성공적으로 완료되었습니다.");
@@ -194,7 +188,7 @@ public class Portal : MonoBehaviour
             }
             GameManager.Instance.GetSystem<Player>().Money += (int)earnedMoney;
 
-            foreach (var hunter in hunters)
+            foreach (var hunter in _construction.VisitedHunters)
             {
                 var reward = HunterDispatchReward;
                 var damage = Random.Range(0, reward);

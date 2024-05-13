@@ -123,11 +123,11 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: RoadN
+      name: OneLaneRoadN
       rect:
         serializedVersion: 2
         x: 0
-        y: 208
+        y: 224
         width: 64
         height: 32
       alignment: 0
@@ -144,11 +144,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RoadE
+      name: OneLaneRoadE
       rect:
         serializedVersion: 2
         x: 64
-        y: 208
+        y: 224
         width: 64
         height: 32
       alignment: 0
@@ -165,11 +165,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RoadS
+      name: OneLaneRoadS
       rect:
         serializedVersion: 2
         x: 128
-        y: 208
+        y: 224
         width: 64
         height: 32
       alignment: 0
@@ -186,11 +186,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RoadW
+      name: OneLaneRoadW
       rect:
         serializedVersion: 2
         x: 192
-        y: 208
+        y: 224
         width: 64
         height: 32
       alignment: 0
@@ -207,11 +207,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RoadSN
+      name: OneLaneRoadSN
       rect:
         serializedVersion: 2
         x: 0
-        y: 176
+        y: 192
         width: 64
         height: 32
       alignment: 0
@@ -228,11 +228,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RoadWE
+      name: OneLaneRoadWE
       rect:
         serializedVersion: 2
         x: 64
-        y: 176
+        y: 192
         width: 64
         height: 32
       alignment: 0
@@ -249,11 +249,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RoadNone
+      name: OneLaneRoadNone
       rect:
         serializedVersion: 2
         x: 128
-        y: 176
+        y: 192
         width: 64
         height: 32
       alignment: 0
@@ -270,11 +270,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RoadSWNE
+      name: OneLaneRoadSWNE
       rect:
         serializedVersion: 2
         x: 192
-        y: 176
+        y: 192
         width: 64
         height: 32
       alignment: 0
@@ -291,11 +291,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RoadSWE
+      name: OneLaneRoadSWE
       rect:
         serializedVersion: 2
         x: 0
-        y: 144
+        y: 160
         width: 64
         height: 32
       alignment: 0
@@ -312,11 +312,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RoadSWN
+      name: OneLaneRoadSWN
       rect:
         serializedVersion: 2
         x: 64
-        y: 144
+        y: 160
         width: 64
         height: 32
       alignment: 0
@@ -333,11 +333,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RoadSNE
+      name: OneLaneRoadSNE
       rect:
         serializedVersion: 2
         x: 128
-        y: 144
+        y: 160
         width: 64
         height: 32
       alignment: 0
@@ -354,11 +354,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RoadWNE
+      name: OneLaneRoadWNE
       rect:
         serializedVersion: 2
         x: 192
-        y: 144
+        y: 160
         width: 64
         height: 32
       alignment: 0
@@ -375,11 +375,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RoadSW
+      name: OneLaneRoadSW
       rect:
         serializedVersion: 2
         x: 0
-        y: 112
+        y: 128
         width: 64
         height: 32
       alignment: 0
@@ -396,11 +396,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RoadNE
+      name: OneLaneRoadNE
       rect:
         serializedVersion: 2
         x: 64
-        y: 112
+        y: 128
         width: 64
         height: 32
       alignment: 0
@@ -417,11 +417,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RoadWN
+      name: OneLaneRoadWN
       rect:
         serializedVersion: 2
         x: 128
-        y: 112
+        y: 128
         width: 64
         height: 32
       alignment: 0
@@ -438,11 +438,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RoadSE
+      name: OneLaneRoadSE
       rect:
         serializedVersion: 2
         x: 192
-        y: 112
+        y: 128
         width: 64
         height: 32
       alignment: 0
@@ -458,6 +458,342 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: DirtRoadN
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 352
+        width: 64
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4e83bb056a7afc243bfa77358a6ecac9
+      internalID: -902446387
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DirtRoadE
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 352
+        width: 64
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9e19b714c8ad3ac48b7328ad0199dc7d
+      internalID: -1273367415
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DirtRoadS
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 352
+        width: 64
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5cf3966e1ed863648ab3becf9baa6748
+      internalID: 1969763089
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DirtRoadW
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 352
+        width: 64
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9be889285260b1d4f930d5fe415f4edf
+      internalID: 487544391
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DirtRoadSN
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 320
+        width: 64
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5bf11e3d38680ba4f8b3619bbd29eb74
+      internalID: 1137623578
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DirtRoadWE
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 320
+        width: 64
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2d3f74ba9d99c8649b89cfe16fec3b3d
+      internalID: -361124128
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DirtRoadNone
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 320
+        width: 64
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c4d730446f80b93469ea7337802b9c43
+      internalID: 778909228
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DirtRoadSWNE
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 320
+        width: 64
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e18739878e7282c47bb05a68585697d5
+      internalID: -2018903384
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DirtRoadSWE
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 288
+        width: 64
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 75b26bf8933ea79449040188caaedc2e
+      internalID: 1850215818
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DirtRoadSWN
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 288
+        width: 64
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8a004a24c36dc8742a457b239b98e48a
+      internalID: -1216517769
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DirtRoadSNE
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 288
+        width: 64
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 225b73cb03e39a64ab8d34c086235fd6
+      internalID: -2002037712
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DirtRoadWNE
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 288
+        width: 64
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4d0260f67bb7f53449cf459dabb84046
+      internalID: -795904803
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DirtRoadSW
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 256
+        width: 64
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0e8bc68ddf011554297911fc95046635
+      internalID: 493253942
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DirtRoadNE
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 256
+        width: 64
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 487ef8c6b2ba3da4f80d9340b037546d
+      internalID: 1959286375
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DirtRoadWN
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 256
+        width: 64
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 03baed8200a65a347b2f9025fa765eb4
+      internalID: -777678988
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DirtRoadSE
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 256
+        width: 64
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8eb70ca9211becb48a9fff4ef85baa34
+      internalID: 217670141
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -469,22 +805,38 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      RoadE: 60986158
-      RoadN: -3711728
-      RoadNE: 1208307691
-      RoadNone: 83718644
-      RoadS: 785179344
-      RoadSE: 1370674463
-      RoadSN: 1186669591
-      RoadSNE: -873806994
-      RoadSW: 1349382372
-      RoadSWE: -295972988
-      RoadSWN: -580307748
-      RoadSWNE: -1927958277
-      RoadW: 1110279636
-      RoadWE: -1897608246
-      RoadWN: 1284933799
-      RoadWNE: 1281248992
+      DirtRoadE: -1273367415
+      DirtRoadN: -902446387
+      DirtRoadNE: 1959286375
+      DirtRoadNone: 778909228
+      DirtRoadS: 1969763089
+      DirtRoadSE: 217670141
+      DirtRoadSN: 1137623578
+      DirtRoadSNE: -2002037712
+      DirtRoadSW: 493253942
+      DirtRoadSWE: 1850215818
+      DirtRoadSWN: -1216517769
+      DirtRoadSWNE: -2018903384
+      DirtRoadW: 487544391
+      DirtRoadWE: -361124128
+      DirtRoadWN: -777678988
+      DirtRoadWNE: -795904803
+      OneLaneRoadE: 60986158
+      OneLaneRoadN: -3711728
+      OneLaneRoadNE: 1208307691
+      OneLaneRoadNone: 83718644
+      OneLaneRoadS: 785179344
+      OneLaneRoadSE: 1370674463
+      OneLaneRoadSN: 1186669591
+      OneLaneRoadSNE: -873806994
+      OneLaneRoadSW: 1349382372
+      OneLaneRoadSWE: -295972988
+      OneLaneRoadSWN: -580307748
+      OneLaneRoadSWNE: -1927958277
+      OneLaneRoadW: 1110279636
+      OneLaneRoadWE: -1897608246
+      OneLaneRoadWN: 1284933799
+      OneLaneRoadWNE: 1281248992
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

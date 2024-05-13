@@ -107,7 +107,7 @@ public class UIConstructionBuildPanel : MonoBehaviour
 
     private void Update()
     {
-        var hoveredButton = UIManager.GetUIObjectTypeOverPointer<UIBuildButton>();
+        var hoveredButton = UIUtil.GetUIObjectTypeOverPointer<UIBuildButton>();
         if (hoveredButton)
         {
             if (hoveredButton == _selectButton)

@@ -11,10 +11,10 @@ public class InteractableSelector : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && !UIManager.IsUIObjectOverPointer() && GameManager.Instance.GetSystem<ConstructionBuilder>().BulidMode == ConstructionBuilder.BuildMode.Select)
+        if (Input.GetMouseButtonDown(0) && !UIUtil.IsUIObjectOverPointer() && GameManager.Instance.GetSystem<ConstructionBuilder>().BulidMode == ConstructionBuilder.BuildMode.Select)
         {
             var interactable = GetInteractableOverPointer();
-            _onInteractableSelected.Invoke(interactable);
+            SelectInteractable(interactable);
         }
     }
 
@@ -28,11 +28,16 @@ public class InteractableSelector : MonoBehaviour
         foreach (var collider in colliders)
         {
             var interactable = collider.GetComponent<Interactable>();
-            if (frontInteractable == null || interactable.SpriteRenderer.sortingOrder > frontInteractable.SpriteRenderer.sortingOrder)
+            if (frontInteractable == null || frontInteractable.SpriteRenderer.sortingOrder > interactable.SpriteRenderer.sortingOrder)
             {
                 frontInteractable = interactable;
             }
         }
         return frontInteractable;
+    }
+
+    public void SelectInteractable(Interactable interactable)
+    {
+        _onInteractableSelected.Invoke(interactable);
     }
 }

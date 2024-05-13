@@ -56,7 +56,7 @@ public class HunterSpawner : MonoBehaviour, ISerializable, IDeserializable
         newHunter.HairColor = Random.ColorHSV(0, 1, 0.4f, 0.6f, 0.5f, 1f);
 
         var clothIdx = Random.Range(1, 12);
-        newHunter.BodySprite = _clothSprites.Where(s => s.name == $"Cloth{clothIdx}_Body").FirstOrDefault();
+        newHunter.BodyClothSprite = _clothSprites.Where(s => s.name == $"Cloth{clothIdx}_Body").FirstOrDefault();
         newHunter.LeftSleeveSprite = _clothSprites.Where(s => s.name == $"Cloth{clothIdx}_Left").FirstOrDefault();
         newHunter.RightSleeveSprite = _clothSprites.Where(s => s.name == $"Cloth{clothIdx}_Right").FirstOrDefault();
 
@@ -89,7 +89,7 @@ public class HunterSpawner : MonoBehaviour, ISerializable, IDeserializable
                 ["hp"] = hunter.DefaultHp,
                 ["damage"] = hunter.DefaultDamage,
                 ["hair"] = hunter.HairSprite.name,
-                ["cloth"] = hunter.BodySprite.name,
+                ["cloth"] = hunter.BodyClothSprite.name,
                 ["leftSleeve"] = hunter.LeftSleeveSprite.name,
                 ["rightSleeve"] = hunter.RightSleeveSprite.name,
                 ["leftPant"] = hunter.LeftPantSprite.name,
@@ -118,7 +118,7 @@ public class HunterSpawner : MonoBehaviour, ISerializable, IDeserializable
             newHunter.DisplayName = obj["name"].Value<string>();
             newHunter.DefaultHp = obj["hp"].Value<float>();
             newHunter.DefaultDamage = obj["damage"].Value<float>();
-            newHunter.BodySprite = _clothSprites.Where(s => s.name == obj["cloth"].Value<string>()).FirstOrDefault();
+            newHunter.BodyClothSprite = _clothSprites.Where(s => s.name == obj["cloth"].Value<string>()).FirstOrDefault();
             newHunter.LeftSleeveSprite = _clothSprites.Where(s => s.name == obj["leftSleeve"].Value<string>()).FirstOrDefault();
             newHunter.RightSleeveSprite = _clothSprites.Where(s => s.name == obj["rightSleeve"].Value<string>()).FirstOrDefault();
             newHunter.LeftPantSprite = _pantSprites.Where(s => s.name == obj["leftPant"].Value<string>()).FirstOrDefault();

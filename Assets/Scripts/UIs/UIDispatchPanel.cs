@@ -11,10 +11,10 @@ public class UIDispatchPanel : MonoBehaviour
     [SerializeField] private Text _difficultyText;
     [SerializeField] private Text _rankText;
     [SerializeField] private Text _successText;
+    [SerializeField] private UIDispatchSlot[] _dispatchSlots;
     [SerializeField] private Button _dispatchButton;
+    [SerializeField] private UIAbilitySlot[] _abilitySlots;
 
-    private UIDispatchSlot[] _dispatchSlots;
-    private UIAbilitySlot[] _abilitySlots;
     private UIAbilityInfo _abilityInfo;
     private UIAbilitySlot _abilitySlotOverPointer;
 
@@ -31,17 +31,17 @@ public class UIDispatchPanel : MonoBehaviour
         {
             _fade.FadeOut();
         });
-        _dispatchSlots = transform.GetComponentsInChildren<UIDispatchSlot>();
+
         _dispatchButton.onClick.AddListener(() =>
         {
             if (_targetPortal)
             {
-                var hunters = _dispatchSlots.Select(x => x.Hunter).OfType<Hunter>().ToArray();
-                _targetPortal.Dispatch(hunters);
+                _targetPortal.Dispatch();
                 _fade.FadeOut();
             }
         });
-        _abilitySlots = transform.GetComponentsInChildren<UIAbilitySlot>();
+
+
 
         var interactableSelector = FindObjectOfType<InteractableSelector>();
         interactableSelector.OnInteractableInteracted.AddListener((interactable, interaction) =>
@@ -60,7 +60,7 @@ public class UIDispatchPanel : MonoBehaviour
 
     private void Update()
     {
-        var abilitySlotOverPointer = UIManager.GetUIObjectTypeOverPointer<UIAbilitySlot>();
+        var abilitySlotOverPointer = UIUtil.GetUIObjectTypeOverPointer<UIAbilitySlot>();
         if (abilitySlotOverPointer != _abilitySlotOverPointer)
         {
             if (abilitySlotOverPointer && !abilitySlotOverPointer.Hidden)
@@ -111,9 +111,17 @@ public class UIDispatchPanel : MonoBehaviour
         _difficultyText.text = "복잡도: " + (_targetPortal.DifficultyVisibility ? _targetPortal.Difficulty.ToString("F1") : "???");
         _rankText.text = _targetPortal.Rank.ToString();
 
-        foreach (var dispatchSlot in _dispatchSlots)
+        for (int i = 0; i < 4; i++)
         {
-            dispatchSlot.Hunter = null;
+            if (i < portal.Construction.VisitedHunters.Count)
+            {
+                _dispatchSlots[i].Hunter = portal.Construction.VisitedHunters[i];
+            }
+            else
+            {
+                _dispatchSlots[i].Hunter = null;
+            }
+
         }
 
         for (int i = 0; i < 3; i++)

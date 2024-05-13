@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 3380698535929008947}
   - component: {fileID: 3595824103850118899}
   m_Layer: 0
-  m_Name: Street
+  m_Name: OneLaneRoad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

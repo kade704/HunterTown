@@ -33,7 +33,7 @@ public class UIInteractablePanel : MonoBehaviour
 
         if (interactable)
         {
-            _panel.FadeIn(20);
+            _panel.FadeIn(10);
 
             _name.text = interactable.DisplayName;
             _description.text = interactable.Description;
@@ -52,7 +52,7 @@ public class UIInteractablePanel : MonoBehaviour
                     _interactableSelector.OnInteractableInteracted.Invoke(interactable, interaction);
                     interactable.OnInteracted.Invoke(interaction);
                     interactable.SetOutline(false);
-                    _panel.FadeOut(20);
+                    _panel.FadeOut(10);
                 });
             }
             LayoutRebuilder.ForceRebuildLayoutImmediate(GetComponent<RectTransform>());
@@ -62,7 +62,7 @@ public class UIInteractablePanel : MonoBehaviour
         }
         else
         {
-            _panel.FadeOut(20);
+            _panel.FadeOut(10);
 
             _selectedInteractable = null;
         }

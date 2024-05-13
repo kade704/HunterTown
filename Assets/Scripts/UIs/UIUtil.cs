@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class UIManager : MonoBehaviour
+public class UIUtil
 {
     public static GameObject[] GetUIObjectsOverPointer()
     {

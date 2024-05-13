@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
@@ -34,9 +35,7 @@ public class Construction : MonoBehaviour
     [SerializeField]
     private bool _destroyable;
 
-    private UnityEvent<string> _onInteracted = new();
-    private UnityEvent _onBuilded = new();
-    private UnityEvent _onClicked = new();
+    private List<Hunter> _visitedHunters = new();
     private ConstructionGridmap _constructionGridMap;
     private SpriteRenderer _spriteRenderer;
     private Interactable _interactable;
@@ -53,9 +52,6 @@ public class Construction : MonoBehaviour
         get => _constructionGridMap;
         set => _constructionGridMap = value;
     }
-    public UnityEvent OnBuilded => _onBuilded;
-    public UnityEvent<string> OnInteracted => _onInteracted;
-    public UnityEvent OnClicked => _onClicked;
     public string ID => _id;
     public int Cost => _cost;
     public string DisplayName => _displayName;
@@ -66,6 +62,7 @@ public class Construction : MonoBehaviour
 
     public bool Buildable => _buildable;
     public bool Destroyable => _destroyable;
+    public List<Hunter> VisitedHunters => _visitedHunters;
 
     private void Awake()
     {
@@ -78,8 +75,6 @@ public class Construction : MonoBehaviour
     {
         _interactable.DisplayName = _displayName;
         _interactable.Description = _description;
-
-        _onBuilded.Invoke();
     }
 
     private void Update()

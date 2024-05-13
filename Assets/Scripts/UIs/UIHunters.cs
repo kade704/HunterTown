@@ -1,24 +1,39 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class UIHunters : MonoBehaviour
 {
-    [SerializeField] private UIHunterSlot _hunterSlotPrefab;
-    [SerializeField] private Transform _hunterSlotContainer;
+    [SerializeField] private UIHunterButton _hunterButtonPrefab;
+
+    private List<UIHunterButton> _hunterButtons = new();
 
     private void Awake()
     {
         var hunterSpawner = FindObjectOfType<HunterSpawner>();
         hunterSpawner.OnHuntersChanged.AddListener(() =>
         {
-            foreach (Transform child in _hunterSlotContainer)
+            _hunterButtons.Clear();
+
+            foreach (Transform child in transform)
             {
                 Destroy(child.gameObject);
             }
 
             foreach (var hunter in hunterSpawner.Hunters)
             {
-                var slot = Instantiate(_hunterSlotPrefab, _hunterSlotContainer);
-                slot.Hunter = hunter;
+                var button = Instantiate(_hunterButtonPrefab, transform);
+                button.Hunter = hunter;
+                button.OnClick.AddListener(() =>
+                {
+                    foreach (var b in _hunterButtons)
+                    {
+                        b.Outline.enabled = false;
+                    }
+                    GameManager.Instance.GetSystem<InteractableSelector>().SelectInteractable(hunter.GetComponent<Interactable>());
+                    GameManager.Instance.GetSystem<CameraMovement>().MovePosition(hunter.transform.position);
+                    button.Outline.enabled = true;
+                });
+                _hunterButtons.Add(button);
             }
         });
     }

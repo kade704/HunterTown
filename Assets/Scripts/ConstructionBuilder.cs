@@ -60,7 +60,7 @@ public class ConstructionBuilder : MonoBehaviour
 
         if (_selectedConstructionPrefab.GetComponent<Road>())
         {
-            if (Input.GetMouseButtonDown(0) && !UIManager.IsUIObjectOverPointer())
+            if (Input.GetMouseButtonDown(0) && !UIUtil.IsUIObjectOverPointer())
             {
                 _isDragging = true;
                 _startDragPos = cellPos;
@@ -149,17 +149,12 @@ public class ConstructionBuilder : MonoBehaviour
             _previewSprites[0].color = !buildable ? new Color(1.0f, 0.0f, 0.0f, 0.8f) : new Color(0.0f, 1.0f, 0.5f, 0.8f);
             _previewSprites[0].transform.position = _constructionGridMap.CellToWorld(cellPos);
 
-            if (Input.GetMouseButtonDown(0) && !UIManager.IsUIObjectOverPointer() && buildable)
+            if (Input.GetMouseButtonDown(0) && !UIUtil.IsUIObjectOverPointer() && buildable)
             {
                 _constructionGridMap.BuildConstruction(_selectedConstructionPrefab, cellPos);
 
                 GameManager.Instance.GetSystem<Player>().Money -= _selectedConstructionPrefab.Cost;
                 GameManager.Instance.GetSystem<AudioController>().PlaySFX("Build");
-            }
-
-            if (Input.GetKeyDown(KeyCode.R))
-            {
-                // Rotate construction
             }
         }
     }
@@ -183,7 +178,7 @@ public class ConstructionBuilder : MonoBehaviour
             _previewSprites[0].sprite = hoveredConstruction.Sprite;
             _previewSprites[0].color = new Color(1.0f, 0.0f, 0.0f, 0.8f);
 
-            if (Input.GetMouseButtonDown(0) && !UIManager.IsUIObjectOverPointer())
+            if (Input.GetMouseButtonDown(0) && !UIUtil.IsUIObjectOverPointer())
             {
                 GameManager.Instance.GetSystem<Player>().Money += hoveredConstruction.Cost / 2;
                 GameManager.Instance.GetSystem<AudioController>().PlaySFX("Destruction");

@@ -13,7 +13,7 @@ public class PortalGenerator : MonoBehaviour
     [SerializeField]
     private Ability[] _portalAbilities;
 
-    private int _nextSpawnHour = 5;
+    private int _nextSpawnHour = 10;
     private ConstructionGridmap _constructionGridMap;
 
     private void Awake()
@@ -28,7 +28,7 @@ public class PortalGenerator : MonoBehaviour
             var hour = GameManager.Instance.GetSystem<TimeSystem>().Hour.Total;
             if (hour >= _nextSpawnHour)
             {
-                _nextSpawnHour = hour + Random.Range(50, 100);
+                _nextSpawnHour = hour + Random.Range(500, 1000);
                 SpawnRandomPortal();
             }
         });

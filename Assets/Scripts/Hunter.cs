@@ -1,27 +1,28 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using Sirenix.Utilities;
+using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Rendering;
 
 [RequireComponent(typeof(Interactable))]
 public class Hunter : MonoBehaviour
 {
-    [SerializeField] private string _displayName;
-    [SerializeField] private float _defaultHp;
-    [SerializeField] private float _defaultDamage;
-    private bool _isDispatched = false;
+    [ReadOnly][SerializeField] private string _displayName;
+    [ReadOnly][SerializeField] private float _defaultHp;
+    [ReadOnly][SerializeField] private float _defaultDamage;
+    [SerializeField] private SpriteRenderer _bodyClothRenderer;
+    [SerializeField] private SpriteRenderer _hairRenderer;
+    [SerializeField] private SpriteRenderer _leftSleeveRenderer;
+    [SerializeField] private SpriteRenderer _rightSleeveRenderer;
+    [SerializeField] private SpriteRenderer _leftPantRenderer;
+    [SerializeField] private SpriteRenderer _rightPantRenderer;
+    [SerializeField] private Transform _spriteRoot;
+    [SerializeField] private SpriteRenderer _shadowRenderer;
+
+
     private Interactable _interactable;
-    private SpriteRenderer _bodySprite;
-    private SpriteRenderer _hairSprite;
-    private SpriteRenderer _leftSleeveSprite;
-    private SpriteRenderer _rightSleeveSprite;
-    private SpriteRenderer _leftPantSprite;
-    private SpriteRenderer _rightPantSprite;
     private SortingGroup _sortingGroup;
-    private Transform _spriteRoot;
+
     private Animator _animator;
     private Sprite _thumbnail;
 
@@ -30,20 +31,15 @@ public class Hunter : MonoBehaviour
 
     public float DefaultDamage { get { return _defaultDamage; } set { _defaultDamage = value; } }
 
-    public bool IsDispatched { get { return _isDispatched; } set { _isDispatched = value; } }
     public Sprite Thumbnail { get { return _thumbnail; } set { _thumbnail = value; } }
-    public Sprite BodySprite { get { return _bodySprite.sprite; } set { _bodySprite.sprite = value; } }
-    public Sprite HairSprite { get { return _hairSprite.sprite; } set { _hairSprite.sprite = value; } }
-    public Sprite LeftSleeveSprite { get { return _leftSleeveSprite.sprite; } set { _leftSleeveSprite.sprite = value; } }
-    public Sprite RightSleeveSprite { get { return _rightSleeveSprite.sprite; } set { _rightSleeveSprite.sprite = value; } }
-    public Sprite LeftPantSprite { get { return _leftPantSprite.sprite; } set { _leftPantSprite.sprite = value; } }
-    public Sprite RightPantSprite { get { return _rightPantSprite.sprite; } set { _rightPantSprite.sprite = value; } }
-    public Color HairColor { get { return _hairSprite.color; } set { _hairSprite.color = value; } }
+    public Sprite BodyClothSprite { get { return _bodyClothRenderer.sprite; } set { _bodyClothRenderer.sprite = value; } }
+    public Sprite HairSprite { get { return _hairRenderer.sprite; } set { _hairRenderer.sprite = value; } }
+    public Sprite LeftSleeveSprite { get { return _leftSleeveRenderer.sprite; } set { _leftSleeveRenderer.sprite = value; } }
+    public Sprite RightSleeveSprite { get { return _rightSleeveRenderer.sprite; } set { _rightSleeveRenderer.sprite = value; } }
+    public Sprite LeftPantSprite { get { return _leftPantRenderer.sprite; } set { _leftPantRenderer.sprite = value; } }
+    public Sprite RightPantSprite { get { return _rightPantRenderer.sprite; } set { _rightPantRenderer.sprite = value; } }
+    public Color HairColor { get { return _hairRenderer.color; } set { _hairRenderer.color = value; } }
 
-    public bool Dispatch
-    {
-        set => _isDispatched = value;
-    }
 
     public float Viability
     {
@@ -60,14 +56,6 @@ public class Hunter : MonoBehaviour
         _animator = GetComponent<Animator>();
         _interactable = GetComponent<Interactable>();
         _sortingGroup = GetComponent<SortingGroup>();
-
-        _spriteRoot = transform.Find("Root");
-        _bodySprite = transform.Find("Root/BodySet/P_Body/Body/P_ClothBody/ClothBody").GetComponent<SpriteRenderer>();
-        _hairSprite = transform.Find("Root/BodySet/P_Body/HeadSet/P_Head/P_Hair/7_Hair").GetComponent<SpriteRenderer>();
-        _leftSleeveSprite = transform.Find("Root/BodySet/P_Body/ArmSet/ArmL/P_LArm/P_Arm/20_L_Arm/P_LCArm/21_LCArm").GetComponent<SpriteRenderer>();
-        _rightSleeveSprite = transform.Find("Root/BodySet/P_Body/ArmSet/ArmR/P_RArm/P_Arm/-20_R_Arm/P_RCArm/-19_RCArm").GetComponent<SpriteRenderer>();
-        _leftPantSprite = transform.Find("Root/P_LFoot/P_LCloth/_4L_Cloth").GetComponent<SpriteRenderer>();
-        _rightPantSprite = transform.Find("Root/P_RFoot/P_RCloth/_9R_Cloth").GetComponent<SpriteRenderer>();
     }
 
     private void Start()
@@ -77,26 +65,25 @@ public class Hunter : MonoBehaviour
 
         _interactable.OnInteracted.AddListener((interaction) =>
         {
-            if (interaction.ID == "#follow")
+            if (interaction.ID == "#move_target")
             {
-                GameManager.Instance.GetSystem<FollowCamera>().SetEnabled(true);
-                GameManager.Instance.GetSystem<FollowCamera>().SetTarget(transform);
+                _animator.SetFloat("RunState", 0);
+
+                StopAllCoroutines();
+                StartCoroutine(MoveTargetRoutine());
             }
         });
 
-
-        CaptureThumbnailRoutine();
-        StartCoroutine(MoveRoutine());
+        StartCoroutine(WanderRoutine());
         StartCoroutine(CaptureThumbnailRoutine());
     }
 
     private void Update()
     {
-        _sortingGroup.sortingOrder = 300 - Mathf.FloorToInt(transform.position.y * 10);
-        _spriteRoot.gameObject.SetActive(!_isDispatched);
+        _sortingGroup.sortingOrder = 300 - Mathf.FloorToInt(transform.position.y * 10) + 1;
     }
 
-    private IEnumerator MoveRoutine()
+    private IEnumerator WanderRoutine()
     {
         var timeSystem = GameManager.Instance.GetSystem<TimeSystem>();
         var roads = FindObjectsOfType<Road>();
@@ -114,89 +101,98 @@ public class Hunter : MonoBehaviour
             roads = FindObjectsOfType<Road>();
             if (roads.Length == 0) continue;
 
-            Road target = roads[Random.Range(0, roads.Length)];
-
-            var path = SearchPath(start, target);
-            if (path == null) continue;
-
-            var pathPos = path.Select(road => (Vector2)road.transform.position).ToArray();
-
-            int index = 0;
-
-            while (index < pathPos.Length)
-            {
-                while (Vector2.Distance(transform.position, pathPos[index]) > 0.1f)
-                {
-                    var speed = timeSystem.TimeScale * 0.6f;
-                    var dir = (pathPos[index] - (Vector2)transform.position).normalized;
-                    var velocity = speed * Time.deltaTime * dir;
-
-                    _spriteRoot.localScale = new Vector3(velocity.x < 0 ? 0.5f : -0.5f, 0.5f, 1);
-
-                    transform.position += (Vector3)velocity;
-
-                    _animator.SetFloat("RunState", 0.5f);
-                    yield return null;
-                }
-                index++;
-            }
-            start = target;
-            if (!start)
-            {
-                start = roads[Random.Range(0, roads.Length)];
-                transform.position = start.transform.position;
-            }
-
-            _animator.SetFloat("RunState", 0);
+            var target = roads[Random.Range(0, roads.Length)].Construction.CellPos;
+            yield return MoveRoutine(target);
         }
     }
 
-    public static Road[] SearchPath(Road start, Road end)
+    public IEnumerator MoveRoutine(Vector2Int target, bool drawPath = false)
     {
-        static int heuristic(Vector2Int a, Vector2Int b)
+        var start = GameManager.Instance.GetSystem<ConstructionGridmap>().WorldToCell(transform.position);
+
+        var path = PathFinder.SearchPath(start, target);
+        if (path == null) yield break;
+
+        if (drawPath)
         {
-            return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y);
+            GameManager.Instance.GetSystem<PathDrawer>().DrawPath(path);
         }
 
-        var costs = new Dictionary<Road, int>();
-        var queue = new PriorityQueue<Road>();
-        var visited = new HashSet<Road>();
-        var parent = new Dictionary<Road, Road>();
+        _spriteRoot.gameObject.SetActive(true);
+        _shadowRenderer.enabled = true;
 
-        queue.Enqueue(start, heuristic(start.Construction.CellPos, end.Construction.CellPos));
-        costs[start] = 0;
+        var gridmap = GameManager.Instance.GetSystem<ConstructionGridmap>();
 
-        while (queue.Count > 0)
+        int index = 0;
+        while (index < path.Length)
         {
-            var current = queue.Dequeue();
-            var cost = costs.ContainsKey(current) ? costs[current] : int.MaxValue;
-            visited.Add(current);
-
-            if (current == end)
+            var speed = GameManager.Instance.GetSystem<TimeSystem>().TimeScale * 0.6f;
+            if (gridmap.GetConstructionAt(path.Nodes[index].Position) == null)
             {
-                var path = new List<Road>();
-                while (current != start)
+                speed *= 0.5f;
+            }
+
+            var worldPos = gridmap.CellToWorld(path.Nodes[index].Position);
+            while (Vector2.Distance(transform.position, worldPos) > 0.1f)
+            {
+                var dir = (worldPos - (Vector2)transform.position).normalized;
+                var velocity = speed * Time.deltaTime * dir;
+
+                _spriteRoot.localScale = new Vector3(velocity.x < 0 ? 0.5f : -0.5f, 0.5f, 1);
+
+                transform.position += (Vector3)velocity;
+
+                _animator.SetFloat("RunState", 0.5f);
+                yield return null;
+            }
+            index++;
+            path.Location = index;
+        }
+
+        if (index == path.Length)
+        {
+            var construction = gridmap.GetConstructionAt(target);
+            if (construction != null && construction.GetComponent<Road>() == null)
+            {
+                construction.VisitedHunters.Add(this);
+                _spriteRoot.gameObject.SetActive(false);
+                _shadowRenderer.enabled = false;
+            }
+        }
+
+        if (drawPath)
+        {
+            GameManager.Instance.GetSystem<PathDrawer>().RemovePath(path);
+        }
+
+        _animator.SetFloat("RunState", 0);
+    }
+
+    private IEnumerator MoveTargetRoutine()
+    {
+        Construction clickedConstruction = null;
+
+        while (clickedConstruction == null)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                var position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                var colliders = Physics2D.OverlapPointAll(position);
+
+                foreach (var collider in colliders)
                 {
-                    path.Add(current);
-                    current = parent[current];
+                    if (collider.TryGetComponent<Construction>(out var construction))
+                    {
+                        clickedConstruction = construction;
+                        break;
+                    }
                 }
-                path.Add(start);
-                path.Reverse();
-                return path.ToArray();
             }
 
-            foreach (var neighbor in current.Neighbors.FilterCast<Road>())
-            {
-                if (visited.Contains(neighbor)) continue;
-
-                var newCost = cost + 1 + heuristic(neighbor.Construction.CellPos, end.Construction.CellPos);
-                queue.Enqueue(neighbor, newCost);
-                costs[neighbor] = newCost;
-                parent[neighbor] = current;
-            }
+            yield return null;
         }
 
-        return null;
+        StartCoroutine(MoveRoutine(clickedConstruction.CellPos, true));
     }
 
     public IEnumerator CaptureThumbnailRoutine(int resolution = 512)

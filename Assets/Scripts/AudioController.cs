@@ -17,9 +17,6 @@ public class AudioController : MonoBehaviour
     private float _musicVolume = 0;
     private float _sfxVolume = 0;
     private float _ambienceVolume = 0;
-    private float _musicVolumeScale = 1;
-    private float _sfxVolumeScale = 1;
-    private float _ambienceVolumeScale = 1;
 
     private int _currentMusicIndex = 0;
 
@@ -40,7 +37,7 @@ public class AudioController : MonoBehaviour
         set
         {
             _musicVolume = value;
-            SetGroupVolume("MusicVolume", value * _musicVolumeScale);
+            SetGroupVolume("MusicVolume", value);
         }
     }
 
@@ -50,7 +47,7 @@ public class AudioController : MonoBehaviour
         set
         {
             _sfxVolume = value;
-            SetGroupVolume("SFXVolume", value * _sfxVolumeScale);
+            SetGroupVolume("SFXVolume", value);
         }
     }
 
@@ -60,39 +57,10 @@ public class AudioController : MonoBehaviour
         set
         {
             _ambienceVolume = value;
-            SetGroupVolume("AmbienceVolume", value * _ambienceVolumeScale);
+            SetGroupVolume("AmbienceVolume", value);
         }
     }
 
-    public float MusicVolumeScale
-    {
-        get => _musicVolumeScale;
-        set
-        {
-            _musicVolumeScale = value;
-            SetGroupVolume("MusicVolume", _musicVolume * value);
-        }
-    }
-
-    public float SFXVolumeScale
-    {
-        get => _sfxVolumeScale;
-        set
-        {
-            _sfxVolumeScale = value;
-            SetGroupVolume("SFXVolume", _sfxVolume * value);
-        }
-    }
-
-    public float AmbienceVolumeScale
-    {
-        get => _ambienceVolumeScale;
-        set
-        {
-            _ambienceVolumeScale = value;
-            SetGroupVolume("AmbienceVolume", _ambienceVolume * value);
-        }
-    }
 
     public float MasterCutoff
     {

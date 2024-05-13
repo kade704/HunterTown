@@ -1,9 +1,7 @@
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.Events;
 
-[RequireComponent(typeof(SpriteRenderer))]
 [RequireComponent(typeof(Interactable))]
 public class Construction : MonoBehaviour
 {
@@ -37,10 +35,8 @@ public class Construction : MonoBehaviour
 
     private List<Hunter> _visitedHunters = new();
     private ConstructionGridmap _constructionGridMap;
-    private SpriteRenderer _spriteRenderer;
     private Interactable _interactable;
     private Vector2Int _cellPos;
-    private int _defaultOrder;
 
     public Vector2Int CellPos
     {
@@ -58,7 +54,6 @@ public class Construction : MonoBehaviour
     public string Description => _description;
     public Sprite DefaultSprite => _defaultSprite;
     public Vector2Int Size => _size;
-    public Sprite Sprite => _spriteRenderer.sprite;
 
     public bool Buildable => _buildable;
     public bool Destroyable => _destroyable;
@@ -66,9 +61,7 @@ public class Construction : MonoBehaviour
 
     private void Awake()
     {
-        _spriteRenderer = GetComponent<SpriteRenderer>();
         _interactable = GetComponent<Interactable>();
-        _defaultOrder = _spriteRenderer.sortingOrder;
     }
 
     private void Start()
@@ -77,21 +70,9 @@ public class Construction : MonoBehaviour
         _interactable.Description = _description;
     }
 
-    private void Update()
-    {
-        _spriteRenderer.sortingOrder = _defaultOrder - Mathf.FloorToInt(transform.position.y * 10);
-    }
-
     private void OnDestroy()
     {
         if (_constructionGridMap.GetConstructionAt(CellPos) == this)
             _constructionGridMap.DestroyConstruction(CellPos);
     }
-
-    public void SetOutline(bool outline)
-    {
-        _spriteRenderer.material.SetFloat("_Outline", outline ? 1 : 0);
-    }
-
-
 }

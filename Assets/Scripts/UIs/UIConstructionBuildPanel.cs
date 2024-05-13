@@ -5,20 +5,20 @@ using UnityEngine.UI;
 public class UIConstructionBuildPanel : MonoBehaviour
 {
     [SerializeField] private Button _destructionButton;
-    [SerializeField] private UIFade _residencePanel;
-    [SerializeField] private UIFade _parkPanel;
-    [SerializeField] private UIFade _roadPanel;
+    [SerializeField] private CanvasGroup _residencePanel;
+    [SerializeField] private CanvasGroup _parkPanel;
+    [SerializeField] private CanvasGroup _roadPanel;
     [SerializeField] private Button _residenceButton;
     [SerializeField] private Button _parkButton;
     [SerializeField] private Button _roadButton;
-    [SerializeField] private UIFade _informationPanel;
+    [SerializeField] private GameObject _informationPanel;
     [SerializeField] private Text _informationTitle;
     [SerializeField] private Text _informationDescription;
     [SerializeField] private UIBuildButton _selectButton;
     [SerializeField] private UIBuildButton _desctructButton;
+    private UIBuildButton[] _buildButtons;
 
     private ConstructionBuilder _constructionBuilder;
-    private UIBuildButton[] _buildButtons;
 
     private void Awake()
     {
@@ -31,43 +31,61 @@ public class UIConstructionBuildPanel : MonoBehaviour
     {
         _residenceButton.onClick.AddListener(() =>
         {
-            if (_residencePanel.IsFadedIn)
+            if (_residencePanel.alpha == 1)
             {
-                _residencePanel.FadeOut();
+                _residencePanel.alpha = 0;
+                _residencePanel.blocksRaycasts = false;
             }
             else
             {
-                _residencePanel.FadeIn();
-                _parkPanel.FadeOut();
-                _roadPanel.FadeOut();
+                _residencePanel.alpha = 1;
+                _residencePanel.blocksRaycasts = true;
+
+                _parkPanel.alpha = 0;
+                _parkPanel.blocksRaycasts = false;
+
+                _roadPanel.alpha = 0;
+                _roadPanel.blocksRaycasts = false;
             }
         });
 
         _parkButton.onClick.AddListener(() =>
         {
-            if (_parkPanel.IsFadedIn)
+            if (_parkPanel.alpha == 1)
             {
-                _parkPanel.FadeOut();
+                _parkPanel.alpha = 0;
+                _parkPanel.blocksRaycasts = false;
             }
             else
             {
-                _residencePanel.FadeOut();
-                _parkPanel.FadeIn();
-                _roadPanel.FadeOut();
+                _residencePanel.alpha = 0;
+                _residencePanel.blocksRaycasts = false;
+
+                _parkPanel.alpha = 1;
+                _parkPanel.blocksRaycasts = true;
+
+                _roadPanel.alpha = 0;
+                _roadPanel.blocksRaycasts = false;
             }
         });
 
         _roadButton.onClick.AddListener(() =>
         {
-            if (_roadPanel.IsFadedIn)
+            if (_roadPanel.alpha == 1)
             {
-                _roadPanel.FadeOut();
+                _roadPanel.alpha = 0;
+                _roadPanel.blocksRaycasts = false;
             }
             else
             {
-                _residencePanel.FadeOut();
-                _parkPanel.FadeOut();
-                _roadPanel.FadeIn();
+                _residencePanel.alpha = 0;
+                _residencePanel.blocksRaycasts = false;
+
+                _parkPanel.alpha = 0;
+                _parkPanel.blocksRaycasts = false;
+
+                _roadPanel.alpha = 1;
+                _roadPanel.blocksRaycasts = true;
             }
         });
 
@@ -78,17 +96,29 @@ public class UIConstructionBuildPanel : MonoBehaviour
                 if (button == _selectButton)
                 {
                     _constructionBuilder.BulidMode = ConstructionBuilder.BuildMode.Select;
-                    _residencePanel.FadeOut();
-                    _parkPanel.FadeOut();
-                    _roadPanel.FadeOut();
+
+                    _residencePanel.alpha = 0;
+                    _residencePanel.blocksRaycasts = false;
+
+                    _parkPanel.alpha = 0;
+                    _parkPanel.blocksRaycasts = false;
+
+                    _roadPanel.alpha = 0;
+                    _roadPanel.blocksRaycasts = false;
 
                 }
                 else if (button == _desctructButton)
                 {
                     _constructionBuilder.BulidMode = ConstructionBuilder.BuildMode.Destruct;
-                    _residencePanel.FadeOut();
-                    _parkPanel.FadeOut();
-                    _roadPanel.FadeOut();
+
+                    _residencePanel.alpha = 0;
+                    _residencePanel.blocksRaycasts = false;
+
+                    _parkPanel.alpha = 0;
+                    _parkPanel.blocksRaycasts = false;
+
+                    _roadPanel.alpha = 0;
+                    _roadPanel.blocksRaycasts = false;
                 }
                 else
                 {
@@ -114,14 +144,14 @@ public class UIConstructionBuildPanel : MonoBehaviour
             {
                 _informationTitle.text = "선택 모드";
                 _informationDescription.text = "건물을 선택할수 있습니다";
-                _informationPanel.FadeIn();
+                _informationPanel.SetActive(true);
                 return;
             }
             else if (hoveredButton == _desctructButton)
             {
                 _informationTitle.text = "파괴 모드";
                 _informationDescription.text = "건물을 파괴할수 있습니다";
-                _informationPanel.FadeIn();
+                _informationPanel.SetActive(true);
                 return;
             }
             else if (hoveredButton.ConstructionPrefab)
@@ -130,14 +160,14 @@ public class UIConstructionBuildPanel : MonoBehaviour
 
                 _informationTitle.text = $"[{construction.DisplayName}] - {construction.Cost}G";
                 _informationDescription.text = construction.Description;
-                _informationPanel.FadeIn();
+                _informationPanel.SetActive(true);
             }
         }
         else
         {
             _informationTitle.text = string.Empty;
             _informationDescription.text = string.Empty;
-            _informationPanel.FadeOut();
+            _informationPanel.SetActive(false);
         }
     }
 }

@@ -12,6 +12,7 @@ Shader "Unlit/ProgressSprite"
         Tags { "Queue"="Transparent" "IgnoreProjector"="True" "RenderType"="Transparent" }
         LOD 100
         ZWrite Off
+        Cull Off
         Blend SrcAlpha OneMinusSrcAlpha 
 
         Pass

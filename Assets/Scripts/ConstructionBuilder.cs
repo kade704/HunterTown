@@ -175,7 +175,7 @@ public class ConstructionBuilder : MonoBehaviour
         if (hoveredConstruction)
         {
             _previewSprites[0].transform.position = hoveredConstruction.transform.position;
-            _previewSprites[0].sprite = hoveredConstruction.Sprite;
+            _previewSprites[0].sprite = hoveredConstruction.DefaultSprite;
             _previewSprites[0].color = new Color(1.0f, 0.0f, 0.0f, 0.8f);
 
             if (Input.GetMouseButtonDown(0) && !UIUtil.IsUIObjectOverPointer())

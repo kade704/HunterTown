@@ -28,7 +28,7 @@ public class InteractableSelector : MonoBehaviour
         foreach (var collider in colliders)
         {
             var interactable = collider.GetComponent<Interactable>();
-            if (frontInteractable == null || frontInteractable.SpriteRenderer.sortingOrder > interactable.SpriteRenderer.sortingOrder)
+            if (frontInteractable == null || frontInteractable.SortingGroup.sortingOrder < interactable.SortingGroup.sortingOrder)
             {
                 frontInteractable = interactable;
             }

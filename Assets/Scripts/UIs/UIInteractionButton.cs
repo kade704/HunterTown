@@ -3,7 +3,9 @@ using UnityEngine.UI;
 
 public class UIInteractionButton : MonoBehaviour
 {
-    private Text _nameText;
+    [SerializeField] private Text _name;
+    [SerializeField] private Image _icon;
+
     private Button _button;
 
     public Button.ButtonClickedEvent OnClick => _button.onClick;
@@ -12,13 +14,13 @@ public class UIInteractionButton : MonoBehaviour
     {
         set
         {
-            _nameText.text = value.DisplayName;
+            _name.text = value.DisplayName;
+            _icon.sprite = value.Icon;
         }
     }
 
     private void Awake()
     {
-        _nameText = transform.Find("Name").GetComponent<Text>();
         _button = GetComponent<Button>();
     }
 }

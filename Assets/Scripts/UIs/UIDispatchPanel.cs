@@ -2,9 +2,9 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(UIFade))]
 public class UIDispatchPanel : MonoBehaviour
 {
+    [SerializeField] private GameObject _panel;
     [SerializeField] private Button _closeButton;
     [SerializeField] private Text _powerText;
     [SerializeField] private Text _dangerText;
@@ -14,22 +14,18 @@ public class UIDispatchPanel : MonoBehaviour
     [SerializeField] private UIDispatchSlot[] _dispatchSlots;
     [SerializeField] private Button _dispatchButton;
     [SerializeField] private UIAbilitySlot[] _abilitySlots;
+    [SerializeField] private UIAbilityInfo _abilityInfo;
 
-    private UIAbilityInfo _abilityInfo;
     private UIAbilitySlot _abilitySlotOverPointer;
-
-    private UIFade _fade;
     private Portal _targetPortal;
 
     public Portal TargetPortal => _targetPortal;
 
-    private void Awake()
+    private void Start()
     {
-        _fade = GetComponent<UIFade>();
-
         _closeButton.onClick.AddListener(() =>
         {
-            _fade.FadeOut();
+            _panel.SetActive(false);
         });
 
         _dispatchButton.onClick.AddListener(() =>
@@ -37,7 +33,7 @@ public class UIDispatchPanel : MonoBehaviour
             if (_targetPortal)
             {
                 _targetPortal.Dispatch();
-                _fade.FadeOut();
+                _panel.SetActive(false);
             }
         });
 
@@ -49,11 +45,11 @@ public class UIDispatchPanel : MonoBehaviour
             if (interaction.ID == "#dispatch")
             {
                 Initialize(interactable.GetComponent<Portal>());
-                _fade.FadeIn();
+                _panel.SetActive(true);
             }
             else
             {
-                _fade.FadeOut();
+                _panel.SetActive(false);
             }
         });
     }
@@ -100,6 +96,21 @@ public class UIDispatchPanel : MonoBehaviour
                 _successText.text = "";
             }
         }
+
+        if (_targetPortal)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                if (i < _targetPortal.Construction.VisitedHunters.Count)
+                {
+                    _dispatchSlots[i].Hunter = _targetPortal.Construction.VisitedHunters[i];
+                }
+                else
+                {
+                    _dispatchSlots[i].Hunter = null;
+                }
+            }
+        }
     }
 
     private void Initialize(Portal portal)
@@ -110,19 +121,6 @@ public class UIDispatchPanel : MonoBehaviour
         _dangerText.text = "위험도: " + (_targetPortal.DangerVisibility ? _targetPortal.Danger.ToString("F1") : "???");
         _difficultyText.text = "복잡도: " + (_targetPortal.DifficultyVisibility ? _targetPortal.Difficulty.ToString("F1") : "???");
         _rankText.text = _targetPortal.Rank.ToString();
-
-        for (int i = 0; i < 4; i++)
-        {
-            if (i < portal.Construction.VisitedHunters.Count)
-            {
-                _dispatchSlots[i].Hunter = portal.Construction.VisitedHunters[i];
-            }
-            else
-            {
-                _dispatchSlots[i].Hunter = null;
-            }
-
-        }
 
         for (int i = 0; i < 3; i++)
         {

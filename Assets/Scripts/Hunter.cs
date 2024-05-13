@@ -21,8 +21,9 @@ public class Hunter : MonoBehaviour
 
 
     private Interactable _interactable;
-    private SortingGroup _sortingGroup;
+    private Construction _visitedConstruction;
 
+    private Collider2D _collider2D;
     private Animator _animator;
     private Sprite _thumbnail;
 
@@ -40,7 +41,6 @@ public class Hunter : MonoBehaviour
     public Sprite RightPantSprite { get { return _rightPantRenderer.sprite; } set { _rightPantRenderer.sprite = value; } }
     public Color HairColor { get { return _hairRenderer.color; } set { _hairRenderer.color = value; } }
 
-
     public float Viability
     {
         get => DefaultHp + DefaultDamage * 0.8f;
@@ -53,9 +53,9 @@ public class Hunter : MonoBehaviour
 
     private void Awake()
     {
+        _collider2D = GetComponent<Collider2D>();
         _animator = GetComponent<Animator>();
         _interactable = GetComponent<Interactable>();
-        _sortingGroup = GetComponent<SortingGroup>();
     }
 
     private void Start()
@@ -76,11 +76,6 @@ public class Hunter : MonoBehaviour
 
         StartCoroutine(WanderRoutine());
         StartCoroutine(CaptureThumbnailRoutine());
-    }
-
-    private void Update()
-    {
-        _sortingGroup.sortingOrder = 300 - Mathf.FloorToInt(transform.position.y * 10) + 1;
     }
 
     private IEnumerator WanderRoutine()
@@ -113,6 +108,12 @@ public class Hunter : MonoBehaviour
         var path = PathFinder.SearchPath(start, target);
         if (path == null) yield break;
 
+        if (_visitedConstruction)
+        {
+            _visitedConstruction.VisitedHunters.Remove(this);
+            _visitedConstruction = null;
+        }
+
         if (drawPath)
         {
             GameManager.Instance.GetSystem<PathDrawer>().DrawPath(path);
@@ -120,17 +121,29 @@ public class Hunter : MonoBehaviour
 
         _spriteRoot.gameObject.SetActive(true);
         _shadowRenderer.enabled = true;
+        _collider2D.enabled = true;
 
         var gridmap = GameManager.Instance.GetSystem<ConstructionGridmap>();
 
         int index = 0;
+        var speed = 1f;
         while (index < path.Length)
         {
-            var speed = GameManager.Instance.GetSystem<TimeSystem>().TimeScale * 0.6f;
-            if (gridmap.GetConstructionAt(path.Nodes[index].Position) == null)
+            var newSpeed = GameManager.Instance.GetSystem<TimeSystem>().TimeScale * 0.3f;
+            var road = gridmap.GetConstructionAt(path.Nodes[index].Position)?.GetComponent<Road>();
+            if (road != null)
             {
-                speed *= 0.5f;
+                newSpeed *= road.Speed;
             }
+            else if (gridmap.GetConstructionAt(path.Nodes[index].Position))
+            {
+                newSpeed = speed;
+            }
+            else
+            {
+                newSpeed *= 0.5f;
+            }
+            speed = newSpeed;
 
             var worldPos = gridmap.CellToWorld(path.Nodes[index].Position);
             while (Vector2.Distance(transform.position, worldPos) > 0.1f)
@@ -155,8 +168,10 @@ public class Hunter : MonoBehaviour
             if (construction != null && construction.GetComponent<Road>() == null)
             {
                 construction.VisitedHunters.Add(this);
+                _visitedConstruction = construction;
                 _spriteRoot.gameObject.SetActive(false);
                 _shadowRenderer.enabled = false;
+                _collider2D.enabled = false;
             }
         }
 

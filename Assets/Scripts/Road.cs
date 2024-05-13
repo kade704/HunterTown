@@ -42,17 +42,19 @@ public class Road : MonoBehaviour
         public Sprite None => _none;
     }
 
+    [SerializeField] private float _speed;
     [SerializeField] private SpriteRule _spriteRule;
+    [SerializeField] private SpriteRenderer _spriteRenderer;
+
     private Construction _construction;
-    private SpriteRenderer _spriteRenderer;
     private Road[] _neighbors = new Road[4];
     public Construction Construction => _construction;
     public Road[] Neighbors => _neighbors;
+    public float Speed => _speed;
 
     private void Awake()
     {
         _construction = GetComponent<Construction>();
-        _spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     private void Start()

@@ -1,23 +1,20 @@
-using UnityEditor.Overlays;
 using UnityEngine;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(UIFade))]
 public class UIInteractablePanel : MonoBehaviour
 {
+    [SerializeField] private GameObject _panel;
     [SerializeField] private Text _name;
     [SerializeField] private Text _description;
     [SerializeField] private Transform _interactionButtonsParent;
     [SerializeField] private UIInteractionButton _interactionButtonPrefab;
 
-    private UIFade _panel;
     private Interactable _selectedInteractable;
     private InteractableSelector _interactableSelector;
 
 
     private void Awake()
     {
-        _panel = GetComponent<UIFade>();
         _interactableSelector = FindObjectOfType<InteractableSelector>();
 
         var InteractableSelector = FindObjectOfType<InteractableSelector>();
@@ -33,10 +30,12 @@ public class UIInteractablePanel : MonoBehaviour
 
         if (interactable)
         {
-            _panel.FadeIn(10);
+            _panel.SetActive(true);
 
             _name.text = interactable.DisplayName;
             _description.text = interactable.Description;
+
+            LayoutRebuilder.ForceRebuildLayoutImmediate(_panel.GetComponent<RectTransform>());
 
             foreach (Transform interactionButton in _interactionButtonsParent)
             {
@@ -52,17 +51,26 @@ public class UIInteractablePanel : MonoBehaviour
                     _interactableSelector.OnInteractableInteracted.Invoke(interactable, interaction);
                     interactable.OnInteracted.Invoke(interaction);
                     interactable.SetOutline(false);
-                    _panel.FadeOut(10);
+                    _panel.SetActive(false);
+
+                    foreach (Transform interactionButton in _interactionButtonsParent)
+                    {
+                        Destroy(interactionButton.gameObject);
+                    }
                 });
             }
-            LayoutRebuilder.ForceRebuildLayoutImmediate(GetComponent<RectTransform>());
 
             _selectedInteractable = interactable;
             _selectedInteractable.SetOutline(true);
         }
         else
         {
-            _panel.FadeOut(10);
+            foreach (Transform interactionButton in _interactionButtonsParent)
+            {
+                Destroy(interactionButton.gameObject);
+            }
+
+            _panel.SetActive(false);
 
             _selectedInteractable = null;
         }

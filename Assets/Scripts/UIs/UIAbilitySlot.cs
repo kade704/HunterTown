@@ -3,18 +3,13 @@ using UnityEngine.UI;
 
 public class UIAbilitySlot : MonoBehaviour
 {
-    private Text _name;
-    private Image _icon;
-    private Ability _ability;
-    private Sprite _questionMark;
-    private bool _hidden;
-    private void Awake()
-    {
-        _name = transform.Find("Name").GetComponent<Text>();
-        _icon = transform.Find("Sprite").GetComponent<Image>();
-        _questionMark = Resources.Load<Sprite>("question");
-    }
+    [SerializeField] private Text _name;
+    [SerializeField] private Image _icon;
+    [SerializeField] private Sprite _questionMark;
 
+    private Ability _ability;
+
+    private bool _hidden;
     public bool Hidden
     {
         set

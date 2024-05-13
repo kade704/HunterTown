@@ -2,9 +2,10 @@ using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Construction))]
-[RequireComponent(typeof(SpriteRenderer))]
 public class Portal : MonoBehaviour
 {
+    [SerializeField] private SpriteRenderer _portalRenderer;
+    [SerializeField] private SpriteRenderer _progressRenderer;
     [SerializeField] private Sprite[] _spriteFrames;
 
     private float _defaultPower;
@@ -19,9 +20,7 @@ public class Portal : MonoBehaviour
     private bool _isExamining = false;
     private bool _isWave = false;
     private Construction _construction;
-    private SpriteRenderer _spriteRenderer;
-    private SpriteRenderer _progressSprite;
-    private ParticleSystem _fireParticle;
+
 
     public float Power
     {
@@ -111,9 +110,7 @@ public class Portal : MonoBehaviour
     private void Awake()
     {
         _construction = GetComponent<Construction>();
-        _spriteRenderer = GetComponent<SpriteRenderer>();
-        _progressSprite = transform.Find("Progress").GetComponent<SpriteRenderer>();
-        _fireParticle = transform.Find("Fire").GetComponent<ParticleSystem>();
+        _progressRenderer = transform.Find("Progress").GetComponent<SpriteRenderer>();
 
         // _onInteracted.AddListener((id) =>
         //  {
@@ -150,16 +147,16 @@ public class Portal : MonoBehaviour
 
         _isDispatching = true;
 
-        _progressSprite.enabled = true;
+        _progressRenderer.enabled = true;
         var startTime = Time.time;
         var nextTime = startTime + Random.Range(3, 8);
         while (Time.time < nextTime)
         {
             var progressValue = (Time.time - startTime) / (nextTime - startTime);
-            _progressSprite.material.SetFloat("_Value", progressValue);
+            _progressRenderer.material.SetFloat("_Value", progressValue);
             yield return null;
         }
-        _progressSprite.enabled = false;
+        _progressRenderer.enabled = false;
 
         var HunterSpawner = FindObjectOfType<HunterSpawner>();
         foreach (var hunter in _construction.VisitedHunters)
@@ -219,16 +216,16 @@ public class Portal : MonoBehaviour
 
         GameManager.Instance.GetSystem<Player>().Money -= Random.Range(30, 70);
 
-        _progressSprite.enabled = true;
+        _progressRenderer.enabled = true;
         var startTime = Time.time;
         var nextTime = startTime + 2;
         while (Time.time < nextTime)
         {
             var progressValue = (Time.time - startTime) / (nextTime - startTime);
-            _progressSprite.material.SetFloat("_Value", progressValue);
+            _progressRenderer.material.SetFloat("_Value", progressValue);
             yield return null;
         }
-        _progressSprite.enabled = false;
+        _progressRenderer.enabled = false;
 
         GameManager.Instance.GetSystem<LoggerSystem>().LogInfo($"탐색이 완료되었습니다.");
 
@@ -271,7 +268,6 @@ public class Portal : MonoBehaviour
     public void Wave()
     {
         _isWave = true;
-        _fireParticle.Play();
         GameManager.Instance.GetSystem<LoggerSystem>().LogError("포탈 웨이브가 시작되었습니다!");
     }
 
@@ -317,7 +313,7 @@ public class Portal : MonoBehaviour
         var frameIndex = 0;
         while (true)
         {
-            _spriteRenderer.sprite = _spriteFrames[frameIndex];
+            _portalRenderer.sprite = _spriteFrames[frameIndex];
             frameIndex = (frameIndex + 1) % _spriteFrames.Length;
             yield return new WaitForSeconds(0.3f);
         }

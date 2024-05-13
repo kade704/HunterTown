@@ -45,7 +45,9 @@ public class PathDrawer : MonoBehaviour
             for (int i = 0; i < pathArrow.Value.Renderers.Count; i++)
             {
                 var renderer = pathArrow.Value.Renderers[i];
-                renderer.enabled = pathArrow.Key.Location <= i;
+                var color = renderer.color;
+                color.a = (i - pathArrow.Key.Location + 1) / 3f;
+                renderer.color = color;
             }
         }
     }
@@ -68,6 +70,8 @@ public class PathDrawer : MonoBehaviour
         for (int i = 0; i < path.Nodes.Length; i++)
         {
             SpriteRenderer renderer = new GameObject().AddComponent<SpriteRenderer>();
+
+            renderer.sortingOrder = -10;
             renderer.color = color;
             renderer.transform.SetParent(newArrow.Container);
             renderer.transform.position = gridmap.CellToWorld(path.Nodes[i].Position);

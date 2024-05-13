@@ -64,9 +64,13 @@ public class PathFinder
                 var construction = GameManager.Instance.GetSystem<ConstructionGridmap>().GetConstructionAt(cellPos);
                 if (construction == null)
                 {
-                    weight = 10;
+                    weight = 100;
                 }
-                else if (construction.GetComponent<Road>() != null || construction.CellPos == end || construction.CellPos == start)
+                else if (construction.GetComponent<Road>() != null)
+                {
+                    weight = 10 - (int)construction.GetComponent<Road>().Speed;
+                }
+                else if (construction.CellPos == end || construction.CellPos == start)
                 {
                     weight = 1;
                 }

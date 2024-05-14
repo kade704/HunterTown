@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,31 +9,33 @@ public class UIPlayer : MonoBehaviour
     private void Start()
     {
         UpdateMoneyText();
-        StartCoroutine(UpdatePopulationRoutine());
 
         var player = GameManager.Instance.GetSystem<Player>();
         player.OnMoneyChanged.AddListener((money) =>
         {
             UpdateMoneyText();
         });
-    }
 
-    private IEnumerator UpdatePopulationRoutine()
-    {
-        while (true)
+        player.OnPopulationChanged.AddListener((population) =>
         {
-            var residences = FindObjectsOfType<Residence>();
-            var population = residences.Select(r => r.CurrentOccupancy).Sum();
-            var maxPopulation = residences.Select(r => r.MaxOccupancy).Sum();
+            UpdatePopulationText();
+        });
 
-            _population.text = $"인구: {population}/{maxPopulation}";
-            yield return new WaitForSeconds(1);
-        }
+        player.OnMaxPopulationChanged.AddListener((population) =>
+        {
+            UpdatePopulationText();
+        });
     }
 
     private void UpdateMoneyText()
     {
         var player = GameManager.Instance.GetSystem<Player>();
         _money.text = $"예산: {player.Money}G";
+    }
+
+    private void UpdatePopulationText()
+    {
+        var player = GameManager.Instance.GetSystem<Player>();
+        _population.text = $"인구: {player.Population} / {player.MaxPopulation}";
     }
 }

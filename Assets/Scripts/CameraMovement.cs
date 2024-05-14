@@ -52,8 +52,12 @@ public class CameraMovement : MonoBehaviour
 
         var velocity = new Vector3(horizontal, vertical, 0) * _moveSpeed * Time.deltaTime;
         _velocity = Vector2.Lerp(_velocity, velocity, Time.deltaTime * _moveSmooth);
-
         transform.position += (Vector3)_velocity;
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            transform.position = new Vector3(0, 0, -10);
+        }
     }
 
     public void MovePosition(Vector2 position)

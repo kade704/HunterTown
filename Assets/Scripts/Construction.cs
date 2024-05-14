@@ -33,6 +33,9 @@ public class Construction : MonoBehaviour
     [SerializeField]
     private bool _destroyable;
 
+    [SerializeField]
+    private bool _visitable;
+
     private List<Hunter> _visitedHunters = new();
     private ConstructionGridmap _constructionGridMap;
     private Interactable _interactable;
@@ -57,6 +60,7 @@ public class Construction : MonoBehaviour
 
     public bool Buildable => _buildable;
     public bool Destroyable => _destroyable;
+    public bool Visitable => _visitable;
     public List<Hunter> VisitedHunters => _visitedHunters;
 
     private void Awake()

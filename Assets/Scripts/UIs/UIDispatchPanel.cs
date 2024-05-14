@@ -33,11 +33,8 @@ public class UIDispatchPanel : MonoBehaviour
             if (_targetPortal)
             {
                 _targetPortal.Dispatch();
-                _panel.SetActive(false);
             }
         });
-
-
 
         var interactableSelector = FindObjectOfType<InteractableSelector>();
         interactableSelector.OnInteractableInteracted.AddListener((interactable, interaction) =>
@@ -73,44 +70,6 @@ public class UIDispatchPanel : MonoBehaviour
         {
             _abilityInfo.transform.position = Input.mousePosition;
         }
-
-        if (_targetPortal)
-        {
-            var hunters = _dispatchSlots.Select(x => x.Hunter).OfType<Hunter>().ToArray();
-            var readyToDispatch = hunters.Count() > 0;
-            _dispatchButton.interactable = readyToDispatch;
-            if (readyToDispatch)
-            {
-                var success = (_targetPortal.CalcDispatchSuccessProbability(hunters) * 100f).ToString("F1");
-                if (_targetPortal.PowerVisibility)
-                {
-                    _successText.text = $"파견 성공 확률: {success}%";
-                }
-                else
-                {
-                    _successText.text = "파견 성공 확률: ?%";
-                }
-            }
-            else
-            {
-                _successText.text = "";
-            }
-        }
-
-        if (_targetPortal)
-        {
-            for (int i = 0; i < 4; i++)
-            {
-                if (i < _targetPortal.Construction.VisitedHunters.Count)
-                {
-                    _dispatchSlots[i].Hunter = _targetPortal.Construction.VisitedHunters[i];
-                }
-                else
-                {
-                    _dispatchSlots[i].Hunter = null;
-                }
-            }
-        }
     }
 
     private void Initialize(Portal portal)
@@ -128,6 +87,42 @@ public class UIDispatchPanel : MonoBehaviour
 
             abilitySlot.Ability = _targetPortal.Abilities[i];
             abilitySlot.Hidden = !_targetPortal.AbilityVisibilities[i];
+        }
+
+        var battle = GameManager.Instance.GetSystem<Battle>();
+
+        var hunters = _targetPortal.Construction.VisitedHunters;
+        for (int i = 0; i < 4; i++)
+        {
+            if (i < hunters.Count)
+            {
+                _dispatchSlots[i].SetHunter(hunters[i], _targetPortal);
+                battle.SetAvatarCustomize(i, hunters[i].GetComponent<AvatarCustomize>());
+            }
+            else
+            {
+                _dispatchSlots[i].SetHunter(null, _targetPortal);
+                battle.SetAvatarCustomize(i, null);
+            }
+        }
+
+        var readyToDispatch = hunters.Count() > 0;
+        _dispatchButton.interactable = readyToDispatch;
+        if (readyToDispatch)
+        {
+            var success = (_targetPortal.CalcDispatchSuccessProbability(hunters.ToArray()) * 100f).ToString("F1");
+            if (_targetPortal.PowerVisibility)
+            {
+                _successText.text = $"파견 성공 확률: {success}%";
+            }
+            else
+            {
+                _successText.text = "파견 성공 확률: ?%";
+            }
+        }
+        else
+        {
+            _successText.text = "";
         }
     }
 }

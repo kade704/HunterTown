@@ -3,18 +3,18 @@ using UnityEngine.UI;
 
 public class UITimer : MonoBehaviour
 {
-    private TimeSystem _timeSystem;
-    private Text _timeText;
-    private Toggle _pauseButton;
-    private Toggle _resumeButton;
-    private Toggle _fastButton;
+    [SerializeField] private Text _time;
+    [SerializeField] private Toggle _pauseButton;
+    [SerializeField] private Toggle _resumeButton;
+    [SerializeField] private Toggle _fastButton;
 
-    private void Awake()
+    private TimeSystem _timeSystem;
+
+
+    private void Start()
     {
         _timeSystem = GameManager.Instance.GetSystem<TimeSystem>();
-        _timeText = transform.Find("TimeText").GetComponent<Text>();
 
-        _pauseButton = transform.Find("SpeedButtons/PauseButton").GetComponent<Toggle>();
         _pauseButton.onValueChanged.AddListener((active) =>
         {
             if (active)
@@ -23,7 +23,6 @@ public class UITimer : MonoBehaviour
             }
         });
 
-        _resumeButton = transform.Find("SpeedButtons/ResumeButton").GetComponent<Toggle>();
         _resumeButton.onValueChanged.AddListener((active) =>
         {
             if (active)
@@ -32,7 +31,6 @@ public class UITimer : MonoBehaviour
             }
         });
 
-        _fastButton = transform.Find("SpeedButtons/FastButton").GetComponent<Toggle>();
         _fastButton.onValueChanged.AddListener((active) =>
         {
             if (active)
@@ -50,7 +48,7 @@ public class UITimer : MonoBehaviour
 
             var clock = (hour < 12 ? "오전" : "오후") + " " + (hour % 12 == 0 ? "12" : hour % 12) + ":00";
 
-            _timeText.text = $"{year}년 {month}월 {day}일   {clock}";
+            _time.text = $"{year}년 {month}월 {day}일   {clock}";
         });
     }
 }

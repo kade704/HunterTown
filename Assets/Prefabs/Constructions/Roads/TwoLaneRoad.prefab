@@ -115,7 +115,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2a2a8b318f6c374486e542eee07495b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _id: '#street'
+  _id: '#two_lane_road'
   _cost: 10
   _displayName: "2\uCC28\uC120 \uB3C4\uB85C"
   _description: "\uB113\uC740 \uB3C4\uB85C\uC774\uB2E4.\n(\uC774\uB3D9\uC18D\uB3C4:

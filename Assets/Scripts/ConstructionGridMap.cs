@@ -132,6 +132,11 @@ public class ConstructionGridmap : MonoBehaviour, IDeserializable, ISerializable
 
     public Construction GetConstructionAt(Vector2Int cellPos)
     {
+        if (cellPos.x < 0 || cellPos.x >= GRID_SIZE || cellPos.y < 0 || cellPos.y >= GRID_SIZE)
+        {
+            return null;
+        }
+
         return _constructionMap[cellPos.y, cellPos.x];
     }
 

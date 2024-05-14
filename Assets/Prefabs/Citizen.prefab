@@ -967,7 +967,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.25, y: 0.1875}
+  m_Size: {x: 0.15625, y: 0.15625}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 0
@@ -1067,14 +1067,11 @@ GameObject:
   m_Component:
   - component: {fileID: 6265457940506477906}
   - component: {fileID: 8053417791932188995}
-  - component: {fileID: 8826893060352688572}
   - component: {fileID: 6220940011814422774}
-  - component: {fileID: 6625200932925004226}
-  - component: {fileID: 3248824799526615361}
-  - component: {fileID: 7018670336668674498}
-  - component: {fileID: 1720262372711644873}
+  - component: {fileID: 5294423964035171746}
+  - component: {fileID: 8768861680286656410}
   m_Layer: 6
-  m_Name: Hunter
+  m_Name: Citizen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1109,41 +1106,6 @@ SortingGroup:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_SortAtRoot: 0
---- !u!70 &8826893060352688572
-CapsuleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6450463278522870409}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.2}
-  m_Size: {x: 0.3, y: 0.5}
-  m_Direction: 0
 --- !u!95 &6220940011814422774
 Animator:
   serializedVersion: 5
@@ -1165,7 +1127,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &6625200932925004226
+--- !u!114 &5294423964035171746
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1177,7 +1139,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59001f4bace81dd4dbe0d1eb146cf739, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &3248824799526615361
+--- !u!114 &8768861680286656410
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1186,48 +1148,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 6450463278522870409}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7b0502b90d067d429068211375670af, type: 3}
+  m_Script: {fileID: 11500000, guid: b0ad9bc14cfa15b4192178d34597a759, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _bodyClothRenderer: {fileID: 8678031787817683831}
-  _hairRenderer: {fileID: 791346230217804672}
-  _leftSleeveRenderer: {fileID: 2670460494124371913}
-  _rightSleeveRenderer: {fileID: 5881573589927381816}
-  _leftPantRenderer: {fileID: 3960156431137140149}
-  _rightPantRenderer: {fileID: 7209369564811378741}
-  _spriteRoot: {fileID: 1285562720511458490}
-  _shadowRenderer: {fileID: 2462541441788333034}
---- !u!114 &7018670336668674498
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6450463278522870409}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 53cdd44c2ac77d94b9840e4525341168, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _displayName: 
-  _defaultHp: 0
-  _defaultDamage: 0
---- !u!114 &1720262372711644873
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6450463278522870409}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97ef4819a08424d4e866a2ae3dc5977e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _interactions:
-  - _id: '#move_target'
-    _displayName: "\uC704\uCE58\uB85C \uC774\uB3D9"
-    _icon: {fileID: 21300000, guid: e6f9ee05f9c56ab49baee805d3d4aa05, type: 3}
 --- !u!1 &6874745354600390808
 GameObject:
   m_ObjectHideFlags: 0
@@ -1436,7 +1359,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_LocalScale: {x: 0.3, y: 0.3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4556760830665015914}

@@ -10,7 +10,7 @@ public class ConstructionBuilder : MonoBehaviour
     private SpriteRenderer[] _previewSprites;
     private BuildMode _buildMode = BuildMode.Select;
     private bool _isDragging = false;
-    private Vector2Int[] _draggingCells = new Vector2Int[10];
+    private Vector2Int[] _draggingCells = new Vector2Int[64];
     private Vector2Int _startDragPos;
 
     public Construction SelectedConstructionPrefab
@@ -87,7 +87,7 @@ public class ConstructionBuilder : MonoBehaviour
             {
                 Vector2 offset = cellPos - _startDragPos;
                 var angle = Vector2.SignedAngle(Vector2.right, offset);
-                var step = Mathf.Min(Mathf.Max(Mathf.Abs((int)offset.x), Mathf.Abs((int)offset.y)), 9) + 1;
+                var step = Mathf.Min(Mathf.Max(Mathf.Abs((int)offset.x), Mathf.Abs((int)offset.y)), 63) + 1;
 
                 var direction = Vector2Int.zero;
                 if (angle > 45 && angle < 135)
@@ -113,6 +113,7 @@ public class ConstructionBuilder : MonoBehaviour
                     var buildable = CheckBuildable(pos);
 
                     var cursorSprite = _selectedConstructionPrefab.DefaultSprite;
+                    _previewSprites[i].enabled = true;
                     _previewSprites[i].sprite = cursorSprite;
                     _previewSprites[i].color = !buildable ? new Color(1.0f, 0.0f, 0.0f, 0.8f) : new Color(0.0f, 1.0f, 0.5f, 0.8f);
                     _previewSprites[i].transform.position = _constructionGridMap.CellToWorld(pos);
@@ -121,7 +122,7 @@ public class ConstructionBuilder : MonoBehaviour
                 }
                 for (var i = step; i < 10; i++)
                 {
-                    _previewSprites[i].sprite = null;
+                    _previewSprites[i].enabled = false;
                     _draggingCells[i] = new Vector2Int(-1, -1);
                 }
             }

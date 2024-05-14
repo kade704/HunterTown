@@ -118,6 +118,7 @@ MonoBehaviour:
   _size: {x: 1, y: 1}
   _buildable: 0
   _destroyable: 0
+  _visitable: 1
 --- !u!210 &7983202883304104439
 SortingGroup:
   m_ObjectHideFlags: 0

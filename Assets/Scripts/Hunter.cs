@@ -10,14 +10,7 @@ public class Hunter : MonoBehaviour
     [ReadOnly][SerializeField] private string _displayName;
     [ReadOnly][SerializeField] private float _defaultHp;
     [ReadOnly][SerializeField] private float _defaultDamage;
-    [SerializeField] private SpriteRenderer _bodyClothRenderer;
-    [SerializeField] private SpriteRenderer _hairRenderer;
-    [SerializeField] private SpriteRenderer _leftSleeveRenderer;
-    [SerializeField] private SpriteRenderer _rightSleeveRenderer;
-    [SerializeField] private SpriteRenderer _leftPantRenderer;
-    [SerializeField] private SpriteRenderer _rightPantRenderer;
-    [SerializeField] private Transform _spriteRoot;
-    [SerializeField] private SpriteRenderer _shadowRenderer;
+
 
 
     private Interactable _interactable;
@@ -26,6 +19,8 @@ public class Hunter : MonoBehaviour
     private Collider2D _collider2D;
     private Animator _animator;
     private Sprite _thumbnail;
+    private AvatarMovement _avatarMovement;
+    private AvatarCustomize _avatarCustomize;
 
     public string DisplayName { get { return _displayName; } set { _displayName = value; } }
     public float DefaultHp { get { return _defaultHp; } set { _defaultHp = value; } }
@@ -33,13 +28,8 @@ public class Hunter : MonoBehaviour
     public float DefaultDamage { get { return _defaultDamage; } set { _defaultDamage = value; } }
 
     public Sprite Thumbnail { get { return _thumbnail; } set { _thumbnail = value; } }
-    public Sprite BodyClothSprite { get { return _bodyClothRenderer.sprite; } set { _bodyClothRenderer.sprite = value; } }
-    public Sprite HairSprite { get { return _hairRenderer.sprite; } set { _hairRenderer.sprite = value; } }
-    public Sprite LeftSleeveSprite { get { return _leftSleeveRenderer.sprite; } set { _leftSleeveRenderer.sprite = value; } }
-    public Sprite RightSleeveSprite { get { return _rightSleeveRenderer.sprite; } set { _rightSleeveRenderer.sprite = value; } }
-    public Sprite LeftPantSprite { get { return _leftPantRenderer.sprite; } set { _leftPantRenderer.sprite = value; } }
-    public Sprite RightPantSprite { get { return _rightPantRenderer.sprite; } set { _rightPantRenderer.sprite = value; } }
-    public Color HairColor { get { return _hairRenderer.color; } set { _hairRenderer.color = value; } }
+    public AvatarCustomize AvatarCustomize { get { return _avatarCustomize; } }
+
 
     public float Viability
     {
@@ -56,6 +46,8 @@ public class Hunter : MonoBehaviour
         _collider2D = GetComponent<Collider2D>();
         _animator = GetComponent<Animator>();
         _interactable = GetComponent<Interactable>();
+        _avatarMovement = GetComponent<AvatarMovement>();
+        _avatarCustomize = GetComponent<AvatarCustomize>();
     }
 
     private void Start()
@@ -74,114 +66,9 @@ public class Hunter : MonoBehaviour
             }
         });
 
-        StartCoroutine(WanderRoutine());
         StartCoroutine(CaptureThumbnailRoutine());
     }
 
-    private IEnumerator WanderRoutine()
-    {
-        var timeSystem = GameManager.Instance.GetSystem<TimeSystem>();
-        var roads = FindObjectsOfType<Road>();
-        Road start = roads[Random.Range(0, roads.Length)];
-        transform.position = start.transform.position;
-
-        while (true)
-        {
-            var moveTime = timeSystem.Hour.Total + Random.Range(5, 15);
-            while (timeSystem.Hour.Total < moveTime)
-            {
-                yield return null;
-            }
-
-            roads = FindObjectsOfType<Road>();
-            if (roads.Length == 0) continue;
-
-            var target = roads[Random.Range(0, roads.Length)].Construction.CellPos;
-            yield return MoveRoutine(target);
-        }
-    }
-
-    public IEnumerator MoveRoutine(Vector2Int target, bool drawPath = false)
-    {
-        var start = GameManager.Instance.GetSystem<ConstructionGridmap>().WorldToCell(transform.position);
-
-        var path = PathFinder.SearchPath(start, target);
-        if (path == null) yield break;
-
-        if (_visitedConstruction)
-        {
-            _visitedConstruction.VisitedHunters.Remove(this);
-            _visitedConstruction = null;
-        }
-
-        if (drawPath)
-        {
-            GameManager.Instance.GetSystem<PathDrawer>().DrawPath(path);
-        }
-
-        _spriteRoot.gameObject.SetActive(true);
-        _shadowRenderer.enabled = true;
-        _collider2D.enabled = true;
-
-        var gridmap = GameManager.Instance.GetSystem<ConstructionGridmap>();
-
-        int index = 0;
-        var speed = 1f;
-        while (index < path.Length)
-        {
-            var newSpeed = GameManager.Instance.GetSystem<TimeSystem>().TimeScale * 0.3f;
-            var road = gridmap.GetConstructionAt(path.Nodes[index].Position)?.GetComponent<Road>();
-            if (road != null)
-            {
-                newSpeed *= road.Speed;
-            }
-            else if (gridmap.GetConstructionAt(path.Nodes[index].Position))
-            {
-                newSpeed = speed;
-            }
-            else
-            {
-                newSpeed *= 0.5f;
-            }
-            speed = newSpeed;
-
-            var worldPos = gridmap.CellToWorld(path.Nodes[index].Position);
-            while (Vector2.Distance(transform.position, worldPos) > 0.1f)
-            {
-                var dir = (worldPos - (Vector2)transform.position).normalized;
-                var velocity = speed * Time.deltaTime * dir;
-
-                _spriteRoot.localScale = new Vector3(velocity.x < 0 ? 0.5f : -0.5f, 0.5f, 1);
-
-                transform.position += (Vector3)velocity;
-
-                _animator.SetFloat("RunState", 0.5f);
-                yield return null;
-            }
-            index++;
-            path.Location = index;
-        }
-
-        if (index == path.Length)
-        {
-            var construction = gridmap.GetConstructionAt(target);
-            if (construction != null && construction.GetComponent<Road>() == null)
-            {
-                construction.VisitedHunters.Add(this);
-                _visitedConstruction = construction;
-                _spriteRoot.gameObject.SetActive(false);
-                _shadowRenderer.enabled = false;
-                _collider2D.enabled = false;
-            }
-        }
-
-        if (drawPath)
-        {
-            GameManager.Instance.GetSystem<PathDrawer>().RemovePath(path);
-        }
-
-        _animator.SetFloat("RunState", 0);
-    }
 
     private IEnumerator MoveTargetRoutine()
     {
@@ -191,23 +78,65 @@ public class Hunter : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0))
             {
-                var position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                var colliders = Physics2D.OverlapPointAll(position);
-
-                foreach (var collider in colliders)
+                clickedConstruction = GetClickedConstruction();
+                if (clickedConstruction != null && !clickedConstruction.GetComponent<Road>() && !clickedConstruction.Visitable)
                 {
-                    if (collider.TryGetComponent<Construction>(out var construction))
-                    {
-                        clickedConstruction = construction;
-                        break;
-                    }
+                    yield break;
                 }
             }
 
             yield return null;
         }
 
-        StartCoroutine(MoveRoutine(clickedConstruction.CellPos, true));
+        if (_visitedConstruction)
+        {
+            _visitedConstruction.VisitedHunters.Remove(this);
+            _visitedConstruction = null;
+        }
+
+        var gridmap = GameManager.Instance.GetSystem<ConstructionGridmap>();
+
+        var start = gridmap.WorldToCell(transform.position);
+        var path = PathFinder.SearchPath(start, clickedConstruction.CellPos);
+
+        if (path == null)
+        {
+            yield break;
+        }
+
+        GameManager.Instance.GetSystem<PathDrawer>().DrawPath(path);
+
+        _avatarCustomize.ShowAvatar(true);
+        _collider2D.enabled = true;
+
+        yield return _avatarMovement.MoveRoutine(path);
+
+        var destination = gridmap.GetConstructionAt(gridmap.WorldToCell(transform.position));
+        if (destination)
+        {
+            _avatarCustomize.ShowAvatar(false);
+            _collider2D.enabled = false;
+            _visitedConstruction = destination;
+            destination.VisitedHunters.Add(this);
+        }
+
+        GameManager.Instance.GetSystem<PathDrawer>().RemovePath(path);
+    }
+
+    private Construction GetClickedConstruction()
+    {
+        var position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        var colliders = Physics2D.OverlapPointAll(position);
+
+        foreach (var collider in colliders)
+        {
+            if (collider.TryGetComponent<Construction>(out var construction))
+            {
+                return construction;
+            }
+        }
+
+        return null;
     }
 
     public IEnumerator CaptureThumbnailRoutine(int resolution = 512)

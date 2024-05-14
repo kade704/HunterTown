@@ -52,17 +52,17 @@ public class HunterSpawner : MonoBehaviour, ISerializable, IDeserializable
         newHunter.DefaultHp = hp;
         newHunter.DefaultDamage = damage;
 
-        newHunter.HairSprite = _hairSprites[Random.Range(0, _hairSprites.Length)];
-        newHunter.HairColor = Random.ColorHSV(0, 1, 0.4f, 0.6f, 0.5f, 1f);
+        newHunter.AvatarCustomize.HairSprite = _hairSprites[Random.Range(0, _hairSprites.Length)];
+        newHunter.AvatarCustomize.HairColor = Random.ColorHSV(0, 1, 0.4f, 0.6f, 0.5f, 1f);
 
         var clothIdx = Random.Range(1, 12);
-        newHunter.BodyClothSprite = _clothSprites.Where(s => s.name == $"Cloth{clothIdx}_Body").FirstOrDefault();
-        newHunter.LeftSleeveSprite = _clothSprites.Where(s => s.name == $"Cloth{clothIdx}_Left").FirstOrDefault();
-        newHunter.RightSleeveSprite = _clothSprites.Where(s => s.name == $"Cloth{clothIdx}_Right").FirstOrDefault();
+        newHunter.AvatarCustomize.BodyClothSprite = _clothSprites.Where(s => s.name == $"Cloth{clothIdx}_Body").FirstOrDefault();
+        newHunter.AvatarCustomize.LeftSleeveSprite = _clothSprites.Where(s => s.name == $"Cloth{clothIdx}_Left").FirstOrDefault();
+        newHunter.AvatarCustomize.RightSleeveSprite = _clothSprites.Where(s => s.name == $"Cloth{clothIdx}_Right").FirstOrDefault();
 
         var pantIdx = Random.Range(1, 4);
-        newHunter.LeftPantSprite = _pantSprites.Where(s => s.name == $"Pant{pantIdx}_Left").FirstOrDefault();
-        newHunter.RightPantSprite = _pantSprites.Where(s => s.name == $"Pant{pantIdx}_Right").FirstOrDefault();
+        newHunter.AvatarCustomize.LeftPantSprite = _pantSprites.Where(s => s.name == $"Pant{pantIdx}_Left").FirstOrDefault();
+        newHunter.AvatarCustomize.RightPantSprite = _pantSprites.Where(s => s.name == $"Pant{pantIdx}_Right").FirstOrDefault();
 
         _hunters.Add(newHunter);
         _onHuntersChanged.Invoke();
@@ -83,18 +83,22 @@ public class HunterSpawner : MonoBehaviour, ISerializable, IDeserializable
         var token = new JArray();
         foreach (var hunter in _hunters)
         {
+            Vector2Int cellPos = GameManager.Instance.GetSystem<ConstructionGridmap>().WorldToCell(hunter.transform.position);
+
             var obj = new JObject
             {
                 ["name"] = hunter.DisplayName,
                 ["hp"] = hunter.DefaultHp,
                 ["damage"] = hunter.DefaultDamage,
-                ["hair"] = hunter.HairSprite.name,
-                ["cloth"] = hunter.BodyClothSprite.name,
-                ["leftSleeve"] = hunter.LeftSleeveSprite.name,
-                ["rightSleeve"] = hunter.RightSleeveSprite.name,
-                ["leftPant"] = hunter.LeftPantSprite.name,
-                ["rightPant"] = hunter.RightPantSprite.name,
-                ["hairColor"] = '#' + ColorUtility.ToHtmlStringRGB(hunter.HairColor),
+                ["posX"] = cellPos.x,
+                ["posY"] = cellPos.y,
+                ["hair"] = hunter.AvatarCustomize.HairSprite.name,
+                ["cloth"] = hunter.AvatarCustomize.BodyClothSprite.name,
+                ["leftSleeve"] = hunter.AvatarCustomize.LeftSleeveSprite.name,
+                ["rightSleeve"] = hunter.AvatarCustomize.RightSleeveSprite.name,
+                ["leftPant"] = hunter.AvatarCustomize.LeftPantSprite.name,
+                ["rightPant"] = hunter.AvatarCustomize.RightPantSprite.name,
+                ["hairColor"] = '#' + ColorUtility.ToHtmlStringRGB(hunter.AvatarCustomize.HairColor),
             };
             token.Add(obj);
         }
@@ -115,16 +119,20 @@ public class HunterSpawner : MonoBehaviour, ISerializable, IDeserializable
         {
             var newHunter = Instantiate(_hunterPrefab, transform);
 
+            var cellPos = new Vector2Int(obj["posX"].Value<int>(), obj["posY"].Value<int>());
+            var worldPos = GameManager.Instance.GetSystem<ConstructionGridmap>().CellToWorld(cellPos);
+
             newHunter.DisplayName = obj["name"].Value<string>();
             newHunter.DefaultHp = obj["hp"].Value<float>();
             newHunter.DefaultDamage = obj["damage"].Value<float>();
-            newHunter.BodyClothSprite = _clothSprites.Where(s => s.name == obj["cloth"].Value<string>()).FirstOrDefault();
-            newHunter.LeftSleeveSprite = _clothSprites.Where(s => s.name == obj["leftSleeve"].Value<string>()).FirstOrDefault();
-            newHunter.RightSleeveSprite = _clothSprites.Where(s => s.name == obj["rightSleeve"].Value<string>()).FirstOrDefault();
-            newHunter.LeftPantSprite = _pantSprites.Where(s => s.name == obj["leftPant"].Value<string>()).FirstOrDefault();
-            newHunter.RightPantSprite = _pantSprites.Where(s => s.name == obj["rightPant"].Value<string>()).FirstOrDefault();
-            newHunter.HairSprite = _hairSprites.Where(s => s.name == obj["hair"].Value<string>()).FirstOrDefault();
-            newHunter.HairColor = ColorUtility.TryParseHtmlString(obj["hairColor"].Value<string>(), out var color) ? color : Color.white;
+            newHunter.transform.position = worldPos;
+            newHunter.AvatarCustomize.BodyClothSprite = _clothSprites.Where(s => s.name == obj["cloth"].Value<string>()).FirstOrDefault();
+            newHunter.AvatarCustomize.LeftSleeveSprite = _clothSprites.Where(s => s.name == obj["leftSleeve"].Value<string>()).FirstOrDefault();
+            newHunter.AvatarCustomize.RightSleeveSprite = _clothSprites.Where(s => s.name == obj["rightSleeve"].Value<string>()).FirstOrDefault();
+            newHunter.AvatarCustomize.LeftPantSprite = _pantSprites.Where(s => s.name == obj["leftPant"].Value<string>()).FirstOrDefault();
+            newHunter.AvatarCustomize.RightPantSprite = _pantSprites.Where(s => s.name == obj["rightPant"].Value<string>()).FirstOrDefault();
+            newHunter.AvatarCustomize.HairSprite = _hairSprites.Where(s => s.name == obj["hair"].Value<string>()).FirstOrDefault();
+            newHunter.AvatarCustomize.HairColor = ColorUtility.TryParseHtmlString(obj["hairColor"].Value<string>(), out var color) ? color : Color.white;
 
             _hunters.Add(newHunter);
 

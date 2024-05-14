@@ -106,7 +106,7 @@ public class Hunter : MonoBehaviour
 
         GameManager.Instance.GetSystem<PathDrawer>().DrawPath(path);
 
-        _avatarCustomize.ShowAvatar(true);
+        _avatarCustomize.ShowAvatar();
         _collider2D.enabled = true;
 
         yield return _avatarMovement.MoveRoutine(path);
@@ -114,7 +114,7 @@ public class Hunter : MonoBehaviour
         var destination = gridmap.GetConstructionAt(gridmap.WorldToCell(transform.position));
         if (destination)
         {
-            _avatarCustomize.ShowAvatar(false);
+            _avatarCustomize.HideAvatar();
             _collider2D.enabled = false;
             _visitedConstruction = destination;
             destination.VisitedHunters.Add(this);

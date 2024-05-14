@@ -32,8 +32,10 @@ public class UIDispatchPanel : MonoBehaviour
         {
             if (_targetPortal)
             {
-                _targetPortal.Dispatch();
+                //_targetPortal.Dispatch();
+
             }
+            StartCoroutine(GameManager.Instance.GetSystem<Battle>().BattleRoutine());
         });
 
         var interactableSelector = FindObjectOfType<InteractableSelector>();
@@ -97,12 +99,12 @@ public class UIDispatchPanel : MonoBehaviour
             if (i < hunters.Count)
             {
                 _dispatchSlots[i].SetHunter(hunters[i], _targetPortal);
-                battle.SetAvatarCustomize(i, hunters[i].GetComponent<AvatarCustomize>());
+                battle.SetBattleHunter(i, hunters[i].GetComponent<Hunter>());
             }
             else
             {
                 _dispatchSlots[i].SetHunter(null, _targetPortal);
-                battle.SetAvatarCustomize(i, null);
+                battle.SetBattleHunter(i, null);
             }
         }
 

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class AvatarCustomize : MonoBehaviour
@@ -18,11 +19,28 @@ public class AvatarCustomize : MonoBehaviour
     public Sprite LeftPantSprite { get { return _leftPantRenderer.sprite; } set { _leftPantRenderer.sprite = value; } }
     public Sprite RightPantSprite { get { return _rightPantRenderer.sprite; } set { _rightPantRenderer.sprite = value; } }
     public Color HairColor { get { return _hairRenderer.color; } set { _hairRenderer.color = value; } }
+    public bool IsVisible { get { return _spriteRoot.gameObject.activeSelf; } }
 
-    public void ShowAvatar(bool show)
+    public void ShowAvatar()
     {
-        _spriteRoot.gameObject.SetActive(show);
-        _shadowRenderer.gameObject.SetActive(show);
+        _spriteRoot.gameObject.SetActive(true);
+        _shadowRenderer.gameObject.SetActive(true);
     }
 
+    public void HideAvatar()
+    {
+        _spriteRoot.gameObject.SetActive(false);
+        _shadowRenderer.gameObject.SetActive(false);
+    }
+
+    public void CopyAvatar(AvatarCustomize other)
+    {
+        BodyClothSprite = other.BodyClothSprite;
+        HairSprite = other.HairSprite;
+        LeftSleeveSprite = other.LeftSleeveSprite;
+        RightSleeveSprite = other.RightSleeveSprite;
+        LeftPantSprite = other.LeftPantSprite;
+        RightPantSprite = other.RightPantSprite;
+        HairColor = other.HairColor;
+    }
 }

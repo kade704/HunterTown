@@ -1,23 +1,24 @@
 using System.Collections;
+using System.Linq;
+using Newtonsoft.Json.Linq;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 [RequireComponent(typeof(Construction))]
-public class Portal : MonoBehaviour
+public class Portal : MonoBehaviour, ISerializable, IDeserializable
 {
     [SerializeField] private SpriteRenderer _portalRenderer;
-    [SerializeField] private SpriteRenderer _progressRenderer;
     [SerializeField] private Sprite[] _spriteFrames;
+    [SerializeField] private SpriteRenderer[] _visitorRenderers;
 
-    private float _defaultPower;
-    private float _defaultDanger;
-    private float _defaultDifficulty;
-    private Ability[] _abilities = new Ability[3];
-    private bool _powerVisibility = false;
-    private bool _dangerVisibility = false;
-    private bool _difficultyVisibility = false;
-    private bool[] _abilityVisibilities = new bool[3];
-    private bool _isDispatching = false;
-    private bool _isExamining = false;
+    [ReadOnly][SerializeField] private float _defaultPower;
+    [ReadOnly][SerializeField] private float _defaultDanger;
+    [ReadOnly][SerializeField] private float _defaultDifficulty;
+    [ReadOnly][SerializeField] private Ability[] _abilities = new Ability[3];
+    [ReadOnly][SerializeField] private bool _powerVisibility = true;
+    [ReadOnly][SerializeField] private bool _dangerVisibility = true;
+    [ReadOnly][SerializeField] private bool _difficultyVisibility = true;
+    [ReadOnly][SerializeField] private bool[] _abilityVisibilities = new bool[3] { true, true, true };
     private bool _isWave = false;
     private Construction _construction;
 
@@ -110,7 +111,6 @@ public class Portal : MonoBehaviour
     private void Awake()
     {
         _construction = GetComponent<Construction>();
-        _progressRenderer = transform.Find("Progress").GetComponent<SpriteRenderer>();
 
         // _onInteracted.AddListener((id) =>
         //  {
@@ -133,30 +133,31 @@ public class Portal : MonoBehaviour
                 Wave();
             }
         });
+
+        _construction.OnVisitorChanged.AddListener(() =>
+        {
+            for (int i = 0; i < _visitorRenderers.Length; i++)
+            {
+                var visitorCount = _construction.VisitedHunters.Length;
+                if (i < visitorCount)
+                {
+                    _visitorRenderers[i].gameObject.SetActive(true);
+                    _visitorRenderers[i].sprite = _construction.VisitedHunters[i].Thumbnail;
+                    _visitorRenderers[i].transform.localPosition = new Vector3(-(visitorCount - 1) * 0.2f + i * 0.4f, 0, 0);
+                }
+                else
+                {
+                    _visitorRenderers[i].gameObject.SetActive(false);
+                }
+            }
+        });
     }
 
-    public void Dispatch()
-    {
 
-        StartCoroutine(DispatchRoutine());
-    }
-
-    private IEnumerator DispatchRoutine()
+    private void DispatchRoutine()
     {
         GameManager.Instance.GetSystem<LoggerSystem>().LogInfo($"파견이 시작되었습니다.");
 
-        _isDispatching = true;
-
-        _progressRenderer.enabled = true;
-        var startTime = Time.time;
-        var nextTime = startTime + Random.Range(3, 8);
-        while (Time.time < nextTime)
-        {
-            var progressValue = (Time.time - startTime) / (nextTime - startTime);
-            _progressRenderer.material.SetFloat("_Value", progressValue);
-            yield return null;
-        }
-        _progressRenderer.enabled = false;
 
         var HunterSpawner = FindObjectOfType<HunterSpawner>();
         foreach (var hunter in _construction.VisitedHunters)
@@ -169,7 +170,7 @@ public class Portal : MonoBehaviour
             }
         }
 
-        var success = CalcDispatchSuccessProbability(_construction.VisitedHunters.ToArray());
+        var success = CalcDispatchSuccessProbability(_construction.VisitedHunters);
         if (Random.value <= success)
         {
             GameManager.Instance.GetSystem<LoggerSystem>().LogInfo($"파견이 성공적으로 완료되었습니다.");
@@ -199,33 +200,15 @@ public class Portal : MonoBehaviour
         {
             GameManager.Instance.GetSystem<LoggerSystem>().LogError($"파견이 실패했습니다.");
         }
-
-        _isDispatching = false;
     }
 
-    public void Examine()
-    {
-        StartCoroutine(ExamineRoutine());
-    }
 
-    public IEnumerator ExamineRoutine()
+    public void ExamineRoutine()
     {
         GameManager.Instance.GetSystem<LoggerSystem>().LogInfo($"탐색이 시작되었습니다.");
 
-        _isExamining = true;
-
         GameManager.Instance.GetSystem<Player>().Money -= Random.Range(30, 70);
 
-        _progressRenderer.enabled = true;
-        var startTime = Time.time;
-        var nextTime = startTime + 2;
-        while (Time.time < nextTime)
-        {
-            var progressValue = (Time.time - startTime) / (nextTime - startTime);
-            _progressRenderer.material.SetFloat("_Value", progressValue);
-            yield return null;
-        }
-        _progressRenderer.enabled = false;
 
         GameManager.Instance.GetSystem<LoggerSystem>().LogInfo($"탐색이 완료되었습니다.");
 
@@ -261,8 +244,6 @@ public class Portal : MonoBehaviour
                 }
             }
         }
-
-        _isExamining = false;
     }
 
     public void Wave()
@@ -316,6 +297,47 @@ public class Portal : MonoBehaviour
             _portalRenderer.sprite = _spriteFrames[frameIndex];
             frameIndex = (frameIndex + 1) % _spriteFrames.Length;
             yield return new WaitForSeconds(0.3f);
+        }
+    }
+
+    public JToken Serialize()
+    {
+        var data = new JObject
+        {
+            ["power"] = _defaultPower,
+            ["danger"] = _defaultDanger,
+            ["difficulty"] = _defaultDifficulty,
+            ["powerVisibility"] = _powerVisibility,
+            ["dangerVisibility"] = _dangerVisibility,
+            ["difficultyVisibility"] = _difficultyVisibility,
+            ["abilityVisibilities"] = new JArray(_abilityVisibilities)
+        };
+        var abilities = new JArray();
+        foreach (var ability in _abilities)
+        {
+            if (ability)
+            {
+                abilities.Add(ability.ID);
+            }
+        }
+        data["abilities"] = abilities;
+        return data;
+    }
+
+    public void Deserialize(JToken token)
+    {
+        _defaultPower = token["power"].Value<float>();
+        _defaultDanger = token["danger"].Value<float>();
+        _defaultDifficulty = token["difficulty"].Value<float>();
+        _powerVisibility = token["powerVisibility"].Value<bool>();
+        _dangerVisibility = token["dangerVisibility"].Value<bool>();
+        _difficultyVisibility = token["difficultyVisibility"].Value<bool>();
+        _abilityVisibilities = token["abilityVisibilities"].ToObject<bool[]>();
+        var abilities = token["abilities"].ToObject<string[]>();
+        for (int i = 0; i < abilities.Length; i++)
+        {
+            var portalGenerator = GameManager.Instance.GetSystem<PortalGenerator>();
+            _abilities[i] = portalGenerator.PortalAbilities.First(x => x.ID == abilities[i]);
         }
     }
 

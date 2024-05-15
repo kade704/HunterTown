@@ -6,9 +6,29 @@ public class BattleHunter : MonoBehaviour
     private Animator _animator;
     private AvatarCustomize _avatarCustomize;
     private Vector2 _startPosition;
+    private Hunter _hunter;
 
     public AvatarCustomize AvatarCustomize => _avatarCustomize;
     public Vector2 StartPosition => _startPosition;
+
+    public Hunter Hunter
+    {
+        get => _hunter;
+        set
+        {
+            _hunter = value;
+
+            if (_hunter == null)
+            {
+                _avatarCustomize.HideAvatar();
+            }
+            else
+            {
+                _avatarCustomize.CopyAvatar(_hunter.GetComponent<AvatarCustomize>());
+                _avatarCustomize.ShowAvatar();
+            }
+        }
+    }
 
     private void Awake()
     {
@@ -19,6 +39,13 @@ public class BattleHunter : MonoBehaviour
     private void Start()
     {
         _startPosition = transform.position;
+    }
+
+    public void Initialize()
+    {
+        _animator.SetFloat("RunState", 0);
+        _animator.SetTrigger("Respawn");
+        _avatarCustomize.HideAvatar();
     }
 
     public IEnumerator EnterPortalRoutine(Transform portal)

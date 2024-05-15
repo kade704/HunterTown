@@ -21,6 +21,13 @@ public class BattleMonster : MonoBehaviour
         _startPosition = transform.position;
     }
 
+    public void Initialize()
+    {
+        _animator.SetFloat("RunState", 0);
+        _animator.SetTrigger("Respawn");
+        _avatarCustomize.HideAvatar();
+    }
+
     public IEnumerator AttackBeginRoutine(Vector2 position)
     {
         _animator.SetFloat("RunState", 0.5f);

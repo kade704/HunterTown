@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,13 +11,12 @@ public class UIDispatchPanel : MonoBehaviour
     [SerializeField] private Text _dangerText;
     [SerializeField] private Text _difficultyText;
     [SerializeField] private Text _rankText;
-    [SerializeField] private Text _successText;
     [SerializeField] private UIDispatchSlot[] _dispatchSlots;
     [SerializeField] private Button _dispatchButton;
     [SerializeField] private UIAbilitySlot[] _abilitySlots;
-    [SerializeField] private UIAbilityInfo _abilityInfo;
+    [SerializeField] private GameObject _resultPanel;
+    [SerializeField] private Button _resultCloseButton;
 
-    private UIAbilitySlot _abilitySlotOverPointer;
     private Portal _targetPortal;
 
     public Portal TargetPortal => _targetPortal;
@@ -28,14 +28,20 @@ public class UIDispatchPanel : MonoBehaviour
             _panel.SetActive(false);
         });
 
+        _resultCloseButton.onClick.AddListener(() =>
+        {
+            _resultPanel.SetActive(false);
+            _panel.SetActive(false);
+            _closeButton.interactable = true;
+            _dispatchButton.interactable = true;
+            GameManager.Instance.GetSystem<Battle>().Initialize();
+        });
+
         _dispatchButton.onClick.AddListener(() =>
         {
-            if (_targetPortal)
-            {
-                //_targetPortal.Dispatch();
-
-            }
-            StartCoroutine(GameManager.Instance.GetSystem<Battle>().BattleRoutine());
+            _closeButton.interactable = false;
+            _dispatchButton.interactable = false;
+            StartCoroutine(DispatchRoutine());
         });
 
         var interactableSelector = FindObjectOfType<InteractableSelector>();
@@ -53,25 +59,10 @@ public class UIDispatchPanel : MonoBehaviour
         });
     }
 
-    private void Update()
+    private IEnumerator DispatchRoutine()
     {
-        var abilitySlotOverPointer = UIUtil.GetUIObjectTypeOverPointer<UIAbilitySlot>();
-        if (abilitySlotOverPointer != _abilitySlotOverPointer)
-        {
-            if (abilitySlotOverPointer && !abilitySlotOverPointer.Hidden)
-            {
-                _abilityInfo.Ability = abilitySlotOverPointer.Ability;
-            }
-            else
-            {
-                _abilityInfo.Ability = null;
-            }
-            _abilitySlotOverPointer = abilitySlotOverPointer;
-        }
-        if (_abilitySlotOverPointer)
-        {
-            _abilityInfo.transform.position = Input.mousePosition;
-        }
+        yield return GameManager.Instance.GetSystem<Battle>().BattleRoutine();
+        _resultPanel.SetActive(true);
     }
 
     private void Initialize(Portal portal)
@@ -96,35 +87,18 @@ public class UIDispatchPanel : MonoBehaviour
         var hunters = _targetPortal.Construction.VisitedHunters;
         for (int i = 0; i < 4; i++)
         {
-            if (i < hunters.Count)
+            if (i < hunters.Length)
             {
                 _dispatchSlots[i].SetHunter(hunters[i], _targetPortal);
-                battle.SetBattleHunter(i, hunters[i].GetComponent<Hunter>());
+                battle.BattleHunter[i].Hunter = hunters[i].GetComponent<Hunter>();
             }
             else
             {
                 _dispatchSlots[i].SetHunter(null, _targetPortal);
-                battle.SetBattleHunter(i, null);
+                battle.BattleHunter[i].Hunter = null;
             }
         }
 
-        var readyToDispatch = hunters.Count() > 0;
-        _dispatchButton.interactable = readyToDispatch;
-        if (readyToDispatch)
-        {
-            var success = (_targetPortal.CalcDispatchSuccessProbability(hunters.ToArray()) * 100f).ToString("F1");
-            if (_targetPortal.PowerVisibility)
-            {
-                _successText.text = $"파견 성공 확률: {success}%";
-            }
-            else
-            {
-                _successText.text = "파견 성공 확률: ?%";
-            }
-        }
-        else
-        {
-            _successText.text = "";
-        }
+        _dispatchButton.interactable = hunters.Count() > 0;
     }
 }

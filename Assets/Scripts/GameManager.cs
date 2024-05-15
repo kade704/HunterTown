@@ -82,14 +82,14 @@ public class GameManager : MonoBehaviour
             player.Money = 10000;
 
             var constructionGridMap = GetSystem<ConstructionGridmap>();
-            var street = GetSystem<ConstructionDatabase>().GetConstructionPrefab("#street");
+            var road = GetSystem<ConstructionDatabase>().GetConstructionPrefab("#dirt_road");
             var company = GetSystem<ConstructionDatabase>().GetConstructionPrefab("#company");
             constructionGridMap.BuildConstruction(company, new Vector2Int(32, 32));
-            constructionGridMap.BuildConstruction(street, new Vector2Int(31, 31));
-            constructionGridMap.BuildConstruction(street, new Vector2Int(31, 32));
-            constructionGridMap.BuildConstruction(street, new Vector2Int(31, 33));
-            constructionGridMap.BuildConstruction(street, new Vector2Int(32, 31));
-            constructionGridMap.BuildConstruction(street, new Vector2Int(33, 31));
+            constructionGridMap.BuildConstruction(road, new Vector2Int(31, 31));
+            constructionGridMap.BuildConstruction(road, new Vector2Int(31, 32));
+            constructionGridMap.BuildConstruction(road, new Vector2Int(31, 33));
+            constructionGridMap.BuildConstruction(road, new Vector2Int(32, 31));
+            constructionGridMap.BuildConstruction(road, new Vector2Int(33, 31));
 
             var hunterSpawner = GetSystem<HunterSpawner>();
             hunterSpawner.SpawnRandomHunter();

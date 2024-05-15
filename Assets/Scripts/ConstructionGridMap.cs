@@ -24,7 +24,13 @@ public class ConstructionGridmap : MonoBehaviour, IDeserializable, ISerializable
         _isometricGrid = GetComponentInParent<Grid>();
     }
 
-
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            var data = Serialize();
+        }
+    }
 
     public Vector2 CellToWorld(Vector2Int cellPos)
     {
@@ -160,8 +166,7 @@ public class ConstructionGridmap : MonoBehaviour, IDeserializable, ISerializable
             var serializables = construction.GetComponents<ISerializable>();
             foreach (var serializable in serializables)
             {
-                print(serializable);
-                //obj.Add(serializable.Serialize());
+                obj[serializable.GetType().Name] = serializable.Serialize();
             }
 
             data.Add(obj);
@@ -178,11 +183,11 @@ public class ConstructionGridmap : MonoBehaviour, IDeserializable, ISerializable
 
         _constructionMap = new Construction[GRID_SIZE, GRID_SIZE];
 
-        foreach (var construction in token)
+        foreach (var data in token)
         {
-            var id = construction["id"].Value<string>();
-            var posX = construction["posX"].Value<int>();
-            var posY = construction["posY"].Value<int>();
+            var id = data["id"].Value<string>();
+            var posX = data["posX"].Value<int>();
+            var posY = data["posY"].Value<int>();
             var pos = new Vector2Int(posX, posY);
             var constructionPrefab = GameManager.Instance.GetSystem<ConstructionDatabase>().GetConstructionPrefab(id);
             if (!constructionPrefab)
@@ -190,7 +195,19 @@ public class ConstructionGridmap : MonoBehaviour, IDeserializable, ISerializable
                 Debug.LogError("Construction prefab not found: " + id);
                 continue;
             }
-            BuildConstruction(constructionPrefab, pos);
+
+            var construction = BuildConstruction(constructionPrefab, pos);
+            if (!construction)
+            {
+                Debug.LogError("Construction not buildable at this position: " + pos);
+                continue;
+            }
+
+            var deserializables = construction.GetComponents<IDeserializable>();
+            foreach (var deserializable in deserializables)
+            {
+                deserializable.Deserialize(data[deserializable.GetType().Name]);
+            }
         }
     }
 }

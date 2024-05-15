@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(Interactable))]
 public class Construction : MonoBehaviour
@@ -40,6 +41,7 @@ public class Construction : MonoBehaviour
     private ConstructionGridmap _constructionGridMap;
     private Interactable _interactable;
     private Vector2Int _cellPos;
+    private UnityEvent _onVisitorChanged = new UnityEvent();
 
     public Vector2Int CellPos
     {
@@ -61,7 +63,8 @@ public class Construction : MonoBehaviour
     public bool Buildable => _buildable;
     public bool Destroyable => _destroyable;
     public bool Visitable => _visitable;
-    public List<Hunter> VisitedHunters => _visitedHunters;
+    public Hunter[] VisitedHunters => _visitedHunters.ToArray();
+    public UnityEvent OnVisitorChanged => _onVisitorChanged;
 
     private void Awake()
     {
@@ -74,9 +77,21 @@ public class Construction : MonoBehaviour
         _interactable.Description = _description;
     }
 
-    private void OnDestroy()
+    public void EnterVisitor(Hunter hunter)
     {
-        if (_constructionGridMap.GetConstructionAt(CellPos) == this)
-            _constructionGridMap.DestroyConstruction(CellPos);
+        if (!_visitedHunters.Contains(hunter))
+        {
+            _visitedHunters.Add(hunter);
+            _onVisitorChanged.Invoke();
+        }
+    }
+
+    public void ExitVisitor(Hunter hunter)
+    {
+        if (_visitedHunters.Contains(hunter))
+        {
+            _visitedHunters.Remove(hunter);
+            _onVisitorChanged.Invoke();
+        }
     }
 }

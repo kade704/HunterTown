@@ -8,10 +8,12 @@ public struct Interaction
     [SerializeField] private string _id;
     [SerializeField] private string _displayName;
     [SerializeField] private Sprite _icon;
+    [SerializeField] private KeyCode _key;
 
     public string ID => _id;
     public string DisplayName => _displayName;
     public Sprite Icon => _icon;
+    public KeyCode Key => _key;
 }
 
 

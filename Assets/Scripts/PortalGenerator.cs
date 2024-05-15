@@ -16,6 +16,8 @@ public class PortalGenerator : MonoBehaviour
     private int _nextSpawnHour = 10;
     private ConstructionGridmap _constructionGridMap;
 
+    public Ability[] PortalAbilities => _portalAbilities;
+
     private void Awake()
     {
         _constructionGridMap = FindObjectOfType<ConstructionGridmap>();
@@ -79,4 +81,6 @@ public class PortalGenerator : MonoBehaviour
 
         GameManager.Instance.GetSystem<LoggerSystem>().LogWarning($"포탈이 <b>({cellPos.x}, {cellPos.y})</b>위치에 생성되었습니다.");
     }
+
+
 }

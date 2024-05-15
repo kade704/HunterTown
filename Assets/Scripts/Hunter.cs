@@ -90,7 +90,7 @@ public class Hunter : MonoBehaviour
 
         if (_visitedConstruction)
         {
-            _visitedConstruction.VisitedHunters.Remove(this);
+            _visitedConstruction.ExitVisitor(this);
             _visitedConstruction = null;
         }
 
@@ -117,7 +117,7 @@ public class Hunter : MonoBehaviour
             _avatarCustomize.HideAvatar();
             _collider2D.enabled = false;
             _visitedConstruction = destination;
-            destination.VisitedHunters.Add(this);
+            destination.EnterVisitor(this);
         }
 
         GameManager.Instance.GetSystem<PathDrawer>().RemovePath(path);
@@ -139,7 +139,7 @@ public class Hunter : MonoBehaviour
         return null;
     }
 
-    public IEnumerator CaptureThumbnailRoutine(int resolution = 512)
+    public IEnumerator CaptureThumbnailRoutine(int resolution = 64)
     {
         var position = transform.position;
         transform.position = new Vector3(Random.Range(456, 789), Random.Range(456, 789), 0);
@@ -150,14 +150,17 @@ public class Hunter : MonoBehaviour
 
         var camera = new GameObject("Camera").AddComponent<Camera>();
         camera.transform.parent = transform;
-        camera.transform.localPosition = new Vector3(0, 0.2f, -10);
+        camera.transform.localPosition = new Vector3(0, 0.3f, -10);
         camera.orthographic = true;
-        camera.orthographicSize = 0.3f;
+        camera.orthographicSize = 0.2f;
         camera.cullingMask = 1 << LayerMask.NameToLayer("Hunter");
         camera.targetTexture = renderTexture;
         camera.Render();
 
-        Texture2D texture = new Texture2D(resolution, resolution, TextureFormat.ARGB32, false);
+        Texture2D texture = new(resolution, resolution, TextureFormat.ARGB32, false)
+        {
+            filterMode = FilterMode.Point
+        };
 
         var previousRenderTexture = RenderTexture.active;
         RenderTexture.active = renderTexture;
@@ -171,7 +174,7 @@ public class Hunter : MonoBehaviour
 
         Destroy(camera.gameObject);
 
-        _thumbnail = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+        _thumbnail = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f), 64);
 
         transform.position = position;
     }

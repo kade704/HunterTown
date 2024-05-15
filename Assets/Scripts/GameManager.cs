@@ -90,13 +90,6 @@ public class GameManager : MonoBehaviour
             constructionGridMap.BuildConstruction(road, new Vector2Int(31, 33));
             constructionGridMap.BuildConstruction(road, new Vector2Int(32, 31));
             constructionGridMap.BuildConstruction(road, new Vector2Int(33, 31));
-
-            var hunterSpawner = GetSystem<HunterSpawner>();
-            hunterSpawner.SpawnRandomHunter();
-            hunterSpawner.SpawnRandomHunter();
-            hunterSpawner.SpawnRandomHunter();
-            hunterSpawner.SpawnRandomHunter();
-            hunterSpawner.SpawnRandomHunter();
         }
         else
         {

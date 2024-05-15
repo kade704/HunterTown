@@ -9,7 +9,7 @@ public class Portal : MonoBehaviour, ISerializable, IDeserializable
 {
     [SerializeField] private SpriteRenderer _portalRenderer;
     [SerializeField] private Sprite[] _spriteFrames;
-    [SerializeField] private SpriteRenderer[] _visitorRenderers;
+    [SerializeField] private Transform[] _visitorPositions;
 
     [ReadOnly][SerializeField] private float _defaultPower;
     [ReadOnly][SerializeField] private float _defaultDanger;
@@ -136,19 +136,9 @@ public class Portal : MonoBehaviour, ISerializable, IDeserializable
 
         _construction.OnVisitorChanged.AddListener(() =>
         {
-            for (int i = 0; i < _visitorRenderers.Length; i++)
+            for (int i = 0; i < _construction.VisitedHunters.Length; i++)
             {
-                var visitorCount = _construction.VisitedHunters.Length;
-                if (i < visitorCount)
-                {
-                    _visitorRenderers[i].gameObject.SetActive(true);
-                    _visitorRenderers[i].sprite = _construction.VisitedHunters[i].Thumbnail;
-                    _visitorRenderers[i].transform.localPosition = new Vector3(-(visitorCount - 1) * 0.2f + i * 0.4f, 0, 0);
-                }
-                else
-                {
-                    _visitorRenderers[i].gameObject.SetActive(false);
-                }
+                _construction.VisitedHunters[i].transform.position = _visitorPositions[i].position;
             }
         });
     }

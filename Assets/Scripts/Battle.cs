@@ -12,7 +12,13 @@ public class Battle : MonoBehaviour
     [SerializeField] private Sprite _natureBackground;
     [SerializeField] private Sprite _hellBackground;
 
-    public BattleHunter[] BattleHunter => _battleHunter;
+    public void SetHunter(int index, Hunter hunter)
+    {
+        if (index < 0 || index >= 4)
+            Debug.LogError("Invalid index");
+
+        _battleHunter[index].Hunter = hunter;
+    }
 
     public IEnumerator BattleRoutine()
     {

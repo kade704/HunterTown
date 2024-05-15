@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class AvatarCustomize : MonoBehaviour
@@ -12,13 +11,53 @@ public class AvatarCustomize : MonoBehaviour
     [SerializeField] private Transform _spriteRoot;
     [SerializeField] private SpriteRenderer _shadowRenderer;
 
-    public Sprite BodyClothSprite { get { return _bodyClothRenderer.sprite; } set { _bodyClothRenderer.sprite = value; } }
-    public Sprite HairSprite { get { return _hairRenderer.sprite; } set { _hairRenderer.sprite = value; } }
-    public Sprite LeftSleeveSprite { get { return _leftSleeveRenderer.sprite; } set { _leftSleeveRenderer.sprite = value; } }
-    public Sprite RightSleeveSprite { get { return _rightSleeveRenderer.sprite; } set { _rightSleeveRenderer.sprite = value; } }
-    public Sprite LeftPantSprite { get { return _leftPantRenderer.sprite; } set { _leftPantRenderer.sprite = value; } }
-    public Sprite RightPantSprite { get { return _rightPantRenderer.sprite; } set { _rightPantRenderer.sprite = value; } }
-    public Color HairColor { get { return _hairRenderer.color; } set { _hairRenderer.color = value; } }
+    private TopCloth _topCloth;
+    private BottomCloth _bottomCloth;
+    private Hair _hair;
+    private Color _hairColor;
+
+    public TopCloth TopCloth
+    {
+        get => _topCloth;
+        set
+        {
+            _topCloth = value;
+            _bodyClothRenderer.sprite = value.body;
+            _leftSleeveRenderer.sprite = value.armL;
+            _rightSleeveRenderer.sprite = value.armR;
+        }
+    }
+
+    public BottomCloth BottomCloth
+    {
+        get => _bottomCloth;
+        set
+        {
+            _bottomCloth = value;
+            _leftPantRenderer.sprite = value.legL;
+            _rightPantRenderer.sprite = value.legR;
+        }
+    }
+
+    public Hair Hair
+    {
+        get => _hair;
+        set
+        {
+            _hair = value;
+            _hairRenderer.sprite = value.hair;
+        }
+    }
+
+    public Color HairColor
+    {
+        get => _hairColor;
+        set
+        {
+            _hairColor = value;
+            _hairRenderer.color = value;
+        }
+    }
     public bool IsVisible { get { return _spriteRoot.gameObject.activeSelf; } }
 
     public void ShowAvatar()
@@ -35,12 +74,9 @@ public class AvatarCustomize : MonoBehaviour
 
     public void CopyAvatar(AvatarCustomize other)
     {
-        BodyClothSprite = other.BodyClothSprite;
-        HairSprite = other.HairSprite;
-        LeftSleeveSprite = other.LeftSleeveSprite;
-        RightSleeveSprite = other.RightSleeveSprite;
-        LeftPantSprite = other.LeftPantSprite;
-        RightPantSprite = other.RightPantSprite;
+        TopCloth = other.TopCloth;
+        BottomCloth = other.BottomCloth;
+        Hair = other.Hair;
         HairColor = other.HairColor;
     }
 }

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class UIDispatchPanel : MonoBehaviour
 {
-    [SerializeField] private GameObject _panel;
+    [SerializeField] private GameObject _mainPanel;
     [SerializeField] private Button _closeButton;
     [SerializeField] private Text _powerText;
     [SerializeField] private Text _dangerText;
@@ -25,13 +25,13 @@ public class UIDispatchPanel : MonoBehaviour
     {
         _closeButton.onClick.AddListener(() =>
         {
-            _panel.SetActive(false);
+            _mainPanel.SetActive(false);
         });
 
         _resultCloseButton.onClick.AddListener(() =>
         {
             _resultPanel.SetActive(false);
-            _panel.SetActive(false);
+            _mainPanel.SetActive(false);
             _closeButton.interactable = true;
             _dispatchButton.interactable = true;
             GameManager.Instance.GetSystem<Battle>().Initialize();
@@ -50,11 +50,11 @@ public class UIDispatchPanel : MonoBehaviour
             if (interaction.ID == "#dispatch")
             {
                 Initialize(interactable.GetComponent<Portal>());
-                _panel.SetActive(true);
+                _mainPanel.SetActive(true);
             }
             else
             {
-                _panel.SetActive(false);
+                _mainPanel.SetActive(false);
             }
         });
     }
@@ -90,12 +90,12 @@ public class UIDispatchPanel : MonoBehaviour
             if (i < hunters.Length)
             {
                 _dispatchSlots[i].SetHunter(hunters[i], _targetPortal);
-                battle.BattleHunter[i].Hunter = hunters[i].GetComponent<Hunter>();
+                battle.SetHunter(i, hunters[i].GetComponent<Hunter>());
             }
             else
             {
                 _dispatchSlots[i].SetHunter(null, _targetPortal);
-                battle.BattleHunter[i].Hunter = null;
+                battle.SetHunter(i, null);
             }
         }
 

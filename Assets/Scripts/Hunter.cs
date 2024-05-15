@@ -114,7 +114,6 @@ public class Hunter : MonoBehaviour
         var destination = gridmap.GetConstructionAt(gridmap.WorldToCell(transform.position));
         if (destination)
         {
-            _avatarCustomize.HideAvatar();
             _collider2D.enabled = false;
             _visitedConstruction = destination;
             destination.EnterVisitor(this);

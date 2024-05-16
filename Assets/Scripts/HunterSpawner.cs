@@ -21,8 +21,6 @@ public class HunterSpawner : MonoBehaviour, ISerializable, IDeserializable
         _hunters.Add(newHunter);
         _onHuntersChanged.Invoke();
 
-        GameManager.Instance.GetSystem<LoggerSystem>().LogInfo($"<b>{newHunter.DisplayName}</b> 이(가) 마을에 이주했습니다.");
-
         return newHunter;
     }
 
@@ -31,8 +29,6 @@ public class HunterSpawner : MonoBehaviour, ISerializable, IDeserializable
         _hunters.Remove(hunter);
         _onHuntersChanged.Invoke();
         Destroy(hunter.gameObject);
-
-        GameManager.Instance.GetSystem<LoggerSystem>().LogError($"<b>{hunter.DisplayName}</b> 이(가) 사망했습니다");
     }
 
     public JToken Serialize()

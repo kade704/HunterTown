@@ -2,12 +2,13 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIEmploymentPanel : MonoBehaviour
+public class UIEmployPanel : MonoBehaviour
 {
     [SerializeField] private GameObject _panel;
     [SerializeField] private Button _closeButton;
     [SerializeField] private Text _remainText;
-    [SerializeField] private UIEmploymentSlot[] _employmentSlots;
+    [SerializeField] private UIEmploySlot[] _employmentSlots;
+    private Company _company;
 
     private void Start()
     {
@@ -17,7 +18,7 @@ public class UIEmploymentPanel : MonoBehaviour
             if (interaction.ID == "#employment")
             {
                 _panel.SetActive(true);
-                Initialize();
+                Initialize(interactable.GetComponent<Company>());
             }
             else
             {
@@ -40,9 +41,11 @@ public class UIEmploymentPanel : MonoBehaviour
         }
     }
 
-    private void Initialize()
+    private void Initialize(Company company)
     {
-        var employment = GameManager.Instance.GetSystem<Employment>();
+        _company = company;
+        _remainText.text = $"고용 가능 인원: {company.RemainEmployeeCount}";
+        var employment = GameManager.Instance.GetSystem<EmployDirector>();
         for (int i = 0; i < 4; i++)
         {
             _employmentSlots[i].EmployHunter = employment.EmployHunter[i];
@@ -51,9 +54,13 @@ public class UIEmploymentPanel : MonoBehaviour
 
     private IEnumerator EmployRoutine(int index)
     {
+        if (_company.RemainEmployeeCount <= 0) yield break;
+        _company.RemainEmployeeCount -= 1;
+        _remainText.text = $"고용 가능 인원: {_company.RemainEmployeeCount}";
+
         GameManager.Instance.GetSystem<Player>().Money -= 100;
 
-        var employment = GameManager.Instance.GetSystem<Employment>();
+        var employment = GameManager.Instance.GetSystem<EmployDirector>();
 
         var hunterSpawner = GameManager.Instance.GetSystem<HunterSpawner>();
         var newHunter = hunterSpawner.SpawnHunter();
@@ -62,13 +69,15 @@ public class UIEmploymentPanel : MonoBehaviour
         newHunter.DefaultDamage = employment.EmployHunter[index].Damage;
         newHunter.AvatarCustomize.CopyAvatar(employment.EmployHunter[index].AvatarCustomize);
 
-        _employmentSlots[index].EmployButton.interactable = false;
+        _employmentSlots[index].Hide();
         yield return _employmentSlots[index].EmployHunter.ExitRoutine();
 
         employment.SetRandomEmployHunter(index);
+
+
         _employmentSlots[index].EmployHunter = employment.EmployHunter[index];
 
         yield return _employmentSlots[index].EmployHunter.EnterRoutine();
-        _employmentSlots[index].EmployButton.interactable = true;
+        _employmentSlots[index].Show();
     }
 }

@@ -84,6 +84,7 @@ public class GameManager : MonoBehaviour
             var constructionGridMap = GetSystem<ConstructionGridmap>();
             var road = GetSystem<ConstructionDatabase>().GetConstructionPrefab("#dirt_road");
             var company = GetSystem<ConstructionDatabase>().GetConstructionPrefab("#company");
+            company.GetComponent<Company>().RemainEmployeeCount = 4;
             constructionGridMap.BuildConstruction(company, new Vector2Int(32, 32));
             constructionGridMap.BuildConstruction(road, new Vector2Int(31, 31));
             constructionGridMap.BuildConstruction(road, new Vector2Int(31, 32));

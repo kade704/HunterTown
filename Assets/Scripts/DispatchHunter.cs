@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class BattleHunter : MonoBehaviour
+public class DispatchHunter : MonoBehaviour
 {
     private Animator _animator;
     private AvatarCustomize _avatarCustomize;

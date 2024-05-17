@@ -7,7 +7,7 @@ public class InteractableSelector : MonoBehaviour
     private UnityEvent<Interactable> _onInteractableSelected = new();
     private UnityEvent<Interactable, Interaction> _onInteractableInteracted = new();
 
-
+    public Interactable SelectedInteractable => _selectedInteractable;
     public UnityEvent<Interactable> OnInteractableSelected => _onInteractableSelected;
     public UnityEvent<Interactable, Interaction> OnInteractableInteracted => _onInteractableInteracted;
 
@@ -27,6 +27,7 @@ public class InteractableSelector : MonoBehaviour
                 if (Input.GetKeyDown(interaction.Key))
                 {
                     _onInteractableInteracted.Invoke(_selectedInteractable, interaction);
+                    _selectedInteractable.OnInteracted.Invoke(interaction);
                 }
             }
         }
@@ -52,6 +53,17 @@ public class InteractableSelector : MonoBehaviour
 
     public void SelectInteractable(Interactable interactable)
     {
+        if (_selectedInteractable)
+        {
+            _selectedInteractable.SetFocus(false);
+        }
+
+        if (interactable != null)
+        {
+            interactable.SetFocus(true);
+        }
+
+        _selectedInteractable = interactable;
         _onInteractableSelected.Invoke(interactable);
     }
 }

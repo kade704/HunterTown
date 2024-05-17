@@ -2,12 +2,12 @@ using System.Collections;
 using System.Linq;
 using UnityEngine;
 
-public class Battle : MonoBehaviour
+public class DispatchDirector : MonoBehaviour
 {
-    [SerializeField] private BattleHunter[] _battleHunter = new BattleHunter[4];
+    [SerializeField] private DispatchHunter[] _battleHunter = new DispatchHunter[4];
     [SerializeField] private SpriteRenderer _portal;
     [SerializeField] private SpriteRenderer _background;
-    [SerializeField] private BattleMonster _battleMonster;
+    [SerializeField] private DispatchMonster _battleMonster;
     [SerializeField] private Transform _transition;
     [SerializeField] private Sprite _natureBackground;
     [SerializeField] private Sprite _hellBackground;

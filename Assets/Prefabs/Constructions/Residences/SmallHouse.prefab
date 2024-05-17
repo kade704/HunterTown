@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8494855508593197953}
   - component: {fileID: 8661895948472644750}
   - component: {fileID: -6851594000809429196}
+  - component: {fileID: -8049044420955903368}
   m_Layer: 0
   m_Name: SmallHouse
   m_TagString: Untagged
@@ -124,6 +125,7 @@ MonoBehaviour:
   _size: {x: 1, y: 1}
   _buildable: 1
   _destroyable: 1
+  _visitable: 0
 --- !u!114 &8661895948472644750
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -149,7 +151,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba4f49db3c17b484dbae92a9e0ea6fda, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxOccupancy: 5
+  _increasePopulation: 5
+--- !u!114 &-8049044420955903368
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2901527553759305183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5cf9540428e638d4fadab6e1a19effb6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3495467589047441681
 GameObject:
   m_ObjectHideFlags: 0
@@ -202,7 +216,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 3c19633ad8d86e640a9549617646783c, type: 2}
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

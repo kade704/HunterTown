@@ -9,7 +9,11 @@ public class Company : MonoBehaviour, ISerializable, IDeserializable
     private Interactable _interactable;
     private string _defaultDescription;
 
-    public int RemainEmployeeCount => _remainEmployeeCount;
+    public int RemainEmployeeCount
+    {
+        get => _remainEmployeeCount;
+        set => _remainEmployeeCount = value;
+    }
 
     private void Awake()
     {

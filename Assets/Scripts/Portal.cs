@@ -10,6 +10,7 @@ public class Portal : MonoBehaviour, ISerializable, IDeserializable
     [SerializeField] private SpriteRenderer _portalRenderer;
     [SerializeField] private Sprite[] _spriteFrames;
     [SerializeField] private Transform[] _visitorPositions;
+    [SerializeField] private Monster _monsterPrefab;
 
     [ReadOnly][SerializeField] private float _defaultPower;
     [ReadOnly][SerializeField] private float _defaultDanger;
@@ -240,6 +241,7 @@ public class Portal : MonoBehaviour, ISerializable, IDeserializable
     {
         _isWave = true;
         GameManager.Instance.GetSystem<LoggerSystem>().LogError("포탈 웨이브가 시작되었습니다!");
+        Instantiate(_monsterPrefab, transform.position, Quaternion.identity);
     }
 
     public float CalcHunterDeathProbability(Hunter hunter)

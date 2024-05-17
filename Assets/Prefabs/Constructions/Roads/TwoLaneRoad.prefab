@@ -118,12 +118,13 @@ MonoBehaviour:
   _id: '#two_lane_road'
   _cost: 10
   _displayName: "2\uCC28\uC120 \uB3C4\uB85C"
-  _description: "\uB113\uC740 \uB3C4\uB85C\uC774\uB2E4.\n(\uC774\uB3D9\uC18D\uB3C4:
+  _description: "\uB113\uC740 \uB3C4\uB85C\uC774\uB2E4.\n\n(\uC774\uB3D9\uC18D\uB3C4:
     2.5)"
-  _defaultSprite: {fileID: -1927958277, guid: 9ce137b1be9c78d4683d4c1afb72be4e, type: 3}
+  _defaultSprite: {fileID: -550659547, guid: 9ce137b1be9c78d4683d4c1afb72be4e, type: 3}
   _size: {x: 1, y: 1}
   _buildable: 1
   _destroyable: 1
+  _visitable: 0
 --- !u!114 &3380698535929008947
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -220,7 +221,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 3c19633ad8d86e640a9549617646783c, type: 2}
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

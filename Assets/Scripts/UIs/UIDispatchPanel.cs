@@ -17,10 +17,6 @@ public class UIDispatchPanel : MonoBehaviour
     [SerializeField] private GameObject _resultPanel;
     [SerializeField] private Button _resultCloseButton;
 
-    private Portal _targetPortal;
-
-    public Portal TargetPortal => _targetPortal;
-
     private void Start()
     {
         _closeButton.onClick.AddListener(() =>
@@ -34,7 +30,7 @@ public class UIDispatchPanel : MonoBehaviour
             _mainPanel.SetActive(false);
             _closeButton.interactable = true;
             _dispatchButton.interactable = true;
-            GameManager.Instance.GetSystem<Battle>().Initialize();
+            GameManager.Instance.GetSystem<DispatchDirector>().Initialize();
         });
 
         _dispatchButton.onClick.AddListener(() =>
@@ -61,40 +57,38 @@ public class UIDispatchPanel : MonoBehaviour
 
     private IEnumerator DispatchRoutine()
     {
-        yield return GameManager.Instance.GetSystem<Battle>().BattleRoutine();
+        yield return GameManager.Instance.GetSystem<DispatchDirector>().BattleRoutine();
         _resultPanel.SetActive(true);
     }
 
     private void Initialize(Portal portal)
     {
-        _targetPortal = portal;
-
-        _powerText.text = "능력치: " + (_targetPortal.PowerVisibility ? _targetPortal.Power.ToString("F1") : "???");
-        _dangerText.text = "위험도: " + (_targetPortal.DangerVisibility ? _targetPortal.Danger.ToString("F1") : "???");
-        _difficultyText.text = "복잡도: " + (_targetPortal.DifficultyVisibility ? _targetPortal.Difficulty.ToString("F1") : "???");
-        _rankText.text = _targetPortal.Rank.ToString();
+        _powerText.text = "능력치: " + (portal.PowerVisibility ? portal.Power.ToString("F1") : "???");
+        _dangerText.text = "위험도: " + (portal.DangerVisibility ? portal.Danger.ToString("F1") : "???");
+        _difficultyText.text = "복잡도: " + (portal.DifficultyVisibility ? portal.Difficulty.ToString("F1") : "???");
+        _rankText.text = portal.Rank.ToString();
 
         for (int i = 0; i < 3; i++)
         {
             var abilitySlot = _abilitySlots[i];
 
-            abilitySlot.Ability = _targetPortal.Abilities[i];
-            abilitySlot.Hidden = !_targetPortal.AbilityVisibilities[i];
+            abilitySlot.Ability = portal.Abilities[i];
+            abilitySlot.Hidden = !portal.AbilityVisibilities[i];
         }
 
-        var battle = GameManager.Instance.GetSystem<Battle>();
+        var battle = GameManager.Instance.GetSystem<DispatchDirector>();
 
-        var hunters = _targetPortal.Construction.VisitedHunters;
+        var hunters = portal.Construction.VisitedHunters;
         for (int i = 0; i < 4; i++)
         {
             if (i < hunters.Length)
             {
-                _dispatchSlots[i].SetHunter(hunters[i], _targetPortal);
+                _dispatchSlots[i].SetHunter(hunters[i], portal);
                 battle.SetHunter(i, hunters[i].GetComponent<Hunter>());
             }
             else
             {
-                _dispatchSlots[i].SetHunter(null, _targetPortal);
+                _dispatchSlots[i].SetHunter(null, portal);
                 battle.SetHunter(i, null);
             }
         }

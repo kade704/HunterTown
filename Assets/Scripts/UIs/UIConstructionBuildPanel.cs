@@ -14,16 +14,18 @@ public class UIConstructionBuildPanel : MonoBehaviour
     [SerializeField] private GameObject _informationPanel;
     [SerializeField] private Text _informationTitle;
     [SerializeField] private Text _informationDescription;
-    [SerializeField] private UIBuildButton _selectButton;
-    [SerializeField] private UIBuildButton _desctructButton;
-    private UIBuildButton[] _buildButtons;
+    [SerializeField] private UIBuildToggle _selectButton;
+    [SerializeField] private UIBuildToggle _desctructButton;
+    private UIBuildToggle[] _buildToggles;
+    private ToggleGroup _toggleGroup;
 
     private ConstructionBuilder _constructionBuilder;
 
     private void Awake()
     {
+        _toggleGroup = GetComponent<ToggleGroup>();
         _constructionBuilder = FindObjectOfType<ConstructionBuilder>();
-        _buildButtons = GetComponentsInChildren<UIBuildButton>();
+        _buildToggles = GetComponentsInChildren<UIBuildToggle>();
     }
 
 
@@ -31,113 +33,103 @@ public class UIConstructionBuildPanel : MonoBehaviour
     {
         _residenceButton.onClick.AddListener(() =>
         {
-            if (_residencePanel.alpha == 1)
+            if (UIUtil.IsCanvasGroupVisible(_residencePanel))
             {
-                _residencePanel.alpha = 0;
-                _residencePanel.blocksRaycasts = false;
+                UIUtil.HideCanvasGroup(_residencePanel);
             }
             else
             {
-                _residencePanel.alpha = 1;
-                _residencePanel.blocksRaycasts = true;
-
-                _parkPanel.alpha = 0;
-                _parkPanel.blocksRaycasts = false;
-
-                _roadPanel.alpha = 0;
-                _roadPanel.blocksRaycasts = false;
+                UIUtil.HideCanvasGroup(_parkPanel);
+                UIUtil.HideCanvasGroup(_roadPanel);
+                UIUtil.ShowCanvasGroup(_residencePanel);
             }
         });
 
         _parkButton.onClick.AddListener(() =>
         {
-            if (_parkPanel.alpha == 1)
+            if (UIUtil.IsCanvasGroupVisible(_parkPanel))
             {
-                _parkPanel.alpha = 0;
-                _parkPanel.blocksRaycasts = false;
+                UIUtil.HideCanvasGroup(_parkPanel);
             }
             else
             {
-                _residencePanel.alpha = 0;
-                _residencePanel.blocksRaycasts = false;
-
-                _parkPanel.alpha = 1;
-                _parkPanel.blocksRaycasts = true;
-
-                _roadPanel.alpha = 0;
-                _roadPanel.blocksRaycasts = false;
+                UIUtil.HideCanvasGroup(_residencePanel);
+                UIUtil.HideCanvasGroup(_roadPanel);
+                UIUtil.ShowCanvasGroup(_parkPanel);
             }
         });
 
         _roadButton.onClick.AddListener(() =>
         {
-            if (_roadPanel.alpha == 1)
+            if (UIUtil.IsCanvasGroupVisible(_roadPanel))
             {
-                _roadPanel.alpha = 0;
-                _roadPanel.blocksRaycasts = false;
+                UIUtil.HideCanvasGroup(_roadPanel);
             }
             else
             {
-                _residencePanel.alpha = 0;
-                _residencePanel.blocksRaycasts = false;
-
-                _parkPanel.alpha = 0;
-                _parkPanel.blocksRaycasts = false;
-
-                _roadPanel.alpha = 1;
-                _roadPanel.blocksRaycasts = true;
+                UIUtil.HideCanvasGroup(_residencePanel);
+                UIUtil.HideCanvasGroup(_parkPanel);
+                UIUtil.ShowCanvasGroup(_roadPanel);
             }
         });
 
-        foreach (var button in _buildButtons)
+
+        foreach (var toggle in _buildToggles)
         {
-            button.OnClick.AddListener(() =>
+            toggle.OnValueChanged.AddListener((value) =>
             {
-                if (button == _selectButton)
+                if (value == false) return;
+
+                if (toggle == _selectButton)
                 {
                     _constructionBuilder.BulidMode = ConstructionBuilder.BuildMode.Select;
 
-                    _residencePanel.alpha = 0;
-                    _residencePanel.blocksRaycasts = false;
-
-                    _parkPanel.alpha = 0;
-                    _parkPanel.blocksRaycasts = false;
-
-                    _roadPanel.alpha = 0;
-                    _roadPanel.blocksRaycasts = false;
+                    UIUtil.HideCanvasGroup(_residencePanel);
+                    UIUtil.HideCanvasGroup(_parkPanel);
+                    UIUtil.HideCanvasGroup(_roadPanel);
 
                 }
-                else if (button == _desctructButton)
+                else if (toggle == _desctructButton)
                 {
                     _constructionBuilder.BulidMode = ConstructionBuilder.BuildMode.Destruct;
 
-                    _residencePanel.alpha = 0;
-                    _residencePanel.blocksRaycasts = false;
-
-                    _parkPanel.alpha = 0;
-                    _parkPanel.blocksRaycasts = false;
-
-                    _roadPanel.alpha = 0;
-                    _roadPanel.blocksRaycasts = false;
+                    UIUtil.HideCanvasGroup(_residencePanel);
+                    UIUtil.HideCanvasGroup(_parkPanel);
+                    UIUtil.HideCanvasGroup(_roadPanel);
                 }
                 else
                 {
-                    _constructionBuilder.SelectedConstructionPrefab = button.ConstructionPrefab;
+                    _constructionBuilder.SelectedConstructionPrefab = toggle.ConstructionPrefab;
                     _constructionBuilder.BulidMode = ConstructionBuilder.BuildMode.Construct;
                 }
-
-                foreach (var btn in _buildButtons)
-                {
-                    btn.Outline.enabled = false;
-                }
-                button.Outline.enabled = true;
             });
         }
+
+        var constructionBuilder = GameManager.Instance.GetSystem<ConstructionBuilder>();
+        constructionBuilder.OnBuildModeChanged.AddListener((mode) =>
+        {
+            if (mode == ConstructionBuilder.BuildMode.Select)
+            {
+                _selectButton.SetOn();
+
+                UIUtil.HideCanvasGroup(_residencePanel);
+                UIUtil.HideCanvasGroup(_parkPanel);
+                UIUtil.HideCanvasGroup(_roadPanel);
+            }
+            else if (mode == ConstructionBuilder.BuildMode.Destruct)
+            {
+                _desctructButton.SetOn();
+
+                UIUtil.HideCanvasGroup(_residencePanel);
+                UIUtil.HideCanvasGroup(_parkPanel);
+                UIUtil.HideCanvasGroup(_roadPanel);
+            }
+        });
     }
 
     private void Update()
     {
-        var hoveredButton = UIUtil.GetUIObjectTypeOverPointer<UIBuildButton>();
+        var hoveredButton = UIUtil.GetUIObjectTypeOverPointer<UIBuildToggle>();
         if (hoveredButton)
         {
             if (hoveredButton == _selectButton)

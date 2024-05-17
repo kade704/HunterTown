@@ -9,7 +9,6 @@ public class UIInteractablePanel : MonoBehaviour
     [SerializeField] private Transform _interactionButtonsParent;
     [SerializeField] private UIInteractionButton _interactionButtonPrefab;
 
-    private Interactable _selectedInteractable;
     private InteractableSelector _interactableSelector;
 
 
@@ -23,11 +22,6 @@ public class UIInteractablePanel : MonoBehaviour
 
     private void OnInteractableClicked(Interactable interactable)
     {
-        if (_selectedInteractable)
-        {
-            _selectedInteractable.SetOutline(false);
-        }
-
         if (interactable)
         {
             _panel.SetActive(true);
@@ -50,18 +44,8 @@ public class UIInteractablePanel : MonoBehaviour
                 {
                     _interactableSelector.OnInteractableInteracted.Invoke(interactable, interaction);
                     interactable.OnInteracted.Invoke(interaction);
-                    interactable.SetOutline(false);
-                    _panel.SetActive(false);
-
-                    foreach (Transform interactionButton in _interactionButtonsParent)
-                    {
-                        Destroy(interactionButton.gameObject);
-                    }
                 });
             }
-
-            _selectedInteractable = interactable;
-            _selectedInteractable.SetOutline(true);
         }
         else
         {
@@ -71,8 +55,6 @@ public class UIInteractablePanel : MonoBehaviour
             }
 
             _panel.SetActive(false);
-
-            _selectedInteractable = null;
         }
     }
 }

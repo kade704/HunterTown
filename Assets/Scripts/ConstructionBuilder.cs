@@ -1,5 +1,6 @@
 using Sirenix.Utilities;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class ConstructionBuilder : MonoBehaviour
 {
@@ -12,12 +13,14 @@ public class ConstructionBuilder : MonoBehaviour
     private bool _isDragging = false;
     private Vector2Int[] _draggingCells = new Vector2Int[64];
     private Vector2Int _startDragPos;
+    private UnityEvent<BuildMode> _onBuildModeChanged = new();
 
     public Construction SelectedConstructionPrefab
     {
         get => _selectedConstructionPrefab;
         set => _selectedConstructionPrefab = value;
     }
+    public UnityEvent<BuildMode> OnBuildModeChanged => _onBuildModeChanged;
 
     public BuildMode BulidMode
     {
@@ -25,6 +28,7 @@ public class ConstructionBuilder : MonoBehaviour
         set
         {
             _buildMode = value;
+            _onBuildModeChanged.Invoke(_buildMode);
             _previewSprites.ForEach(sprite => sprite.sprite = null);
         }
     }
@@ -37,11 +41,18 @@ public class ConstructionBuilder : MonoBehaviour
 
     private void Update()
     {
-        if (_buildMode == BuildMode.Construct)
+        if (Input.GetMouseButtonDown(1) && !UIUtil.IsUIObjectOverPointer())
+        {
+            BulidMode = BuildMode.Select;
+            _isDragging = false;
+            return;
+        }
+
+        if (BulidMode == BuildMode.Construct)
         {
             ConstructMode();
         }
-        else if (_buildMode == BuildMode.Destruct)
+        else if (BulidMode == BuildMode.Destruct)
         {
             DestructMode();
         }
@@ -51,15 +62,17 @@ public class ConstructionBuilder : MonoBehaviour
     {
         if (!_selectedConstructionPrefab)
         {
-            _buildMode = BuildMode.Select;
+            BulidMode = BuildMode.Select;
             return;
         }
 
         var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         var cellPos = _constructionGridMap.WorldToCell(mousePos);
 
-        if (_selectedConstructionPrefab.GetComponent<Road>())
+        if (_selectedConstructionPrefab.GetComponent<Road>() != null)
         {
+            var road = _selectedConstructionPrefab.GetComponent<Road>();
+
             if (Input.GetMouseButtonDown(0) && !UIUtil.IsUIObjectOverPointer())
             {
                 _isDragging = true;
@@ -72,10 +85,16 @@ public class ConstructionBuilder : MonoBehaviour
                 {
                     foreach (var draggingCell in _draggingCells)
                     {
-                        if (_constructionGridMap.CheckConstructionBuildable(_selectedConstructionPrefab, draggingCell))
+                        if (draggingCell != new Vector2Int(-1, -1) && CheckRoadBuildable(draggingCell))
                         {
-                            GameManager.Instance.GetSystem<Player>().Money -= _selectedConstructionPrefab.Cost;
+                            if (_constructionGridMap.IsConstructionExistAt(draggingCell))
+                            {
+                                _constructionGridMap.DestroyConstruction(draggingCell);
+                            }
+
                             _constructionGridMap.BuildConstruction(_selectedConstructionPrefab, draggingCell);
+
+                            GameManager.Instance.GetSystem<Player>().Money -= _selectedConstructionPrefab.Cost;
                         }
                     }
                     GameManager.Instance.GetSystem<AudioController>().PlaySFX("Build");
@@ -110,17 +129,16 @@ public class ConstructionBuilder : MonoBehaviour
                 for (var i = 0; i < step; i++)
                 {
                     var pos = _startDragPos + direction * i;
-                    var buildable = CheckBuildable(pos);
+                    var buildable = CheckRoadBuildable(pos);
 
-                    var cursorSprite = _selectedConstructionPrefab.DefaultSprite;
                     _previewSprites[i].enabled = true;
-                    _previewSprites[i].sprite = cursorSprite;
+                    _previewSprites[i].sprite = GetRoadSprite(road, direction, i, step);
                     _previewSprites[i].color = !buildable ? new Color(1.0f, 0.0f, 0.0f, 0.8f) : new Color(0.0f, 1.0f, 0.5f, 0.8f);
                     _previewSprites[i].transform.position = _constructionGridMap.CellToWorld(pos);
 
                     _draggingCells[i] = pos;
                 }
-                for (var i = step; i < 10; i++)
+                for (var i = step; i < _previewSprites.Length; i++)
                 {
                     _previewSprites[i].enabled = false;
                     _draggingCells[i] = new Vector2Int(-1, -1);
@@ -128,22 +146,22 @@ public class ConstructionBuilder : MonoBehaviour
             }
             else
             {
-                var buildable = CheckBuildable(cellPos);
+                var buildable = CheckRoadBuildable(cellPos);
 
                 var cursorSprite = _selectedConstructionPrefab.DefaultSprite;
                 _previewSprites[0].sprite = cursorSprite;
                 _previewSprites[0].color = !buildable ? new Color(1.0f, 0.0f, 0.0f, 0.8f) : new Color(0.0f, 1.0f, 0.5f, 0.8f);
                 _previewSprites[0].transform.position = _constructionGridMap.CellToWorld(cellPos);
 
-                for (var i = 1; i < 10; i++)
+                for (var i = 1; i < _previewSprites.Length; i++)
                 {
                     _previewSprites[i].sprite = null;
                 }
             }
         }
-        else
+        else if (_selectedConstructionPrefab.GetComponent<Building>() != null)
         {
-            var buildable = CheckBuildable(cellPos);
+            var buildable = CheckBuildingBuildable(cellPos);
 
             var cursorSprite = _selectedConstructionPrefab.DefaultSprite;
             _previewSprites[0].sprite = cursorSprite;
@@ -193,29 +211,106 @@ public class ConstructionBuilder : MonoBehaviour
         }
     }
 
-    private bool CheckBuildable(Vector2Int cellPos)
+    private bool CheckRoadBuildable(Vector2Int cellPos)
+    {
+        if (_constructionGridMap.IsConstructionExistAt(cellPos))
+        {
+            var building = _constructionGridMap.GetConstructionAt(cellPos).GetComponent<Building>();
+            if (building)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private bool CheckBuildingBuildable(Vector2Int cellPos)
     {
         if (_constructionGridMap.IsConstructionExistAt(cellPos))
         {
             return false;
         }
 
-        if (!_selectedConstructionPrefab.GetComponent<Road>())
+        var x = new[] { 1, -1, 0, 0 };
+        var y = new[] { 0, 0, 1, -1 };
+        for (var i = 0; i < 4; i++)
         {
-            var x = new[] { 1, -1, 0, 0 };
-            var y = new[] { 0, 0, 1, -1 };
-            for (var i = 0; i < 4; i++)
+            var pos = new Vector2Int(cellPos.x + x[i], cellPos.y + y[i]);
+            if (_constructionGridMap.GetConstructionAt(pos)?.GetComponent<Road>())
             {
-                var pos = new Vector2Int(cellPos.x + x[i], cellPos.y + y[i]);
-                if (_constructionGridMap.GetConstructionAt(pos)?.GetComponent<Road>())
-                {
-                    return true;
-                }
+                return true;
             }
-
-            return false;
         }
 
-        return true;
+        return false;
+    }
+
+    private Sprite GetRoadSprite(Road road, Vector2Int direction, int index, int step)
+    {
+        if (direction == Vector2Int.up)
+        {
+            if (index == 0)
+            {
+                return road.SpriteRule_.N;
+            }
+            else if (index == step - 1)
+            {
+                return road.SpriteRule_.S;
+            }
+            else
+            {
+                return road.SpriteRule_.SN;
+            }
+        }
+        else if (direction == Vector2Int.right)
+        {
+            if (index == 0)
+            {
+                return road.SpriteRule_.E;
+            }
+            else if (index == step - 1)
+            {
+                return road.SpriteRule_.W;
+            }
+            else
+            {
+                return road.SpriteRule_.WE;
+            }
+        }
+        else if (direction == Vector2Int.down)
+        {
+            if (index == 0)
+            {
+                return road.SpriteRule_.S;
+            }
+            else if (index == step - 1)
+            {
+                return road.SpriteRule_.N;
+            }
+            else
+            {
+                return road.SpriteRule_.SN;
+            }
+        }
+        else if (direction == Vector2Int.left)
+        {
+            if (index == 0)
+            {
+                return road.SpriteRule_.W;
+            }
+            else if (index == step - 1)
+            {
+                return road.SpriteRule_.E;
+            }
+            else
+            {
+                return road.SpriteRule_.WE;
+            }
+        }
+        else
+        {
+            return road.SpriteRule_.None;
+        }
     }
 }

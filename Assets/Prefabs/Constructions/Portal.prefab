@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 7983202883304104439}
   - component: {fileID: -3587678450641290384}
   - component: {fileID: -7024696479574689185}
+  - component: {fileID: -3246463555380579313}
   m_Layer: 0
   m_Name: Portal
   m_TagString: Untagged
@@ -155,6 +156,7 @@ MonoBehaviour:
   - {fileID: 7406567055993684393}
   - {fileID: 5875726118415928960}
   - {fileID: 8468542511842067842}
+  _monsterPrefab: {fileID: 8535490694738626908, guid: d048c8a5bd71bdc45a1d3b499dc8115d, type: 3}
   _defaultPower: 0
   _defaultDanger: 0
   _defaultDifficulty: 0
@@ -187,6 +189,18 @@ MonoBehaviour:
     _displayName: "\uD0D0\uC0C9"
     _icon: {fileID: 21300000, guid: 6f71cc46dc5110646a5eb39cd892b048, type: 3}
     _key: 120
+--- !u!114 &-3246463555380579313
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 85643844767486974}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5cf9540428e638d4fadab6e1a19effb6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &171544393581242495
 GameObject:
   m_ObjectHideFlags: 0
@@ -239,7 +253,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 3c19633ad8d86e640a9549617646783c, type: 2}
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

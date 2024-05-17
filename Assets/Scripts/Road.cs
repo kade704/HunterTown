@@ -49,6 +49,7 @@ public class Road : MonoBehaviour
     private Construction _construction;
     private Road[] _neighbors = new Road[4];
     public Construction Construction => _construction;
+    public SpriteRule SpriteRule_ => _spriteRule;
     public Road[] Neighbors => _neighbors;
     public float Speed => _speed;
 

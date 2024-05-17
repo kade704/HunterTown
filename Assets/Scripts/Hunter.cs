@@ -1,8 +1,6 @@
 using System.Collections;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.Rendering;
 
 [RequireComponent(typeof(Interactable))]
 public class Hunter : MonoBehaviour
@@ -60,7 +58,6 @@ public class Hunter : MonoBehaviour
             if (interaction.ID == "#move_target")
             {
                 _animator.SetFloat("RunState", 0);
-
                 StopAllCoroutines();
                 StartCoroutine(MoveTargetRoutine());
             }

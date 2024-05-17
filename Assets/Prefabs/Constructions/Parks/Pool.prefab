@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4436391697399867256}
   - component: {fileID: 8646880615237549289}
   - component: {fileID: -8048074963830222491}
+  - component: {fileID: 4795656294047771551}
   m_Layer: 0
   m_Name: Pool
   m_TagString: Untagged
@@ -128,6 +129,7 @@ MonoBehaviour:
   _size: {x: 1, y: 1}
   _buildable: 1
   _destroyable: 1
+  _visitable: 0
 --- !u!114 &-8048074963830222491
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -141,6 +143,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interactions: []
+--- !u!114 &4795656294047771551
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2901527553759305183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5cf9540428e638d4fadab6e1a19effb6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8304508089379053716
 GameObject:
   m_ObjectHideFlags: 0
@@ -193,7 +207,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 3c19633ad8d86e640a9549617646783c, type: 2}
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

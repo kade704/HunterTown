@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Employment : MonoBehaviour
+public class EmployDirector : MonoBehaviour
 {
     [SerializeField] private EmployHunter[] _employHunter = new EmployHunter[4];
     [SerializeField] private string[] _nameTemplates;

@@ -42,14 +42,14 @@ public class EmployHunter : MonoBehaviour
     {
         transform.position = new Vector2(-2.5f, 30);
         _animator.SetFloat("RunState", 0.5f);
-        yield return MotionUtil.MoveToRoutine(transform, _startPosition, 1);
+        yield return MotionUtil.MoveToRoutine(transform, _startPosition, 2);
         _animator.SetFloat("RunState", 0);
     }
 
     public IEnumerator ExitRoutine()
     {
         _animator.SetFloat("RunState", 0.5f);
-        yield return MotionUtil.MoveToRoutine(transform, new Vector2(2.5f, 30), 1);
+        yield return MotionUtil.MoveToRoutine(transform, new Vector2(2.5f, 30), 2);
         _animator.SetFloat("RunState", 0);
     }
 }

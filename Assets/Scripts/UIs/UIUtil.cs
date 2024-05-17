@@ -33,4 +33,23 @@ public class UIUtil
     {
         return GetUIObjectsOverPointer().Length > 0;
     }
+
+    public static void ShowCanvasGroup(CanvasGroup canvasGroup)
+    {
+        canvasGroup.alpha = 1;
+        canvasGroup.blocksRaycasts = true;
+        canvasGroup.interactable = true;
+    }
+
+    public static void HideCanvasGroup(CanvasGroup canvasGroup)
+    {
+        canvasGroup.alpha = 0;
+        canvasGroup.blocksRaycasts = false;
+        canvasGroup.interactable = false;
+    }
+
+    public static bool IsCanvasGroupVisible(CanvasGroup canvasGroup)
+    {
+        return canvasGroup.alpha == 1;
+    }
 }

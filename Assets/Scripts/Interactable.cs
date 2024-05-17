@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Rendering;
@@ -24,6 +25,7 @@ public class Interactable : MonoBehaviour
     private string _displayName;
     private string _description;
     private SpriteRenderer[] _renderers;
+    private Dictionary<SpriteRenderer, Color> _defaultColors = new();
     private SortingGroup _sortingGroup;
     private int _defaultOrder;
     private UnityEvent<Interaction> _onInteracted = new();
@@ -53,6 +55,8 @@ public class Interactable : MonoBehaviour
     private void Start()
     {
         _defaultOrder = _sortingGroup.sortingOrder;
+        foreach (var _renderer in _renderers)
+            _defaultColors.Add(_renderer, _renderer.color);
     }
 
     private void Update()
@@ -60,9 +64,11 @@ public class Interactable : MonoBehaviour
         _sortingGroup.sortingOrder = 300 - Mathf.FloorToInt(transform.position.y * 10) + _defaultOrder;
     }
 
-    public void SetOutline(bool value)
+    public void SetFocus(bool value)
     {
-        foreach (var _renderer in _renderers)
-            _renderer.material.SetFloat("_Outline", value ? 1 : 0);
+        foreach (var renderer in _renderers)
+        {
+            renderer.color = value ? Color.green : _defaultColors[renderer];
+        }
     }
 }

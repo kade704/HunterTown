@@ -85,12 +85,12 @@ public class GameManager : MonoBehaviour
             var road = GetSystem<ConstructionDatabase>().GetConstructionPrefab("#dirt_road");
             var company = GetSystem<ConstructionDatabase>().GetConstructionPrefab("#company");
             company.GetComponent<Company>().RemainEmployeeCount = 4;
-            constructionGridMap.BuildConstruction(company, new Vector2Int(32, 32));
-            constructionGridMap.BuildConstruction(road, new Vector2Int(31, 31));
-            constructionGridMap.BuildConstruction(road, new Vector2Int(31, 32));
-            constructionGridMap.BuildConstruction(road, new Vector2Int(31, 33));
-            constructionGridMap.BuildConstruction(road, new Vector2Int(32, 31));
-            constructionGridMap.BuildConstruction(road, new Vector2Int(33, 31));
+            constructionGridMap.BuildConstruction(company, new Vector2Int(16, 16));
+            constructionGridMap.BuildConstruction(road, new Vector2Int(15, 15));
+            constructionGridMap.BuildConstruction(road, new Vector2Int(15, 16));
+            constructionGridMap.BuildConstruction(road, new Vector2Int(15, 17));
+            constructionGridMap.BuildConstruction(road, new Vector2Int(16, 15));
+            constructionGridMap.BuildConstruction(road, new Vector2Int(17, 15));
         }
         else
         {

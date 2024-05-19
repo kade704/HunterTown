@@ -8,7 +8,6 @@ public class UIEmployPanel : MonoBehaviour
     [SerializeField] private Button _closeButton;
     [SerializeField] private Text _remainText;
     [SerializeField] private UIEmploySlot[] _employmentSlots;
-    private Company _company;
 
     private void Start()
     {
@@ -31,39 +30,37 @@ public class UIEmployPanel : MonoBehaviour
             _panel.SetActive(false);
         });
 
-        for (int i = 0; i < 4; i++)
-        {
-            var index = i;
-            _employmentSlots[index].EmployButton.onClick.AddListener(() =>
-            {
-                StartCoroutine(EmployRoutine(index));
-            });
-        }
+
     }
 
     private void Initialize(Company company)
     {
-        _company = company;
         _remainText.text = $"고용 가능 인원: {company.RemainEmployeeCount}";
         var employment = GameManager.Instance.GetSystem<EmployDirector>();
         for (int i = 0; i < 4; i++)
         {
-            _employmentSlots[i].EmployHunter = employment.EmployHunter[i];
+            var index = i;
+            _employmentSlots[index].EmployButton.onClick.RemoveAllListeners();
+            _employmentSlots[index].EmployButton.onClick.AddListener(() =>
+            {
+                StartCoroutine(EmployRoutine(company, index));
+            });
+            _employmentSlots[index].EmployHunter = employment.EmployHunter[i];
         }
     }
 
-    private IEnumerator EmployRoutine(int index)
+    private IEnumerator EmployRoutine(Company company, int index)
     {
-        if (_company.RemainEmployeeCount <= 0) yield break;
-        _company.RemainEmployeeCount -= 1;
-        _remainText.text = $"고용 가능 인원: {_company.RemainEmployeeCount}";
+        if (company.RemainEmployeeCount <= 0) yield break;
+        company.RemainEmployeeCount -= 1;
+        _remainText.text = $"고용 가능 인원: {company.RemainEmployeeCount}";
 
         GameManager.Instance.GetSystem<Player>().Money -= 100;
 
         var employment = GameManager.Instance.GetSystem<EmployDirector>();
 
         var hunterSpawner = GameManager.Instance.GetSystem<HunterSpawner>();
-        var newHunter = hunterSpawner.SpawnHunter();
+        var newHunter = hunterSpawner.SpawnHunter(company.Construction.CellPos - Vector2Int.one);
         newHunter.DisplayName = employment.EmployHunter[index].Name;
         newHunter.DefaultHp = employment.EmployHunter[index].HP;
         newHunter.DefaultDamage = employment.EmployHunter[index].Damage;

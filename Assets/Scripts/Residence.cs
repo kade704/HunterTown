@@ -8,10 +8,10 @@ public class Residence : MonoBehaviour
     private void Start()
     {
         GameManager.Instance.GetSystem<Player>().MaxPopulation += _increasePopulation;
-    }
 
-    private void OnDestroy()
-    {
-        //GameManager.Instance.GetSystem<Player>().MaxPopulation -= _increasePopulation;
+        GetComponent<Construction>().OnDestroyed.AddListener(() =>
+        {
+            GameManager.Instance.GetSystem<Player>().MaxPopulation -= _increasePopulation;
+        });
     }
 }

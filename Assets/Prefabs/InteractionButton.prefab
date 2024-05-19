@@ -167,6 +167,7 @@ GameObject:
   - component: {fileID: 2239251891669527321}
   - component: {fileID: 8125504350297006345}
   - component: {fileID: 6922807278144434738}
+  - component: {fileID: 6623349522741815162}
   m_Layer: 5
   m_Name: InteractionButton
   m_TagString: Untagged
@@ -217,14 +218,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.5377358, g: 0.5377358, b: 0.5377358, a: 1}
+  m_Color: {r: 0.48972055, g: 0.5669023, b: 0.6698113, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: d25ae92104725204dbefd6147ffe5c96, type: 3}
+  m_Sprite: {fileID: 1652195628, guid: d25ae92104725204dbefd6147ffe5c96, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -293,6 +294,21 @@ MonoBehaviour:
   _name: {fileID: 7008112794983708947}
   _key: {fileID: 4457491583425272598}
   _icon: {fileID: 4312004505561465918}
+--- !u!114 &6623349522741815162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4770073162585415051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
+  m_EffectDistance: {x: 0, y: -2}
+  m_UseGraphicAlpha: 1
 --- !u!1 &6639766411644382231
 GameObject:
   m_ObjectHideFlags: 0

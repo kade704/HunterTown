@@ -37,11 +37,16 @@ public class Construction : MonoBehaviour
     [SerializeField]
     private bool _visitable;
 
+    [SerializeField]
+    private int _durability;
+
     private List<Hunter> _visitedHunters = new();
     private ConstructionGridmap _constructionGridMap;
     private Interactable _interactable;
     private Vector2Int _cellPos;
     private UnityEvent _onVisitorChanged = new UnityEvent();
+    private UnityEvent _onBuilded = new UnityEvent();
+    private UnityEvent _onDestroyed = new UnityEvent();
 
     public Vector2Int CellPos
     {
@@ -52,6 +57,11 @@ public class Construction : MonoBehaviour
     {
         get => _constructionGridMap;
         set => _constructionGridMap = value;
+    }
+    public int Durability
+    {
+        get => _durability;
+        set => _durability = value;
     }
     public string ID => _id;
     public int Cost => _cost;
@@ -65,6 +75,8 @@ public class Construction : MonoBehaviour
     public bool Visitable => _visitable;
     public Hunter[] VisitedHunters => _visitedHunters.ToArray();
     public UnityEvent OnVisitorChanged => _onVisitorChanged;
+    public UnityEvent OnBuilded => _onBuilded;
+    public UnityEvent OnDestroyed => _onDestroyed;
 
     private void Awake()
     {

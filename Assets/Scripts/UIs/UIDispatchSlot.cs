@@ -8,30 +8,26 @@ public class UIDispatchSlot : MonoBehaviour
 
     private Hunter _hunter;
 
-    public void SetHunter(Hunter hunter, Portal portal)
-    {
-        if (hunter)
-        {
-            _name.text = hunter.DisplayName;
 
-            if (portal.DangerVisibility)
+    public Hunter Hunter
+    {
+        get => _hunter;
+        set
+        {
+            _hunter = value;
+            if (value)
             {
-                var deathProbabilityPercent = (int)(portal.CalcHunterDeathProbability(hunter) * 100);
-                _deathProbability.text = $"사망 확률: {deathProbabilityPercent}%";
+                _name.text = value.DisplayName;
             }
             else
             {
-                _deathProbability.text = $"사망 확률: ?%";
+                _name.text = "[헌터 배치]";
             }
         }
-        else
-        {
-            _name.text = "[헌터 배치]";
-            _deathProbability.text = "";
-        }
-
-        _hunter = hunter;
     }
 
-    public Hunter Hunter => _hunter;
+    public string DeathProbability
+    {
+        set => _deathProbability.text = value;
+    }
 }

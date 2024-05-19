@@ -214,6 +214,7 @@ MonoBehaviour:
   _buildable: 1
   _destroyable: 1
   _visitable: 0
+  _durability: 5
 --- !u!114 &-8048074963830222491
 MonoBehaviour:
   m_ObjectHideFlags: 0

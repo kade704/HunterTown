@@ -6,7 +6,7 @@ using UnityEngine.Events;
 [ExecuteInEditMode]
 public class ConstructionGridmap : MonoBehaviour, IDeserializable, ISerializable
 {
-    public const int GRID_SIZE = 64;
+    public const int GRID_SIZE = 32;
     private Construction[,] _constructionMap = new Construction[GRID_SIZE, GRID_SIZE];
     private List<Construction> _constructions = new();
     private Grid _isometricGrid;
@@ -21,7 +21,7 @@ public class ConstructionGridmap : MonoBehaviour, IDeserializable, ISerializable
 
     private void Awake()
     {
-        _isometricGrid = GetComponentInParent<Grid>();
+        _isometricGrid = GetComponent<Grid>();
     }
 
     private void Update()
@@ -73,6 +73,8 @@ public class ConstructionGridmap : MonoBehaviour, IDeserializable, ISerializable
             }
         }
         _constructions.Add(newConstruction);
+
+        newConstruction.OnBuilded.Invoke();
         _onConstructionBuilded.Invoke(newConstruction);
 
         return newConstruction;
@@ -98,6 +100,7 @@ public class ConstructionGridmap : MonoBehaviour, IDeserializable, ISerializable
         }
         _constructions.Remove(construction);
 
+        construction.OnDestroyed.Invoke();
         _onConstructionDestroyed.Invoke(construction);
 
         Destroy(construction.gameObject);
@@ -105,7 +108,7 @@ public class ConstructionGridmap : MonoBehaviour, IDeserializable, ISerializable
 
     public void DestroyConstruction(Construction construction)
     {
-        if (!construction)
+        if (construction == null)
         {
             Debug.LogError("Construction is null");
             return;

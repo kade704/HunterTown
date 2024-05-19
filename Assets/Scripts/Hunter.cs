@@ -1,6 +1,7 @@
 using System.Collections;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 [RequireComponent(typeof(Interactable))]
 public class Hunter : MonoBehaviour
@@ -9,16 +10,16 @@ public class Hunter : MonoBehaviour
     [ReadOnly][SerializeField] private float _defaultHp;
     [ReadOnly][SerializeField] private float _defaultDamage;
 
-
-
     private Interactable _interactable;
     private Construction _visitedConstruction;
 
-    private Collider2D _collider2D;
     private Animator _animator;
+    private SortingGroup _sortingGroup;
     private Sprite _thumbnail;
     private AvatarMovement _avatarMovement;
     private AvatarCustomize _avatarCustomize;
+    private Coroutine _moveTargetRoutine;
+    private Path _movePath;
 
     public string DisplayName { get { return _displayName; } set { _displayName = value; } }
     public float DefaultHp { get { return _defaultHp; } set { _defaultHp = value; } }
@@ -41,9 +42,9 @@ public class Hunter : MonoBehaviour
 
     private void Awake()
     {
-        _collider2D = GetComponent<Collider2D>();
         _animator = GetComponent<Animator>();
         _interactable = GetComponent<Interactable>();
+        _sortingGroup = GetComponent<SortingGroup>();
         _avatarMovement = GetComponent<AvatarMovement>();
         _avatarCustomize = GetComponent<AvatarCustomize>();
     }
@@ -58,12 +59,21 @@ public class Hunter : MonoBehaviour
             if (interaction.ID == "#move_target")
             {
                 _animator.SetFloat("RunState", 0);
-                StopAllCoroutines();
-                StartCoroutine(MoveTargetRoutine());
+                if (_moveTargetRoutine != null)
+                {
+                    StopCoroutine(_moveTargetRoutine);
+                    GameManager.Instance.GetSystem<PathDrawer>().RemovePath(_movePath);
+                }
+                _moveTargetRoutine = StartCoroutine(MoveTargetRoutine());
             }
         });
 
         StartCoroutine(CaptureThumbnailRoutine());
+    }
+
+    private void Update()
+    {
+        _sortingGroup.sortingOrder = 300 - Mathf.FloorToInt(transform.position.y * 10) + 1;
     }
 
 
@@ -94,29 +104,25 @@ public class Hunter : MonoBehaviour
         var gridmap = GameManager.Instance.GetSystem<ConstructionGridmap>();
 
         var start = gridmap.WorldToCell(transform.position);
-        var path = PathFinder.SearchPath(start, clickedConstruction.CellPos);
+        _movePath = GameManager.Instance.GetSystem<PathFinder>().SearchPath(start, clickedConstruction.CellPos);
 
-        if (path == null)
+        if (_movePath == null)
         {
             yield break;
         }
 
-        GameManager.Instance.GetSystem<PathDrawer>().DrawPath(path);
+        GameManager.Instance.GetSystem<PathDrawer>().DrawPath(_movePath);
 
-        _avatarCustomize.ShowAvatar();
-        _collider2D.enabled = true;
-
-        yield return _avatarMovement.MoveRoutine(path);
+        yield return _avatarMovement.MoveRoutine(_movePath);
 
         var destination = gridmap.GetConstructionAt(gridmap.WorldToCell(transform.position));
-        if (destination)
+        if (destination && destination.Visitable)
         {
-            _collider2D.enabled = false;
             _visitedConstruction = destination;
             destination.EnterVisitor(this);
         }
 
-        GameManager.Instance.GetSystem<PathDrawer>().RemovePath(path);
+        GameManager.Instance.GetSystem<PathDrawer>().RemovePath(_movePath);
     }
 
     private Construction GetClickedConstruction()

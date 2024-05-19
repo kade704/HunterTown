@@ -46,7 +46,7 @@ public class Citizen : MonoBehaviour
 
             var end = roads[Random.Range(0, roads.Length)].Construction.CellPos;
 
-            var path = PathFinder.SearchPath(start, end);
+            var path = GameManager.Instance.GetSystem<PathFinder>().SearchPath(start, end);
 
             yield return _walkable.MoveRoutine(path);
 

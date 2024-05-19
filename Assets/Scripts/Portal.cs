@@ -10,7 +10,6 @@ public class Portal : MonoBehaviour, ISerializable, IDeserializable
     [SerializeField] private SpriteRenderer _portalRenderer;
     [SerializeField] private Sprite[] _spriteFrames;
     [SerializeField] private Transform[] _visitorPositions;
-    [SerializeField] private Monster _monsterPrefab;
 
     [ReadOnly][SerializeField] private float _defaultPower;
     [ReadOnly][SerializeField] private float _defaultDanger;
@@ -126,12 +125,12 @@ public class Portal : MonoBehaviour, ISerializable, IDeserializable
     {
         StartCoroutine(AnimateRoutine());
 
-        var waveDay = GameManager.Instance.GetSystem<TimeSystem>().Day.Total + WaveTime;
+        var waveDay = GameManager.Instance.GetSystem<TimeSystem>().Day.Total + 999999;
         GameManager.Instance.GetSystem<TimeSystem>().Day.OnChanged.AddListener(() =>
         {
             if (GameManager.Instance.GetSystem<TimeSystem>().Day.Total >= waveDay && !_isWave)
             {
-                Wave();
+                StartCoroutine(WaveRoutine());
             }
         });
 
@@ -147,7 +146,7 @@ public class Portal : MonoBehaviour, ISerializable, IDeserializable
 
     private void DispatchRoutine()
     {
-        GameManager.Instance.GetSystem<LoggerSystem>().LogInfo($"파견이 시작되었습니다.");
+
 
 
         var HunterSpawner = FindObjectOfType<HunterSpawner>();
@@ -237,11 +236,21 @@ public class Portal : MonoBehaviour, ISerializable, IDeserializable
         }
     }
 
-    public void Wave()
+    public IEnumerator WaveRoutine()
     {
         _isWave = true;
+
+        GameManager.Instance.GetSystem<CameraMovement>().MovePosition(_construction.transform.position);
         GameManager.Instance.GetSystem<LoggerSystem>().LogError("포탈 웨이브가 시작되었습니다!");
-        Instantiate(_monsterPrefab, transform.position, Quaternion.identity);
+
+        GameManager.Instance.GetSystem<MonsterSpawner>().SpawnMonster(_construction.CellPos);
+        yield return new WaitForSeconds(1);
+
+        GameManager.Instance.GetSystem<MonsterSpawner>().SpawnMonster(_construction.CellPos);
+        yield return new WaitForSeconds(1.5f);
+
+        GameManager.Instance.GetSystem<MonsterSpawner>().SpawnMonster(_construction.CellPos);
+        yield return new WaitForSeconds(1.2f);
     }
 
     public float CalcHunterDeathProbability(Hunter hunter)

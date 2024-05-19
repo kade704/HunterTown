@@ -15,7 +15,12 @@ public class UIDispatchPanel : MonoBehaviour
     [SerializeField] private Button _dispatchButton;
     [SerializeField] private UIAbilitySlot[] _abilitySlots;
     [SerializeField] private GameObject _resultPanel;
+    [SerializeField] private Text _resultTitle;
+    [SerializeField] private Text _resultSubTitle;
+    [SerializeField] private UIDispatchResultSlot[] _dispatchResultSlots;
     [SerializeField] private Button _resultCloseButton;
+
+    private bool[] _hunterAlives = new bool[4];
 
     private void Start()
     {
@@ -57,7 +62,10 @@ public class UIDispatchPanel : MonoBehaviour
 
     private IEnumerator DispatchRoutine()
     {
-        yield return GameManager.Instance.GetSystem<DispatchDirector>().BattleRoutine();
+        GameManager.Instance.GetSystem<LoggerSystem>().LogInfo($"파견이 시작되었습니다.");
+
+        yield return GameManager.Instance.GetSystem<DispatchDirector>().BattleRoutine(_hunterAlives);
+
         _resultPanel.SetActive(true);
     }
 
@@ -76,23 +84,56 @@ public class UIDispatchPanel : MonoBehaviour
             abilitySlot.Hidden = !portal.AbilityVisibilities[i];
         }
 
-        var battle = GameManager.Instance.GetSystem<DispatchDirector>();
+        var director = GameManager.Instance.GetSystem<DispatchDirector>();
 
         var hunters = portal.Construction.VisitedHunters;
         for (int i = 0; i < 4; i++)
         {
             if (i < hunters.Length)
             {
-                _dispatchSlots[i].SetHunter(hunters[i], portal);
-                battle.SetHunter(i, hunters[i].GetComponent<Hunter>());
+                _dispatchSlots[i].Hunter = hunters[i];
+                if (portal.DangerVisibility)
+                {
+                    var deathProbabilityPercent = (int)(portal.CalcHunterDeathProbability(hunters[i]) * 100);
+                    _dispatchSlots[i].DeathProbability = $"사망 확률: {deathProbabilityPercent}%";
+                    _hunterAlives[i] = Random.Range(0, 100) > deathProbabilityPercent;
+                }
+                else
+                {
+                    _dispatchSlots[i].DeathProbability = $"사망 확률: ?%";
+                }
+
+                _dispatchResultSlots[i].Hunter = hunters[i];
+                _dispatchResultSlots[i].Result = _hunterAlives[i] ? " - 생존" : " - 사망";
+
+                director.SetHunter(i, hunters[i].GetComponent<Hunter>());
             }
             else
             {
-                _dispatchSlots[i].SetHunter(null, portal);
-                battle.SetHunter(i, null);
+                _hunterAlives[i] = false;
+
+                _dispatchSlots[i].Hunter = null;
+                _dispatchSlots[i].DeathProbability = "";
+
+                _dispatchResultSlots[i].Hunter = null;
+                _dispatchResultSlots[i].Result = "";
+
+                director.SetHunter(i, null);
             }
         }
 
         _dispatchButton.interactable = hunters.Count() > 0;
+
+        var aliveCount = _hunterAlives.Count(alive => alive);
+        if (aliveCount == 0)
+        {
+            _resultTitle.text = "파견 실패";
+            _resultSubTitle.text = "모든 헌터가 사망했습니다.";
+        }
+        else
+        {
+            _resultTitle.text = "파견 성공";
+            _resultSubTitle.text = $"{aliveCount}명의 헌터가 생존했습니다.";
+        }
     }
 }

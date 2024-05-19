@@ -6,6 +6,7 @@ public class Company : MonoBehaviour, ISerializable, IDeserializable
 {
     [ReadOnly][SerializeField] private int _remainEmployeeCount;
 
+    private Construction _construction;
     private Interactable _interactable;
     private string _defaultDescription;
 
@@ -14,9 +15,11 @@ public class Company : MonoBehaviour, ISerializable, IDeserializable
         get => _remainEmployeeCount;
         set => _remainEmployeeCount = value;
     }
+    public Construction Construction => _construction;
 
     private void Awake()
     {
+        _construction = GetComponent<Construction>();
         _interactable = GetComponent<Interactable>();
     }
 

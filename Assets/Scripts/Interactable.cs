@@ -27,7 +27,6 @@ public class Interactable : MonoBehaviour
     private SpriteRenderer[] _renderers;
     private Dictionary<SpriteRenderer, Color> _defaultColors = new();
     private SortingGroup _sortingGroup;
-    private int _defaultOrder;
     private UnityEvent<Interaction> _onInteracted = new();
 
     public Interaction[] Interactions => _interactions;
@@ -54,14 +53,8 @@ public class Interactable : MonoBehaviour
 
     private void Start()
     {
-        _defaultOrder = _sortingGroup.sortingOrder;
         foreach (var _renderer in _renderers)
             _defaultColors.Add(_renderer, _renderer.color);
-    }
-
-    private void Update()
-    {
-        _sortingGroup.sortingOrder = 300 - Mathf.FloorToInt(transform.position.y * 10) + _defaultOrder;
     }
 
     public void SetFocus(bool value)

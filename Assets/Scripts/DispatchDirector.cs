@@ -20,7 +20,7 @@ public class DispatchDirector : MonoBehaviour
         _battleHunter[index].Hunter = hunter;
     }
 
-    public IEnumerator BattleRoutine()
+    public IEnumerator BattleRoutine(bool[] hunterAlives)
     {
         var battleHunter = _battleHunter.Where(hunter => hunter.Hunter != null).ToArray();
 
@@ -48,12 +48,10 @@ public class DispatchDirector : MonoBehaviour
         yield return new WaitForSeconds(0.7f);
         yield return MotionUtil.MoveEaseInRoutine(_transition, transitionStart, 1f);
 
-        var hunterDeath = new[] { true, false, true, false };
-
         for (int i = battleHunter.Length - 1; i >= 0; i--)
         {
             yield return battleHunter[i].AttackBeginRoutine(_battleMonster.StartPosition - new Vector2(0.3f, 0));
-            if (!hunterDeath[i])
+            if (hunterAlives[i])
             {
                 _battleMonster.Death();
             }
@@ -62,7 +60,7 @@ public class DispatchDirector : MonoBehaviour
             yield return battleHunter[i].AttackEndRoutine();
             yield return new WaitForSeconds(0.5f);
 
-            if (!hunterDeath[i])
+            if (hunterAlives[i])
             {
                 yield return _battleMonster.RespawnRoutine();
             }
@@ -70,6 +68,8 @@ public class DispatchDirector : MonoBehaviour
             {
                 yield return _battleMonster.AttackBeginRoutine(battleHunter[i].StartPosition + new Vector2(0.3f, 0));
                 battleHunter[i].Death();
+                GameManager.Instance.GetSystem<LoggerSystem>().LogInfo($"{battleHunter[i].Hunter.DisplayName}이(가) 사망했습니다.");
+                GameManager.Instance.GetSystem<HunterSpawner>().RemoveHunter(battleHunter[i].Hunter);
             }
 
             yield return new WaitForSeconds(0.5f);

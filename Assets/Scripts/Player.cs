@@ -62,9 +62,18 @@ public class Player : MonoBehaviour, ISerializable, IDeserializable
         {
             yield return new WaitForSeconds(Random.Range(5, 10));
 
-            var people = Random.Range(0, 5);
-            people = Mathf.Min(people, MaxPopulation - Population);
-            Population += people;
+            if (Population < MaxPopulation)
+            {
+                var people = Random.Range(0, 5);
+                people = Mathf.Min(people, MaxPopulation - Population);
+                Population += people;
+            }
+            else
+            {
+                var people = Random.Range(-10, 0);
+                people = Mathf.Max(people, -Population);
+                Population += people;
+            }
         }
     }
 

@@ -201,14 +201,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _id: '#dirt_road'
   _cost: 2
+  _maintenanceCost: 0
   _displayName: "\uD759\uAE38"
   _description: "\uB300\uCDA9 \uB9CC\uB4E4\uC5B4\uC9C4 \uAE38\uC774\uB2E4.\n\n(\uC774\uB3D9\uC18D\uB3C4:
     1)"
   _defaultSprite: {fileID: 778909228, guid: 9ce137b1be9c78d4683d4c1afb72be4e, type: 3}
-  _size: {x: 1, y: 1}
+  _size: 1
   _buildable: 1
   _destroyable: 1
   _visitable: 0
+  _visitorCapacity: 0
   _durability: 0
 --- !u!114 &3380698535929008947
 MonoBehaviour:

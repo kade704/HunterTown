@@ -4,9 +4,16 @@ using UnityEngine;
 public class AvatarMovement : MonoBehaviour
 {
     private Animator _animator;
+    private Vector2 _startScale;
+
     private void Awake()
     {
         _animator = GetComponent<Animator>();
+    }
+
+    private void Start()
+    {
+        _startScale = transform.localScale;
     }
 
     public IEnumerator MoveRoutine(Path path, float speed = 1)
@@ -33,7 +40,7 @@ public class AvatarMovement : MonoBehaviour
                 var dir = (worldPos - (Vector2)transform.position).normalized;
                 var velocity = newSpeed * Time.deltaTime * dir;
 
-                transform.localScale = new Vector3(velocity.x < 0 ? 1 : -1, 1, 1);
+                transform.localScale = new Vector3(velocity.x < 0 ? _startScale.x : -_startScale.x, _startScale.y, _startScale.y);
 
                 transform.position += (Vector3)velocity;
 

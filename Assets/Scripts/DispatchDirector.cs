@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DispatchDirector : MonoBehaviour
 {
-    [SerializeField] private DispatchHunter[] _battleHunter = new DispatchHunter[4];
+    [SerializeField] private DispatchHunter[] _dispatchHunter = new DispatchHunter[4];
     [SerializeField] private SpriteRenderer _portal;
     [SerializeField] private SpriteRenderer _background;
     [SerializeField] private DispatchMonster _battleMonster;
@@ -17,12 +17,12 @@ public class DispatchDirector : MonoBehaviour
         if (index < 0 || index >= 4)
             Debug.LogError("Invalid index");
 
-        _battleHunter[index].Hunter = hunter;
+        _dispatchHunter[index].Hunter = hunter;
     }
 
     public IEnumerator BattleRoutine(bool[] hunterAlives)
     {
-        var battleHunter = _battleHunter.Where(hunter => hunter.Hunter != null).ToArray();
+        var battleHunter = _dispatchHunter.Where(hunter => hunter.Hunter != null).ToArray();
 
         for (int i = battleHunter.Length - 1; i >= 1; i--)
         {
@@ -68,7 +68,7 @@ public class DispatchDirector : MonoBehaviour
             {
                 yield return _battleMonster.AttackBeginRoutine(battleHunter[i].StartPosition + new Vector2(0.3f, 0));
                 battleHunter[i].Death();
-                GameManager.Instance.GetSystem<LoggerSystem>().LogInfo($"{battleHunter[i].Hunter.DisplayName}이(가) 사망했습니다.");
+                GameManager.Instance.GetSystem<LoggerSystem>().LogError($"{battleHunter[i].Hunter.DisplayName}이(가) 사망했습니다.");
                 GameManager.Instance.GetSystem<HunterSpawner>().RemoveHunter(battleHunter[i].Hunter);
             }
 
@@ -83,7 +83,7 @@ public class DispatchDirector : MonoBehaviour
     {
         for (int i = 0; i < 4; i++)
         {
-            _battleHunter[i].Initialize();
+            _dispatchHunter[i].Initialize();
         }
         _battleMonster.Initialize();
         _portal.enabled = true;

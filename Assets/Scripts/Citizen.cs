@@ -1,22 +1,42 @@
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering;
 
 public class Citizen : MonoBehaviour
 {
-    private AvatarMovement _walkable;
+    private AvatarMovement _avatarMovement;
+    private AvatarCustomize _avatarCustomize;
     private SortingGroup _sortingGroup;
 
     private void Awake()
     {
-        _walkable = GetComponent<AvatarMovement>();
+        _avatarMovement = GetComponent<AvatarMovement>();
+        _avatarCustomize = GetComponent<AvatarCustomize>();
         _sortingGroup = GetComponent<SortingGroup>();
     }
 
     private void Start()
     {
+        RandomCustomize();
         StartCoroutine(WanderRoutine());
     }
+
+    public void RandomCustomize()
+    {
+        var database = GameManager.Instance.GetSystem<CustomizeDatabase>();
+
+        var humanBody = database.BaseBodies.Where(x => x.id.Contains("human")).ToArray();
+
+        _avatarCustomize.BaseBody = humanBody[Random.Range(0, humanBody.Length)];
+        _avatarCustomize.Hair = database.Hairs[Random.Range(0, database.Hairs.Length)];
+        _avatarCustomize.HairColor = Random.ColorHSV(0, 1, 0, 1, 0, 1);
+        _avatarCustomize.TopCloth = database.TopCloths[Random.Range(0, database.TopCloths.Length)];
+        _avatarCustomize.BottomCloth = database.BottomCloths[Random.Range(0, database.BottomCloths.Length)];
+        _avatarCustomize.Eye = database.Eyes[Random.Range(0, database.Eyes.Length)];
+        _avatarCustomize.EyeColor = Random.ColorHSV(0, 1, 0, 1, 0, 1);
+    }
+
 
     private void Update()
     {
@@ -48,7 +68,7 @@ public class Citizen : MonoBehaviour
 
             var path = GameManager.Instance.GetSystem<PathFinder>().SearchPath(start, end);
 
-            yield return _walkable.MoveRoutine(path);
+            yield return _avatarMovement.MoveRoutine(path);
 
             start = end;
         }

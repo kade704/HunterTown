@@ -13,6 +13,9 @@ public class Construction : MonoBehaviour
     private int _cost;
 
     [SerializeField]
+    private int _maintenanceCost;
+
+    [SerializeField]
     private string _displayName;
 
     [Title("Description", bold: false)]
@@ -26,7 +29,7 @@ public class Construction : MonoBehaviour
     private Sprite _defaultSprite;
 
     [SerializeField]
-    private Vector2Int _size;
+    private int _size;
 
     [SerializeField]
     private bool _buildable;
@@ -36,6 +39,10 @@ public class Construction : MonoBehaviour
 
     [SerializeField]
     private bool _visitable;
+
+    [EnableIf("_visitable")]
+    [SerializeField]
+    private int _visitorCapacity;
 
     [SerializeField]
     private int _durability;
@@ -65,10 +72,11 @@ public class Construction : MonoBehaviour
     }
     public string ID => _id;
     public int Cost => _cost;
+    public int MaintenanceCost => _maintenanceCost;
     public string DisplayName => _displayName;
     public string Description => _description;
     public Sprite DefaultSprite => _defaultSprite;
-    public Vector2Int Size => _size;
+    public int Size => _size;
 
     public bool Buildable => _buildable;
     public bool Destroyable => _destroyable;
@@ -91,7 +99,7 @@ public class Construction : MonoBehaviour
 
     public void EnterVisitor(Hunter hunter)
     {
-        if (!_visitedHunters.Contains(hunter))
+        if (!_visitedHunters.Contains(hunter) && _visitedHunters.Count < _visitorCapacity)
         {
             _visitedHunters.Add(hunter);
             _onVisitorChanged.Invoke();

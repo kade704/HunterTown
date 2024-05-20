@@ -98,6 +98,7 @@ GameObject:
   - component: {fileID: 8646880615237549289}
   - component: {fileID: -8048074963830222491}
   - component: {fileID: 7229216960351309750}
+  - component: {fileID: -4331182682294835299}
   m_Layer: 0
   m_Name: Plaza
   m_TagString: Untagged
@@ -206,14 +207,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _id: '#plaza'
-  _cost: 30
+  _cost: 900
+  _maintenanceCost: 36
   _displayName: "\uD50C\uB77C\uC790"
-  _description: "\uC2DC\uBBFC\uB4E4\uC758 \uC27C\uD130\uB97C \uC81C\uACF5\uD55C\uB2E4"
+  _description: "\uC2DC\uBBFC\uB4E4\uC758 \uC27C\uD130\uB97C \uC81C\uACF5\uD55C\uB2E4\n\n\uC2DC\uBBFC
+    \uC99D\uAC00 (+2/\uC77C)"
   _defaultSprite: {fileID: -873236447, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
-  _size: {x: 1, y: 1}
+  _size: 1
   _buildable: 1
   _destroyable: 1
   _visitable: 0
+  _visitorCapacity: 0
   _durability: 5
 --- !u!114 &-8048074963830222491
 MonoBehaviour:
@@ -240,3 +244,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5cf9540428e638d4fadab6e1a19effb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-4331182682294835299
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2901527553759305183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce9ffe1a0c7eed04ab1883d73a5e0a75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _increasePopulationGrowth: 2

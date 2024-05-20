@@ -48,9 +48,9 @@ public class PathFinder : MonoBehaviour
 
     private void InitializeNodes()
     {
-        for (int i = 0; i < 64; i++)
+        for (int i = 0; i < 32; i++)
         {
-            for (int j = 0; j < 64; j++)
+            for (int j = 0; j < 32; j++)
             {
                 var position = new Vector2Int(i, j);
                 var construction = GameManager.Instance.GetSystem<ConstructionGridmap>().GetConstructionAt(position);

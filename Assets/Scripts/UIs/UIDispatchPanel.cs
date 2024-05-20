@@ -20,6 +20,7 @@ public class UIDispatchPanel : MonoBehaviour
     [SerializeField] private UIDispatchResultSlot[] _dispatchResultSlots;
     [SerializeField] private Button _resultCloseButton;
 
+    private Portal _targetPortal;
     private bool[] _hunterAlives = new bool[4];
 
     private void Start()
@@ -67,10 +68,22 @@ public class UIDispatchPanel : MonoBehaviour
         yield return GameManager.Instance.GetSystem<DispatchDirector>().BattleRoutine(_hunterAlives);
 
         _resultPanel.SetActive(true);
+
+        if (_hunterAlives.Any())
+        {
+            GameManager.Instance.GetSystem<LoggerSystem>().LogInfo("파견에 성공했습니다. 포탈이 사라집니다.");
+            GameManager.Instance.GetSystem<PortalGenerator>().RemovePortal(_targetPortal.GetComponent<Portal>());
+        }
+        else
+        {
+            GameManager.Instance.GetSystem<LoggerSystem>().LogError("파견에 실패했습니다.");
+        }
     }
 
     private void Initialize(Portal portal)
     {
+        _targetPortal = portal;
+
         _powerText.text = "능력치: " + (portal.PowerVisibility ? portal.Power.ToString("F1") : "???");
         _dangerText.text = "위험도: " + (portal.DangerVisibility ? portal.Danger.ToString("F1") : "???");
         _difficultyText.text = "복잡도: " + (portal.DifficultyVisibility ? portal.Difficulty.ToString("F1") : "???");

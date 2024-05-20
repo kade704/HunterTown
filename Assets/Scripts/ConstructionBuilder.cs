@@ -227,19 +227,31 @@ public class ConstructionBuilder : MonoBehaviour
 
     private bool CheckBuildingBuildable(Vector2Int cellPos)
     {
-        if (_constructionGridMap.IsConstructionExistAt(cellPos))
+        for (var y = 0; y < _selectedConstructionPrefab.Size; y++)
         {
-            return false;
+            for (var x = 0; x < _selectedConstructionPrefab.Size; x++)
+            {
+                if (_constructionGridMap.IsConstructionExistAt(cellPos + new Vector2Int(x, y)))
+                {
+                    return false;
+                }
+            }
         }
 
-        var x = new[] { 1, -1, 0, 0 };
-        var y = new[] { 0, 0, 1, -1 };
-        for (var i = 0; i < 4; i++)
+        for (var y = 0; y < _selectedConstructionPrefab.Size; y++)
         {
-            var pos = new Vector2Int(cellPos.x + x[i], cellPos.y + y[i]);
-            if (_constructionGridMap.GetConstructionAt(pos)?.GetComponent<Road>())
+            for (var x = 0; x < _selectedConstructionPrefab.Size; x++)
             {
-                return true;
+                var dx = new[] { 1, -1, 0, 0 };
+                var dy = new[] { 0, 0, 1, -1 };
+                for (var i = 0; i < 4; i++)
+                {
+                    var pos = new Vector2Int(cellPos.x + x + dx[i], cellPos.y + y + dy[i]);
+                    if (_constructionGridMap.GetConstructionAt(pos)?.GetComponent<Road>())
+                    {
+                        return true;
+                    }
+                }
             }
         }
 

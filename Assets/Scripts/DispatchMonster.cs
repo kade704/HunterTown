@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 
 public class DispatchMonster : MonoBehaviour
@@ -19,6 +20,7 @@ public class DispatchMonster : MonoBehaviour
     void Start()
     {
         _startPosition = transform.position;
+        RandomCustomize();
     }
 
     public void Initialize()
@@ -50,11 +52,24 @@ public class DispatchMonster : MonoBehaviour
 
     public IEnumerator RespawnRoutine()
     {
+        RandomCustomize();
         _animator.SetTrigger("Respawn");
         transform.position = _startPosition + new Vector2(1, 0);
         _animator.SetFloat("RunState", 0.5f);
         yield return MotionUtil.MoveToRoutine(transform, _startPosition, 1);
         _animator.SetFloat("RunState", 0);
+    }
+
+    public void RandomCustomize()
+    {
+        var database = GameManager.Instance.GetSystem<CustomizeDatabase>();
+
+        var monsterBody = database.BaseBodies.Where(x => x.id.Contains("monster")).ToArray();
+
+        _avatarCustomize.BaseBody = monsterBody[Random.Range(0, monsterBody.Length)];
+        _avatarCustomize.Eye = database.Eyes[Random.Range(0, database.Eyes.Length)];
+        _avatarCustomize.EyeColor = Random.ColorHSV(0, 1, 0f, 0.4f, 0.8f, 1f);
+        _avatarCustomize.Weapon = database.Weapons[Random.Range(0, database.Weapons.Length)];
     }
 
     public void Death()

@@ -10,6 +10,7 @@ public class Portal : MonoBehaviour, ISerializable, IDeserializable
     [SerializeField] private SpriteRenderer _portalRenderer;
     [SerializeField] private Sprite[] _spriteFrames;
     [SerializeField] private Transform[] _visitorPositions;
+    [SerializeField] private SpriteRenderer _progressRenderer;
 
     [ReadOnly][SerializeField] private float _defaultPower;
     [ReadOnly][SerializeField] private float _defaultDanger;
@@ -20,6 +21,8 @@ public class Portal : MonoBehaviour, ISerializable, IDeserializable
     [ReadOnly][SerializeField] private bool _difficultyVisibility = true;
     [ReadOnly][SerializeField] private bool[] _abilityVisibilities = new bool[3] { true, true, true };
     private bool _isWave = false;
+    private int _startDay;
+    private int _waveDay;
     private Construction _construction;
 
 
@@ -125,10 +128,17 @@ public class Portal : MonoBehaviour, ISerializable, IDeserializable
     {
         StartCoroutine(AnimateRoutine());
 
-        var waveDay = GameManager.Instance.GetSystem<TimeSystem>().Day.Total + 999999;
-        GameManager.Instance.GetSystem<TimeSystem>().Day.OnChanged.AddListener(() =>
+        var timeSystem = GameManager.Instance.GetSystem<TimeSystem>();
+        _startDay = timeSystem.Day.Total;
+        _waveDay = timeSystem.Day.Total + WaveTime;
+        timeSystem.Day.OnChanged.AddListener(() =>
         {
-            if (GameManager.Instance.GetSystem<TimeSystem>().Day.Total >= waveDay && !_isWave)
+            var day = timeSystem.Day.Total;
+
+            var progress = 1 - (day - _startDay) / (float)(_waveDay - _startDay);
+            _progressRenderer.material.SetFloat("_Value", progress);
+
+            if (day >= _waveDay && !_isWave)
             {
                 StartCoroutine(WaveRoutine());
             }
@@ -141,6 +151,8 @@ public class Portal : MonoBehaviour, ISerializable, IDeserializable
                 _construction.VisitedHunters[i].transform.position = _visitorPositions[i].position;
             }
         });
+
+        _progressRenderer.material.SetFloat("_Value", 1);
     }
 
 

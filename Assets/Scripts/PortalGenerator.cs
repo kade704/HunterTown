@@ -41,7 +41,7 @@ public class PortalGenerator : MonoBehaviour
         Vector2Int cellPos;
         do
         {
-            cellPos = new Vector2Int(Random.Range(0, 64), Random.Range(0, 64));
+            cellPos = new Vector2Int(Random.Range(0, 32), Random.Range(0, 32));
         } while (!_constructionGridMap.CheckConstructionBuildable(_portalPrefab, cellPos));
 
         var newPortal = _constructionGridMap.BuildConstruction(_portalPrefab, cellPos).GetComponent<Portal>();
@@ -82,5 +82,8 @@ public class PortalGenerator : MonoBehaviour
         GameManager.Instance.GetSystem<LoggerSystem>().LogWarning($"포탈이 <b>({cellPos.x}, {cellPos.y})</b>위치에 생성되었습니다.");
     }
 
-
+    public void RemovePortal(Portal portal)
+    {
+        _constructionGridMap.DestroyConstruction(portal.GetComponent<Construction>());
+    }
 }

@@ -63,10 +63,9 @@ public class ConstructionGridmap : MonoBehaviour, IDeserializable, ISerializable
         newConstruction.CellPos = cellPos;
         newConstruction.ConstructionGridMap = this;
 
-        var size = newConstruction.Size;
-        for (var y = 0; y < size.y; y++)
+        for (var y = 0; y < newConstruction.Size; y++)
         {
-            for (var x = 0; x < size.x; x++)
+            for (var x = 0; x < newConstruction.Size; x++)
             {
                 var pos = cellPos + new Vector2Int(x, y);
                 _constructionMap[pos.y, pos.x] = newConstruction;
@@ -89,10 +88,9 @@ public class ConstructionGridmap : MonoBehaviour, IDeserializable, ISerializable
             return;
         }
 
-        var size = construction.Size;
-        for (int y = 0; y < size.y; y++)
+        for (int y = 0; y < construction.Size; y++)
         {
-            for (int x = 0; x < size.x; x++)
+            for (int x = 0; x < construction.Size; x++)
             {
                 var pos = construction.CellPos + new Vector2Int(x, y);
                 _constructionMap[pos.y, pos.x] = null;
@@ -119,10 +117,9 @@ public class ConstructionGridmap : MonoBehaviour, IDeserializable, ISerializable
 
     public bool CheckConstructionBuildable(Construction constructionPrefab, Vector2Int cellPos)
     {
-        var size = constructionPrefab.Size;
-        for (var y = 0; y < size.y; y++)
+        for (var y = 0; y < constructionPrefab.Size; y++)
         {
-            for (var x = 0; x < size.x; x++)
+            for (var x = 0; x < constructionPrefab.Size; x++)
             {
                 var pos = cellPos + new Vector2Int(x, y);
                 if (pos.x < 0 || pos.x >= GRID_SIZE || pos.y < 0 || pos.y >= GRID_SIZE)

@@ -4,12 +4,10 @@ using UnityEngine;
 public class CitizenSpawner : MonoBehaviour
 {
     [SerializeField] private Citizen _citizenPrefab;
-    [SerializeField] private int _maxCitizenCount;
-    [SerializeField] private float _spawnInterval;
 
-    private List<Citizen> _citizens = new List<Citizen>();
+    private List<Citizen> _citizens = new();
 
-    private const int POPULATION_PER_CITIZEN = 10;
+    private const int POPULATION_PER_CITIZEN = 5;
 
     private void Start()
     {

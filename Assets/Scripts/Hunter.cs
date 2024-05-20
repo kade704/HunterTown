@@ -59,7 +59,7 @@ public class Hunter : MonoBehaviour
             if (interaction.ID == "#move_target")
             {
                 _animator.SetFloat("RunState", 0);
-                if (_moveTargetRoutine != null)
+                if (_movePath != null)
                 {
                     StopCoroutine(_moveTargetRoutine);
                     GameManager.Instance.GetSystem<PathDrawer>().RemovePath(_movePath);
@@ -86,9 +86,9 @@ public class Hunter : MonoBehaviour
             if (Input.GetMouseButtonDown(0))
             {
                 clickedConstruction = GetClickedConstruction();
-                if (clickedConstruction != null && !clickedConstruction.GetComponent<Road>() && !clickedConstruction.Visitable)
+                if (clickedConstruction != null && clickedConstruction.Visitable)
                 {
-                    yield break;
+                    break;
                 }
             }
 
@@ -108,6 +108,7 @@ public class Hunter : MonoBehaviour
 
         if (_movePath == null)
         {
+            GameManager.Instance.GetSystem<LoggerSystem>().LogWarning("경로를 찾을 수 없습니다.");
             yield break;
         }
 
@@ -115,11 +116,10 @@ public class Hunter : MonoBehaviour
 
         yield return _avatarMovement.MoveRoutine(_movePath);
 
-        var destination = gridmap.GetConstructionAt(gridmap.WorldToCell(transform.position));
-        if (destination && destination.Visitable)
+        if (clickedConstruction && clickedConstruction.Visitable)
         {
-            _visitedConstruction = destination;
-            destination.EnterVisitor(this);
+            _visitedConstruction = clickedConstruction;
+            clickedConstruction.EnterVisitor(this);
         }
 
         GameManager.Instance.GetSystem<PathDrawer>().RemovePath(_movePath);

@@ -118,14 +118,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _id: '#small_house'
   _cost: 300
+  _maintenanceCost: 15
   _displayName: "\uC791\uC740\uC9D1"
   _description: "\uCD08\uB77C\uD55C \uC9D1\uC774\uB2E4.\n(\uC2DC\uBBFC \uC218\uC6A9
     + 5)"
   _defaultSprite: {fileID: 1722864094, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
-  _size: {x: 1, y: 1}
+  _size: 1
   _buildable: 1
   _destroyable: 1
   _visitable: 0
+  _visitorCapacity: 0
   _durability: 2
 --- !u!114 &8661895948472644750
 MonoBehaviour:

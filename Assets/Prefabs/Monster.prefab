@@ -1062,12 +1062,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7b0502b90d067d429068211375670af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _bodyClothRenderer: {fileID: 3283622070358878172}
+  _headBaseRenderer: {fileID: 0}
+  _bodyBaseRenderer: {fileID: 0}
+  _armLeftBaseRenderer: {fileID: 0}
+  _armRightBaseRenderer: {fileID: 0}
+  _legLeftBaseRenderer: {fileID: 0}
+  _legRightBaseRenderer: {fileID: 0}
   _hairRenderer: {fileID: 3401893201528988861}
-  _leftSleeveRenderer: {fileID: 6840503156479620559}
-  _rightSleeveRenderer: {fileID: 2718916054967409612}
-  _leftPantRenderer: {fileID: 4517450179660304960}
-  _rightPantRenderer: {fileID: 1541727586834090238}
+  _bodyClothRenderer: {fileID: 3283622070358878172}
+  _armLeftClothRenderer: {fileID: 0}
+  _armRightClothRenderer: {fileID: 0}
+  _legLeftClothRenderer: {fileID: 0}
+  _legRightClothRenderer: {fileID: 0}
+  _bodyArmorRenderer: {fileID: 0}
+  _armLeftArmorRenderer: {fileID: 0}
+  _armRightArmorRenderer: {fileID: 0}
+  _helmetRenderer: {fileID: 0}
+  _weaponRenderer: {fileID: 0}
+  _eyeLeftRenderer: {fileID: 0}
+  _eyeRightRenderer: {fileID: 0}
   _spriteRoot: {fileID: 3802607855834606235}
   _shadowRenderer: {fileID: 1116963154505163346}
 --- !u!114 &712750543145840348
@@ -1094,7 +1107,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 078695d110069fa4f8c7e77a5707d0e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _lifeHour: 24
+  _lifeHour: 36
   _progressRenderer: {fileID: 4527314580331743528}
 --- !u!1 &5405553295476107089
 GameObject:

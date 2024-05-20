@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Linq;
 using Newtonsoft.Json.Linq;
@@ -8,16 +9,23 @@ using UnityEngine.Events;
 public class Player : MonoBehaviour, ISerializable, IDeserializable
 {
     [ReadOnly] private int _money;
+    [ReadOnly] private int _expenditure;
     [ReadOnly] private int _population;
     [ReadOnly] private int _maxPopulation;
+    [ReadOnly] private int _populationGrowth = 5;
+
 
     private UnityEvent<int> _onMoneyChanged = new();
+    private UnityEvent<int> _onExpenditureChanged = new();
     private UnityEvent<int> _onPopulationChanged = new();
     private UnityEvent<int> _onMaxPopulationChanged = new();
+    private UnityEvent<int> _onPopulationGrowthChanged = new();
 
     public UnityEvent<int> OnMoneyChanged => _onMoneyChanged;
+    public UnityEvent<int> OnExpenditureChanged => _onExpenditureChanged;
     public UnityEvent<int> OnPopulationChanged => _onPopulationChanged;
     public UnityEvent<int> OnMaxPopulationChanged => _onMaxPopulationChanged;
+    public UnityEvent<int> OnPopulationGrowthChanged => _onPopulationGrowthChanged;
 
 
     public int Money
@@ -27,6 +35,16 @@ public class Player : MonoBehaviour, ISerializable, IDeserializable
         {
             _money = value;
             OnMoneyChanged.Invoke(value);
+        }
+    }
+
+    public int Expenditure
+    {
+        get => _expenditure;
+        set
+        {
+            _expenditure = value;
+            OnExpenditureChanged.Invoke(value);
         }
     }
 
@@ -50,38 +68,75 @@ public class Player : MonoBehaviour, ISerializable, IDeserializable
         }
     }
 
-    private void Start()
+    public int PopulationGrowth
     {
-        StartCoroutine(PopulationRoutine());
-    }
-
-
-    public IEnumerator PopulationRoutine()
-    {
-        while (true)
+        get => _populationGrowth;
+        set
         {
-            yield return new WaitForSeconds(Random.Range(5, 10));
-
-            if (Population < MaxPopulation)
-            {
-                var people = Random.Range(0, 5);
-                people = Mathf.Min(people, MaxPopulation - Population);
-                Population += people;
-            }
-            else
-            {
-                var people = Random.Range(-10, 0);
-                people = Mathf.Max(people, -Population);
-                Population += people;
-            }
+            _populationGrowth = value;
+            OnPopulationGrowthChanged.Invoke(value);
         }
     }
 
+    private void Start()
+    {
+        var constructionGridMap = FindObjectOfType<ConstructionGridmap>();
+        constructionGridMap.OnConstructionBuilded.AddListener((construction) =>
+        {
+            if (construction.GetComponent<Residence>() != null)
+            {
+                MaxPopulation += construction.GetComponent<Residence>().IncreasePopulation;
+            }
+            Population = Mathf.Min(Population, MaxPopulation);
+
+            if (construction.GetComponent<Park>() != null)
+            {
+                PopulationGrowth += construction.GetComponent<Park>().IncreasePopulationGrowth;
+            }
+
+            _expenditure += construction.GetComponent<Construction>().MaintenanceCost;
+        });
+
+        constructionGridMap.OnConstructionDestroyed.AddListener((construction) =>
+        {
+            if (construction.GetComponent<Residence>() != null)
+            {
+                MaxPopulation -= construction.GetComponent<Residence>().IncreasePopulation;
+            }
+            Population = Mathf.Min(Population, MaxPopulation);
+
+            if (construction.GetComponent<Park>() != null)
+            {
+                PopulationGrowth -= construction.GetComponent<Park>().IncreasePopulationGrowth;
+            }
+
+            _expenditure -= construction.GetComponent<Construction>().MaintenanceCost;
+        });
+
+        MaxPopulation = constructionGridMap.Constructions.Where(construction => construction.GetComponent<Residence>() != null)
+            .Sum(construction => construction.GetComponent<Residence>().IncreasePopulation);
+
+        PopulationGrowth = constructionGridMap.Constructions.Where(construction => construction.GetComponent<Park>() != null)
+            .Sum(construction => construction.GetComponent<Park>().IncreasePopulationGrowth) + 1;
+
+        Expenditure = constructionGridMap.Constructions.Sum(construction => construction.GetComponent<Construction>().MaintenanceCost);
+
+        var timeSystem = GameManager.Instance.GetSystem<TimeSystem>();
+        timeSystem.Day.OnChanged.AddListener(() =>
+        {
+            Money -= Expenditure;
+
+            if (Population < MaxPopulation)
+            {
+                Population += PopulationGrowth;
+            }
+            Population = Mathf.Min(Population, MaxPopulation);
+        });
+    }
     public void Deserialize(JToken token)
     {
         Money = token["money"].Value<int>();
         Population = token["population"].Value<int>();
-        MaxPopulation = token["maxPopulation"].Value<int>();
     }
 
     public JToken Serialize()
@@ -90,7 +145,6 @@ public class Player : MonoBehaviour, ISerializable, IDeserializable
         {
             ["money"] = Money,
             ["population"] = Population,
-            ["maxPopulation"] = MaxPopulation,
         };
     }
 

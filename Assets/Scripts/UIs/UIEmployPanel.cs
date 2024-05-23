@@ -4,10 +4,22 @@ using UnityEngine.UI;
 
 public class UIEmployPanel : MonoBehaviour
 {
-    [SerializeField] private GameObject _panel;
-    [SerializeField] private Button _closeButton;
-    [SerializeField] private Text _remainText;
-    [SerializeField] private UIEmploySlot[] _employmentSlots;
+    private CanvasGroup _panel;
+    private Button _closeButton;
+    private Button _refreshButton;
+    private Text _remainText;
+    private Image _transitionImage;
+    private UIEmploySlot[] _employmentSlots;
+
+    private void Awake()
+    {
+        _panel = GetComponent<CanvasGroup>();
+        _closeButton = transform.Find("CloseButton").GetComponent<Button>();
+        _refreshButton = transform.Find("RefreshButton").GetComponent<Button>();
+        _remainText = transform.Find("RemainText").GetComponent<Text>();
+        _transitionImage = transform.Find("Director/TransitionImage").GetComponent<Image>();
+        _employmentSlots = GetComponentsInChildren<UIEmploySlot>();
+    }
 
     private void Start()
     {
@@ -16,21 +28,24 @@ public class UIEmployPanel : MonoBehaviour
         {
             if (interaction.ID == "#employment")
             {
-                _panel.SetActive(true);
+                UIUtil.ShowCanvasGroup(_panel);
                 Initialize(interactable.GetComponent<Company>());
             }
             else
             {
-                _panel.SetActive(false);
+                UIUtil.HideCanvasGroup(_panel);
             }
         });
 
         _closeButton.onClick.AddListener(() =>
         {
-            _panel.SetActive(false);
+            UIUtil.HideCanvasGroup(_panel);
         });
 
-
+        _refreshButton.onClick.AddListener(() =>
+        {
+            StartCoroutine(RefreshRoutine());
+        });
     }
 
     private void Initialize(Company company)
@@ -45,7 +60,45 @@ public class UIEmployPanel : MonoBehaviour
             {
                 StartCoroutine(EmployRoutine(company, index));
             });
-            _employmentSlots[index].EmployHunter = employment.EmployHunter[i];
+            _employmentSlots[index].EmployHunter = employment.EmployHunters[i];
+        }
+    }
+
+    private IEnumerator RefreshRoutine()
+    {
+        GameManager.Instance.GetSystem<Player>().Money -= 500;
+
+        yield return HideTransitionRoutine();
+
+        var employDirector = GameManager.Instance.GetSystem<EmployDirector>();
+        for (int i = 0; i < 4; i++)
+        {
+            employDirector.SetRandomEmployHunter(i);
+            _employmentSlots[i].EmployHunter = employDirector.EmployHunters[i];
+        }
+
+        yield return ShowTransitionRoutine();
+    }
+
+    private IEnumerator HideTransitionRoutine()
+    {
+        _transitionImage.fillOrigin = 0;
+        _transitionImage.fillAmount = 0;
+        while (_transitionImage.fillAmount < 1)
+        {
+            _transitionImage.fillAmount += Time.deltaTime * 2;
+            yield return null;
+        }
+    }
+
+    private IEnumerator ShowTransitionRoutine()
+    {
+        _transitionImage.fillOrigin = 1;
+        _transitionImage.fillAmount = 1;
+        while (_transitionImage.fillAmount > 0)
+        {
+            _transitionImage.fillAmount -= Time.deltaTime * 2;
+            yield return null;
         }
     }
 
@@ -57,24 +110,25 @@ public class UIEmployPanel : MonoBehaviour
 
         GameManager.Instance.GetSystem<Player>().Money -= 100;
 
-        var employment = GameManager.Instance.GetSystem<EmployDirector>();
+        var employDirector = GameManager.Instance.GetSystem<EmployDirector>();
 
         var hunterSpawner = GameManager.Instance.GetSystem<HunterSpawner>();
         var newHunter = hunterSpawner.SpawnHunter(company.Construction.CellPos - Vector2Int.one);
-        newHunter.DisplayName = employment.EmployHunter[index].Name;
-        newHunter.DefaultHp = employment.EmployHunter[index].HP;
-        newHunter.DefaultDamage = employment.EmployHunter[index].Damage;
-        newHunter.AvatarCustomize.CopyAvatar(employment.EmployHunter[index].AvatarCustomize);
+        newHunter.DisplayName = employDirector.EmployHunters[index].Name;
+        newHunter.DefaultHp = employDirector.EmployHunters[index].HP;
+        newHunter.DefaultDamage = employDirector.EmployHunters[index].Damage;
+        newHunter.AvatarCustomize.CopyAvatar(employDirector.EmployHunters[index].AvatarCustomize);
 
-        _employmentSlots[index].Hide();
+        _refreshButton.interactable = false;
+        _employmentSlots[index].EmployButton.interactable = false;
+
         yield return _employmentSlots[index].EmployHunter.ExitRoutine();
 
-        employment.SetRandomEmployHunter(index);
-
-
-        _employmentSlots[index].EmployHunter = employment.EmployHunter[index];
+        employDirector.SetRandomEmployHunter(index);
 
         yield return _employmentSlots[index].EmployHunter.EnterRoutine();
-        _employmentSlots[index].Show();
+        _employmentSlots[index].EmployHunter = employDirector.EmployHunters[index];
+        _employmentSlots[index].EmployButton.interactable = true;
+        _refreshButton.interactable = true;
     }
 }

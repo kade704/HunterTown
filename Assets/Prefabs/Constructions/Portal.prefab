@@ -107,7 +107,7 @@ MonoBehaviour:
   _description: "\uD5CC\uD130\uB97C \uD30C\uACAC\uC2DC\uD0AC\uC218 \uC788\uB2E4.\n\uC77C\uC815
     \uC2DC\uAC04\uC774 \uC9C0\uB098\uBA74 \uD3EC\uD0C8 \uC6E8\uC774\uBE0C\uAC00 \uC2DC\uC791\uB41C\uB2E4."
   _defaultSprite: {fileID: 0}
-  _size: 0
+  _size: 1
   _buildable: 0
   _destroyable: 0
   _visitable: 1

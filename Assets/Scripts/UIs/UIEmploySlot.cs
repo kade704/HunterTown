@@ -3,12 +3,13 @@ using UnityEngine.UI;
 
 public class UIEmploySlot : MonoBehaviour
 {
-    [SerializeField] Button _employButton;
-    [SerializeField] Text _nameText;
-    [SerializeField] Text _hpText;
-    [SerializeField] Text _damageText;
+    private Button _employButton;
+    private Text _nameText;
+    private Text _hpText;
+    private Text _damageText;
+    private Text _totalText;
     private EmployHunter _employHunter;
-    private CanvasGroup _canvasGroup;
+
 
     public Button EmployButton => _employButton;
     public EmployHunter EmployHunter
@@ -20,21 +21,16 @@ public class UIEmploySlot : MonoBehaviour
             _nameText.text = _employHunter.Name;
             _hpText.text = $"방어력: {_employHunter.HP}";
             _damageText.text = $"공격력: {_employHunter.Damage}";
+            _totalText.text = $"총 능력치: {_employHunter.HP + _employHunter.Damage}";
         }
     }
 
     private void Awake()
     {
-        _canvasGroup = GetComponent<CanvasGroup>();
-    }
-
-    public void Show()
-    {
-        UIUtil.ShowCanvasGroup(_canvasGroup);
-    }
-
-    public void Hide()
-    {
-        UIUtil.HideCanvasGroup(_canvasGroup);
+        _employButton = transform.Find("EmployButton").GetComponent<Button>();
+        _nameText = transform.Find("NameText").GetComponent<Text>();
+        _hpText = transform.Find("HPText").GetComponent<Text>();
+        _damageText = transform.Find("DamageText").GetComponent<Text>();
+        _totalText = transform.Find("TotalText").GetComponent<Text>();
     }
 }

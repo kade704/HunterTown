@@ -72,7 +72,7 @@ public class DispatchMonster : MonoBehaviour
         _avatarCustomize.Weapon = database.Weapons[Random.Range(0, database.Weapons.Length)];
     }
 
-    public void Death()
+    public void Die()
     {
         _animator.SetTrigger("Die");
     }

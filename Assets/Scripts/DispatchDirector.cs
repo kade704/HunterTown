@@ -4,78 +4,138 @@ using UnityEngine;
 
 public class DispatchDirector : MonoBehaviour
 {
-    [SerializeField] private DispatchHunter[] _dispatchHunter = new DispatchHunter[4];
-    [SerializeField] private SpriteRenderer _portal;
-    [SerializeField] private SpriteRenderer _background;
-    [SerializeField] private DispatchMonster _battleMonster;
-    [SerializeField] private Transform _transition;
     [SerializeField] private Sprite _natureBackground;
     [SerializeField] private Sprite _hellBackground;
 
-    public void SetHunter(int index, Hunter hunter)
+    private DispatchHunter[] _dispatchHunters;
+    private DispatchMonster _monster;
+    private SpriteRenderer _portal;
+    private SpriteRenderer _background;
+
+    public DispatchHunter[] DispatchHunters => _dispatchHunters;
+
+    private void Awake()
+    {
+        _dispatchHunters = GetComponentsInChildren<DispatchHunter>();
+        _monster = GetComponentInChildren<DispatchMonster>();
+        _portal = transform.Find("Portal").GetComponent<SpriteRenderer>();
+        _background = transform.Find("Background").GetComponent<SpriteRenderer>();
+    }
+
+    public void SetHunter(int index, Hunter hunter, Portal portal)
     {
         if (index < 0 || index >= 4)
             Debug.LogError("Invalid index");
 
-        _dispatchHunter[index].Hunter = hunter;
+        _dispatchHunters[index].Hunter = hunter;
+
+        if (hunter != null)
+        {
+            var death = Random.Range(0, 1) > portal.CalcHunterDeathProbability(hunter);
+            _dispatchHunters[index].Death = death;
+
+            var reward = portal.HunterDispatchReward;
+            var damage = Random.Range(0, reward);
+            var hp = reward - damage;
+            _dispatchHunters[index].IncleaseDamage = damage;
+            _dispatchHunters[index].IncleaseHP = hp;
+        }
     }
 
-    public IEnumerator BattleRoutine(bool[] hunterAlives)
+    public IEnumerator EnterPortal()
     {
-        var battleHunter = _dispatchHunter.Where(hunter => hunter.Hunter != null).ToArray();
+        var dispatchHunters = _dispatchHunters.Where(hunter => hunter.Hunter != null).ToArray();
 
-        for (int i = battleHunter.Length - 1; i >= 1; i--)
+        for (int i = dispatchHunters.Length - 1; i >= 1; i--)
         {
-            StartCoroutine(battleHunter[i].EnterPortalRoutine(_portal.transform));
+            StartCoroutine(dispatchHunters[i].EnterPortalRoutine(_portal.transform));
             yield return new WaitForSeconds(0.5f);
         }
 
-        yield return battleHunter[0].EnterPortalRoutine(_portal.transform);
+        yield return dispatchHunters[0].EnterPortalRoutine(_portal.transform);
+    }
 
-        var transitionStart = _transition.position;
-        yield return MotionUtil.MoveEaseOutRoutine(_transition, transform.position, 1f);
+    public void PrepareBattle()
+    {
+        var dispatchHunters = _dispatchHunters.Where(hunter => hunter.Hunter != null).ToArray();
+
         _portal.enabled = false;
-        _battleMonster.AvatarCustomize.ShowAvatar();
+        _monster.AvatarCustomize.ShowAvatar();
 
-        for (int i = 0; i < battleHunter.Length; i++)
+        for (int i = 0; i < dispatchHunters.Length; i++)
         {
-            battleHunter[i].transform.position = battleHunter[i].StartPosition;
-            battleHunter[i].AvatarCustomize.ShowAvatar();
+            dispatchHunters[i].transform.position = dispatchHunters[i].StartPosition;
+            dispatchHunters[i].AvatarCustomize.ShowAvatar();
         }
 
         _background.sprite = _hellBackground;
+    }
 
-        yield return new WaitForSeconds(0.7f);
-        yield return MotionUtil.MoveEaseInRoutine(_transition, transitionStart, 1f);
+    public IEnumerator BattleRoutine(Portal portal)
+    {
+        var dispatchHunters = _dispatchHunters.Where(hunter => hunter.Hunter != null).ToArray();
 
-        for (int i = battleHunter.Length - 1; i >= 0; i--)
+        for (int i = dispatchHunters.Length - 1; i >= 0; i--)
         {
-            yield return battleHunter[i].AttackBeginRoutine(_battleMonster.StartPosition - new Vector2(0.3f, 0));
-            if (hunterAlives[i])
+            yield return dispatchHunters[i].AttackBeginRoutine(_monster.StartPosition - new Vector2(0.3f, 0));
+
+            if (!dispatchHunters[i].Death)
             {
-                _battleMonster.Death();
+                _monster.Die();
+                yield return new WaitForSeconds(0.5f);
             }
+
+            yield return dispatchHunters[i].AttackEndRoutine();
             yield return new WaitForSeconds(0.5f);
 
-            yield return battleHunter[i].AttackEndRoutine();
-            yield return new WaitForSeconds(0.5f);
-
-            if (hunterAlives[i])
+            if (!dispatchHunters[i].Death)
             {
-                yield return _battleMonster.RespawnRoutine();
+                yield return _monster.RespawnRoutine();
             }
             else
             {
-                yield return _battleMonster.AttackBeginRoutine(battleHunter[i].StartPosition + new Vector2(0.3f, 0));
-                battleHunter[i].Death();
-                GameManager.Instance.GetSystem<LoggerSystem>().LogError($"{battleHunter[i].Hunter.DisplayName}이(가) 사망했습니다.");
-                GameManager.Instance.GetSystem<HunterSpawner>().RemoveHunter(battleHunter[i].Hunter);
+                yield return _monster.AttackBeginRoutine(dispatchHunters[i].StartPosition + new Vector2(0.3f, 0));
+                dispatchHunters[i].Die();
+                GameManager.Instance.GetSystem<LoggerSystem>().LogError($"{dispatchHunters[i].Hunter.DisplayName}이(가) 사망했습니다.");
+                GameManager.Instance.GetSystem<HunterSpawner>().RemoveHunter(dispatchHunters[i].Hunter);
             }
 
             yield return new WaitForSeconds(0.5f);
 
-            yield return _battleMonster.AttackEndRoutine();
+            yield return _monster.AttackEndRoutine();
             yield return new WaitForSeconds(0.5f);
+        }
+    }
+
+    public void FinishBattle(Portal portal)
+    {
+        var dispatchHunters = _dispatchHunters.Where(hunter => hunter.Hunter != null).ToArray();
+
+        if (dispatchHunters.Any(hunter => !hunter.Death))
+        {
+            var earnedMoney = portal.Power * 10f;
+            if (portal.ContainAbility("crystal_portal"))
+            {
+                earnedMoney *= 1.2f;
+            }
+            else if (portal.ContainAbility("badlands"))
+            {
+                earnedMoney *= 0.5f;
+            }
+            GameManager.Instance.GetSystem<Player>().Money += (int)earnedMoney;
+
+            foreach (var dispatchHunter in dispatchHunters)
+            {
+                dispatchHunter.Hunter.DefaultDamage += dispatchHunter.IncleaseDamage;
+                dispatchHunter.Hunter.DefaultHp += dispatchHunter.IncleaseHP;
+            }
+
+            GameManager.Instance.GetSystem<LoggerSystem>().LogInfo("파견에 성공했습니다. 포탈이 사라집니다.");
+            GameManager.Instance.GetSystem<PortalGenerator>().RemovePortal(portal.GetComponent<Portal>());
+        }
+        else
+        {
+            GameManager.Instance.GetSystem<LoggerSystem>().LogError("파견에 실패했습니다.");
         }
     }
 
@@ -83,9 +143,9 @@ public class DispatchDirector : MonoBehaviour
     {
         for (int i = 0; i < 4; i++)
         {
-            _dispatchHunter[i].Initialize();
+            _dispatchHunters[i].Initialize();
         }
-        _battleMonster.Initialize();
+        _monster.Initialize();
         _portal.enabled = true;
         _background.sprite = _natureBackground;
     }

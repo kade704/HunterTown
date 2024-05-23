@@ -4,26 +4,25 @@ using UnityEngine.UI;
 
 public class UIConstructionBuildPanel : MonoBehaviour
 {
-    [SerializeField] private Button _destructionButton;
     [SerializeField] private CanvasGroup _residencePanel;
     [SerializeField] private CanvasGroup _parkPanel;
+    [SerializeField] private CanvasGroup _educationPanel;
     [SerializeField] private CanvasGroup _roadPanel;
     [SerializeField] private Button _residenceButton;
     [SerializeField] private Button _parkButton;
+    [SerializeField] private Button _educationButton;
     [SerializeField] private Button _roadButton;
-    [SerializeField] private GameObject _informationPanel;
+    [SerializeField] private CanvasGroup _informationPanel;
     [SerializeField] private Text _informationTitle;
     [SerializeField] private Text _informationDescription;
     [SerializeField] private UIBuildToggle _selectButton;
     [SerializeField] private UIBuildToggle _desctructButton;
     private UIBuildToggle[] _buildToggles;
-    private ToggleGroup _toggleGroup;
 
     private ConstructionBuilder _constructionBuilder;
 
     private void Awake()
     {
-        _toggleGroup = GetComponent<ToggleGroup>();
         _constructionBuilder = FindObjectOfType<ConstructionBuilder>();
         _buildToggles = GetComponentsInChildren<UIBuildToggle>();
     }
@@ -39,9 +38,10 @@ public class UIConstructionBuildPanel : MonoBehaviour
             }
             else
             {
-                UIUtil.HideCanvasGroup(_parkPanel);
-                UIUtil.HideCanvasGroup(_roadPanel);
                 UIUtil.ShowCanvasGroup(_residencePanel);
+                UIUtil.HideCanvasGroup(_parkPanel);
+                UIUtil.HideCanvasGroup(_educationPanel);
+                UIUtil.HideCanvasGroup(_roadPanel);
             }
         });
 
@@ -54,8 +54,24 @@ public class UIConstructionBuildPanel : MonoBehaviour
             else
             {
                 UIUtil.HideCanvasGroup(_residencePanel);
-                UIUtil.HideCanvasGroup(_roadPanel);
                 UIUtil.ShowCanvasGroup(_parkPanel);
+                UIUtil.HideCanvasGroup(_educationPanel);
+                UIUtil.HideCanvasGroup(_roadPanel);
+            }
+        });
+
+        _educationButton.onClick.AddListener(() =>
+        {
+            if (UIUtil.IsCanvasGroupVisible(_educationPanel))
+            {
+                UIUtil.HideCanvasGroup(_educationPanel);
+            }
+            else
+            {
+                UIUtil.HideCanvasGroup(_residencePanel);
+                UIUtil.HideCanvasGroup(_parkPanel);
+                UIUtil.ShowCanvasGroup(_educationPanel);
+                UIUtil.HideCanvasGroup(_roadPanel);
             }
         });
 
@@ -69,6 +85,7 @@ public class UIConstructionBuildPanel : MonoBehaviour
             {
                 UIUtil.HideCanvasGroup(_residencePanel);
                 UIUtil.HideCanvasGroup(_parkPanel);
+                UIUtil.HideCanvasGroup(_educationPanel);
                 UIUtil.ShowCanvasGroup(_roadPanel);
             }
         });
@@ -86,6 +103,7 @@ public class UIConstructionBuildPanel : MonoBehaviour
 
                     UIUtil.HideCanvasGroup(_residencePanel);
                     UIUtil.HideCanvasGroup(_parkPanel);
+                    UIUtil.HideCanvasGroup(_educationPanel);
                     UIUtil.HideCanvasGroup(_roadPanel);
 
                 }
@@ -95,6 +113,7 @@ public class UIConstructionBuildPanel : MonoBehaviour
 
                     UIUtil.HideCanvasGroup(_residencePanel);
                     UIUtil.HideCanvasGroup(_parkPanel);
+                    UIUtil.HideCanvasGroup(_educationPanel);
                     UIUtil.HideCanvasGroup(_roadPanel);
                 }
                 else
@@ -114,6 +133,7 @@ public class UIConstructionBuildPanel : MonoBehaviour
 
                 UIUtil.HideCanvasGroup(_residencePanel);
                 UIUtil.HideCanvasGroup(_parkPanel);
+                UIUtil.HideCanvasGroup(_educationPanel);
                 UIUtil.HideCanvasGroup(_roadPanel);
             }
             else if (mode == ConstructionBuilder.BuildMode.Destruct)
@@ -122,6 +142,7 @@ public class UIConstructionBuildPanel : MonoBehaviour
 
                 UIUtil.HideCanvasGroup(_residencePanel);
                 UIUtil.HideCanvasGroup(_parkPanel);
+                UIUtil.HideCanvasGroup(_educationPanel);
                 UIUtil.HideCanvasGroup(_roadPanel);
             }
         });
@@ -136,14 +157,14 @@ public class UIConstructionBuildPanel : MonoBehaviour
             {
                 _informationTitle.text = "선택 모드";
                 _informationDescription.text = "건물을 선택할수 있습니다";
-                _informationPanel.SetActive(true);
+                UIUtil.ShowCanvasGroup(_informationPanel);
                 return;
             }
             else if (hoveredButton == _desctructButton)
             {
                 _informationTitle.text = "파괴 모드";
                 _informationDescription.text = "건물을 파괴할수 있습니다";
-                _informationPanel.SetActive(true);
+                UIUtil.ShowCanvasGroup(_informationPanel);
                 return;
             }
             else if (hoveredButton.ConstructionPrefab)
@@ -152,14 +173,16 @@ public class UIConstructionBuildPanel : MonoBehaviour
 
                 _informationTitle.text = $"[{construction.DisplayName}] - {construction.Cost}G";
                 _informationDescription.text = construction.Description;
-                _informationPanel.SetActive(true);
+
+                LayoutRebuilder.ForceRebuildLayoutImmediate(_informationPanel.GetComponent<RectTransform>());
+                UIUtil.ShowCanvasGroup(_informationPanel);
             }
         }
         else
         {
             _informationTitle.text = string.Empty;
             _informationDescription.text = string.Empty;
-            _informationPanel.SetActive(false);
+            UIUtil.HideCanvasGroup(_informationPanel);
         }
     }
 }

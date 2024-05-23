@@ -20,7 +20,6 @@ public class Portal : MonoBehaviour, ISerializable, IDeserializable
     [ReadOnly][SerializeField] private bool _dangerVisibility = true;
     [ReadOnly][SerializeField] private bool _difficultyVisibility = true;
     [ReadOnly][SerializeField] private bool[] _abilityVisibilities = new bool[3] { true, true, true };
-    private bool _isWave = false;
     private int _startDay;
     private int _waveDay;
     private Construction _construction;
@@ -131,79 +130,45 @@ public class Portal : MonoBehaviour, ISerializable, IDeserializable
         var timeSystem = GameManager.Instance.GetSystem<TimeSystem>();
         _startDay = timeSystem.Day.Total;
         _waveDay = timeSystem.Day.Total + WaveTime;
-        timeSystem.Day.OnChanged.AddListener(() =>
-        {
-            var day = timeSystem.Day.Total;
 
-            var progress = 1 - (day - _startDay) / (float)(_waveDay - _startDay);
-            _progressRenderer.material.SetFloat("_Value", progress);
+        timeSystem.Day.OnChanged.AddListener(OnDayChanged);
 
-            if (day >= _waveDay && !_isWave)
-            {
-                StartCoroutine(WaveRoutine());
-            }
-        });
-
-        _construction.OnVisitorChanged.AddListener(() =>
-        {
-            for (int i = 0; i < _construction.VisitedHunters.Length; i++)
-            {
-                _construction.VisitedHunters[i].transform.position = _visitorPositions[i].position;
-            }
-        });
+        _construction.OnVisitorChanged.AddListener(OnVisitorChanged);
+        _construction.OnDestroyed.AddListener(OnDestroyed);
 
         _progressRenderer.material.SetFloat("_Value", 1);
     }
 
-
-    private void DispatchRoutine()
+    private void OnDestroyed()
     {
+        var timeSystem = GameManager.Instance.GetSystem<TimeSystem>();
+        timeSystem.Day.OnChanged.RemoveListener(OnDayChanged);
+    }
 
-
-
-        var HunterSpawner = FindObjectOfType<HunterSpawner>();
-        foreach (var hunter in _construction.VisitedHunters)
+    private void OnVisitorChanged()
+    {
+        for (int i = 0; i < _construction.VisitedHunters.Length; i++)
         {
-            var deathProbability = CalcHunterDeathProbability(hunter);
-            if (Random.value < deathProbability)
-            {
-                GameManager.Instance.GetSystem<LoggerSystem>().LogError($"{hunter.DisplayName} 이(가) 파견중 사망했습니다.");
-                HunterSpawner.RemoveHunter(hunter);
-            }
-        }
-
-        var success = CalcDispatchSuccessProbability(_construction.VisitedHunters);
-        if (Random.value <= success)
-        {
-            GameManager.Instance.GetSystem<LoggerSystem>().LogInfo($"파견이 성공적으로 완료되었습니다.");
-            _construction.ConstructionGridMap.DestroyConstruction(_construction);
-            var earnedMoney = Power * 10f;
-            if (ContainAbility("crystal_portal"))
-            {
-                earnedMoney *= 1.2f;
-            }
-            else if (ContainAbility("badlands"))
-            {
-                earnedMoney *= 0.5f;
-            }
-            GameManager.Instance.GetSystem<Player>().Money += (int)earnedMoney;
-
-            foreach (var hunter in _construction.VisitedHunters)
-            {
-                var reward = HunterDispatchReward;
-                var damage = Random.Range(0, reward);
-                var hp = reward - damage;
-
-                hunter.DefaultDamage += damage;
-                hunter.DefaultHp += hp;
-            }
-        }
-        else
-        {
-            GameManager.Instance.GetSystem<LoggerSystem>().LogError($"파견이 실패했습니다.");
+            _construction.VisitedHunters[i].transform.position = _visitorPositions[i].position;
         }
     }
 
+    private void OnDayChanged()
+    {
+        var timeSystem = GameManager.Instance.GetSystem<TimeSystem>();
+        var day = timeSystem.Day.Total;
+
+        var progress = 1 - (day - _startDay) / (float)(_waveDay - _startDay);
+        _progressRenderer.material.SetFloat("_Value", progress);
+
+        if (day >= _waveDay)
+        {
+            _startDay = timeSystem.Day.Total;
+            _waveDay = timeSystem.Day.Total + WaveTime;
+
+            StartCoroutine(WaveRoutine());
+        }
+    }
 
     public void ExamineRoutine()
     {
@@ -250,8 +215,6 @@ public class Portal : MonoBehaviour, ISerializable, IDeserializable
 
     public IEnumerator WaveRoutine()
     {
-        _isWave = true;
-
         GameManager.Instance.GetSystem<CameraMovement>().MovePosition(_construction.transform.position);
         GameManager.Instance.GetSystem<LoggerSystem>().LogError("포탈 웨이브가 시작되었습니다!");
 
@@ -354,7 +317,7 @@ public class Portal : MonoBehaviour, ISerializable, IDeserializable
         }
     }
 
-    private int HunterDispatchReward
+    public int HunterDispatchReward
     {
         get
         {

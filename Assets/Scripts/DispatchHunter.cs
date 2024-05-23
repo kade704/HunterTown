@@ -7,9 +7,30 @@ public class DispatchHunter : MonoBehaviour
     private AvatarCustomize _avatarCustomize;
     private Vector2 _startPosition;
     private Hunter _hunter;
+    private bool _death;
+    private int _incleaseHP;
+    private int _incleaseDamage;
 
     public AvatarCustomize AvatarCustomize => _avatarCustomize;
     public Vector2 StartPosition => _startPosition;
+
+    public bool Death
+    {
+        get => _death;
+        set => _death = value;
+    }
+
+    public int IncleaseHP
+    {
+        get => _incleaseHP;
+        set => _incleaseHP = value;
+    }
+
+    public int IncleaseDamage
+    {
+        get => _incleaseDamage;
+        set => _incleaseDamage = value;
+    }
 
     public Hunter Hunter
     {
@@ -43,6 +64,7 @@ public class DispatchHunter : MonoBehaviour
 
     public void Initialize()
     {
+        _death = false;
         _animator.SetFloat("RunState", 0);
         _animator.SetTrigger("Respawn");
         _avatarCustomize.HideAvatar();
@@ -76,8 +98,9 @@ public class DispatchHunter : MonoBehaviour
         _animator.SetFloat("RunState", 0);
     }
 
-    public void Death()
+    public void Die()
     {
         _animator.SetTrigger("Die");
+        _death = true;
     }
 }

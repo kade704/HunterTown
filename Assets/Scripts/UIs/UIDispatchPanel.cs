@@ -5,45 +5,66 @@ using UnityEngine.UI;
 
 public class UIDispatchPanel : MonoBehaviour
 {
-    [SerializeField] private GameObject _mainPanel;
-    [SerializeField] private Button _closeButton;
-    [SerializeField] private Text _powerText;
-    [SerializeField] private Text _dangerText;
-    [SerializeField] private Text _difficultyText;
-    [SerializeField] private Text _rankText;
-    [SerializeField] private UIDispatchSlot[] _dispatchSlots;
-    [SerializeField] private Button _dispatchButton;
-    [SerializeField] private UIAbilitySlot[] _abilitySlots;
-    [SerializeField] private GameObject _resultPanel;
-    [SerializeField] private Text _resultTitle;
-    [SerializeField] private Text _resultSubTitle;
-    [SerializeField] private UIDispatchResultSlot[] _dispatchResultSlots;
-    [SerializeField] private Button _resultCloseButton;
+    private CanvasGroup _panel;
+    private CanvasGroup _resultPanel;
+    private Button _closeButton;
+    private Text _powerText;
+    private Text _dangerText;
+    private Text _difficultyText;
+    private Text _rankText;
+    private UIDispatchSlot[] _dispatchSlots;
+    private Button _dispatchButton;
+    private UIAbilitySlot[] _abilitySlots;
+    private Image _transitionImage;
+    private Button _skipButton;
 
     private Portal _targetPortal;
-    private bool[] _hunterAlives = new bool[4];
+    private DispatchDirector _dispatchDirector;
+    private Coroutine _dispatchRoutine;
+
+    private void Awake()
+    {
+        _panel = GetComponent<CanvasGroup>();
+        _resultPanel = transform.Find("../ResultPanel").GetComponent<CanvasGroup>();
+        _closeButton = transform.Find("CloseButton").GetComponent<Button>();
+        _powerText = transform.Find("StatusTexts/PowerText").GetComponent<Text>();
+        _dangerText = transform.Find("StatusTexts/DangerText").GetComponent<Text>();
+        _difficultyText = transform.Find("StatusTexts/DifficultyText").GetComponent<Text>();
+        _rankText = transform.Find("RankText").GetComponent<Text>();
+        _dispatchSlots = GetComponentsInChildren<UIDispatchSlot>();
+        _dispatchButton = transform.Find("DispatchButton").GetComponent<Button>();
+        _abilitySlots = GetComponentsInChildren<UIAbilitySlot>();
+        _transitionImage = transform.Find("Director/TransitionImage").GetComponent<Image>();
+        _skipButton = transform.Find("Director/SkipButton").GetComponent<Button>();
+        _dispatchDirector = GameManager.Instance.GetSystem<DispatchDirector>();
+    }
 
     private void Start()
     {
         _closeButton.onClick.AddListener(() =>
         {
-            _mainPanel.SetActive(false);
-        });
-
-        _resultCloseButton.onClick.AddListener(() =>
-        {
-            _resultPanel.SetActive(false);
-            _mainPanel.SetActive(false);
-            _closeButton.interactable = true;
-            _dispatchButton.interactable = true;
-            GameManager.Instance.GetSystem<DispatchDirector>().Initialize();
+            UIUtil.HideCanvasGroup(_panel);
         });
 
         _dispatchButton.onClick.AddListener(() =>
         {
             _closeButton.interactable = false;
             _dispatchButton.interactable = false;
-            StartCoroutine(DispatchRoutine());
+            _dispatchRoutine = StartCoroutine(DispatchRoutine());
+        });
+
+        _skipButton.onClick.AddListener(() =>
+        {
+            if (_dispatchRoutine != null)
+            {
+                StopCoroutine(_dispatchRoutine);
+                _dispatchRoutine = null;
+            }
+
+            _resultPanel.GetComponent<UIDispatchResultPanel>().Initialize();
+            _dispatchDirector.FinishBattle(_targetPortal);
+            _dispatchDirector.Initialize();
+            UIUtil.ShowCanvasGroup(_resultPanel);
         });
 
         var interactableSelector = FindObjectOfType<InteractableSelector>();
@@ -52,11 +73,11 @@ public class UIDispatchPanel : MonoBehaviour
             if (interaction.ID == "#dispatch")
             {
                 Initialize(interactable.GetComponent<Portal>());
-                _mainPanel.SetActive(true);
+                UIUtil.ShowCanvasGroup(_panel);
             }
             else
             {
-                _mainPanel.SetActive(false);
+                UIUtil.HideCanvasGroup(_panel);
             }
         });
     }
@@ -64,20 +85,24 @@ public class UIDispatchPanel : MonoBehaviour
     private IEnumerator DispatchRoutine()
     {
         GameManager.Instance.GetSystem<LoggerSystem>().LogInfo($"파견이 시작되었습니다.");
+        UIUtil.ShowCanvasGroup(_skipButton.GetComponent<CanvasGroup>());
 
-        yield return GameManager.Instance.GetSystem<DispatchDirector>().BattleRoutine(_hunterAlives);
+        yield return _dispatchDirector.EnterPortal();
 
-        _resultPanel.SetActive(true);
+        yield return HideTransitionRoutine();
 
-        if (_hunterAlives.Any())
-        {
-            GameManager.Instance.GetSystem<LoggerSystem>().LogInfo("파견에 성공했습니다. 포탈이 사라집니다.");
-            GameManager.Instance.GetSystem<PortalGenerator>().RemovePortal(_targetPortal.GetComponent<Portal>());
-        }
-        else
-        {
-            GameManager.Instance.GetSystem<LoggerSystem>().LogError("파견에 실패했습니다.");
-        }
+        _dispatchDirector.PrepareBattle();
+
+        yield return ShowTransitionRoutine();
+
+        yield return _dispatchDirector.BattleRoutine(_targetPortal);
+
+        _resultPanel.GetComponent<UIDispatchResultPanel>().Initialize();
+        UIUtil.ShowCanvasGroup(_resultPanel);
+
+        _dispatchDirector.FinishBattle(_targetPortal);
+        _dispatchDirector.Initialize();
+        UIUtil.HideCanvasGroup(_skipButton.GetComponent<CanvasGroup>());
     }
 
     private void Initialize(Portal portal)
@@ -97,8 +122,6 @@ public class UIDispatchPanel : MonoBehaviour
             abilitySlot.Hidden = !portal.AbilityVisibilities[i];
         }
 
-        var director = GameManager.Instance.GetSystem<DispatchDirector>();
-
         var hunters = portal.Construction.VisitedHunters;
         for (int i = 0; i < 4; i++)
         {
@@ -109,44 +132,45 @@ public class UIDispatchPanel : MonoBehaviour
                 {
                     var deathProbabilityPercent = (int)(portal.CalcHunterDeathProbability(hunters[i]) * 100);
                     _dispatchSlots[i].DeathProbability = $"사망 확률: {deathProbabilityPercent}%";
-                    _hunterAlives[i] = Random.Range(0, 100) > deathProbabilityPercent;
                 }
                 else
                 {
                     _dispatchSlots[i].DeathProbability = $"사망 확률: ?%";
                 }
-
-                _dispatchResultSlots[i].Hunter = hunters[i];
-                _dispatchResultSlots[i].Result = _hunterAlives[i] ? " - 생존" : " - 사망";
-
-                director.SetHunter(i, hunters[i].GetComponent<Hunter>());
+                _dispatchDirector.SetHunter(i, hunters[i].GetComponent<Hunter>(), portal);
             }
             else
             {
-                _hunterAlives[i] = false;
-
                 _dispatchSlots[i].Hunter = null;
                 _dispatchSlots[i].DeathProbability = "";
 
-                _dispatchResultSlots[i].Hunter = null;
-                _dispatchResultSlots[i].Result = "";
 
-                director.SetHunter(i, null);
+                _dispatchDirector.SetHunter(i, null, portal);
             }
         }
 
         _dispatchButton.interactable = hunters.Count() > 0;
+    }
 
-        var aliveCount = _hunterAlives.Count(alive => alive);
-        if (aliveCount == 0)
+    private IEnumerator HideTransitionRoutine()
+    {
+        _transitionImage.fillOrigin = 0;
+        _transitionImage.fillAmount = 0;
+        while (_transitionImage.fillAmount < 1)
         {
-            _resultTitle.text = "파견 실패";
-            _resultSubTitle.text = "모든 헌터가 사망했습니다.";
+            _transitionImage.fillAmount += Time.deltaTime * 2;
+            yield return null;
         }
-        else
+    }
+
+    private IEnumerator ShowTransitionRoutine()
+    {
+        _transitionImage.fillOrigin = 1;
+        _transitionImage.fillAmount = 1;
+        while (_transitionImage.fillAmount > 0)
         {
-            _resultTitle.text = "파견 성공";
-            _resultSubTitle.text = $"{aliveCount}명의 헌터가 생존했습니다.";
+            _transitionImage.fillAmount -= Time.deltaTime * 2;
+            yield return null;
         }
     }
 }

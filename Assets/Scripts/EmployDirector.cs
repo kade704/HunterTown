@@ -1,12 +1,17 @@
-using System.Linq;
 using UnityEngine;
 
 public class EmployDirector : MonoBehaviour
 {
-    [SerializeField] private EmployHunter[] _employHunter = new EmployHunter[4];
     [SerializeField] private string[] _nameTemplates;
 
-    public EmployHunter[] EmployHunter => _employHunter;
+    private EmployHunter[] _employHunters;
+
+    public EmployHunter[] EmployHunters => _employHunters;
+
+    private void Awake()
+    {
+        _employHunters = GetComponentsInChildren<EmployHunter>();
+    }
 
     void Start()
     {
@@ -22,13 +27,15 @@ public class EmployDirector : MonoBehaviour
             Debug.LogError("Invalid index");
 
         var day = GameManager.Instance.GetSystem<TimeSystem>().Day.Total;
-        var stat = 13 + (day * day / 1500);
-        var hp = Random.Range(0, stat + 1 - 6) + 3;
-        var damage = stat - hp;
+        var totalStat = 13 + (day * day / 1500);
+        totalStat = (int)(totalStat * Random.Range(0.9f, 1.1f));
 
-        _employHunter[index].Name = _nameTemplates[Random.Range(0, _nameTemplates.Length)];
-        _employHunter[index].HP = hp;
-        _employHunter[index].Damage = damage;
-        _employHunter[index].RandomCustomize();
+        var hp = Random.Range(0, totalStat + 1 - 6) + 3;
+        var damage = totalStat - hp;
+
+        _employHunters[index].Name = _nameTemplates[Random.Range(0, _nameTemplates.Length)];
+        _employHunters[index].HP = hp;
+        _employHunters[index].Damage = damage;
+        _employHunters[index].RandomCustomize();
     }
 }

@@ -8,7 +8,6 @@ public class DispatchMonster : MonoBehaviour
     private AvatarCustomize _avatarCustomize;
     private Vector2 _startPosition;
 
-    public AvatarCustomize AvatarCustomize => _avatarCustomize;
     public Vector2 StartPosition => _startPosition;
 
     void Awake()
@@ -54,10 +53,12 @@ public class DispatchMonster : MonoBehaviour
     {
         RandomCustomize();
         _animator.SetTrigger("Respawn");
-        transform.position = _startPosition + new Vector2(1, 0);
-        _animator.SetFloat("RunState", 0.5f);
-        yield return MotionUtil.MoveToRoutine(transform, _startPosition, 1);
-        _animator.SetFloat("RunState", 0);
+        yield return MotionUtil.MoveToRoutine(transform, _startPosition - new Vector2(1, 0), 1);
+    }
+
+    public IEnumerator LeaveRoutine()
+    {
+        yield return MotionUtil.MoveToRoutine(transform, _startPosition - new Vector2(4, 0), 1);
     }
 
     public void RandomCustomize()
@@ -74,6 +75,7 @@ public class DispatchMonster : MonoBehaviour
 
     public void Die()
     {
+        print("asdasdasdad");
         _animator.SetTrigger("Die");
     }
 }

@@ -95,7 +95,7 @@ public class UIDispatchPanel : MonoBehaviour
 
         yield return ShowTransitionRoutine();
 
-        yield return _dispatchDirector.BattleRoutine(_targetPortal);
+        yield return _dispatchDirector.BattleRoutine();
 
         _resultPanel.GetComponent<UIDispatchResultPanel>().Initialize();
         UIUtil.ShowCanvasGroup(_resultPanel);

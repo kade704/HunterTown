@@ -73,7 +73,7 @@ public class Hunter : MonoBehaviour
     private void Update()
     {
         _sortingGroup.sortingOrder = 300 - Mathf.FloorToInt(transform.position.y * 10) + 1;
-        _interactable.Description = $"체력: {_defaultHp}\n공격력: {_defaultDamage}\n\n방어력: {Viability}\n전투력: {CombatPower}";
+        _interactable.Description = $"체력: {_defaultHp}\n공격력: {_defaultDamage}\n";
     }
 
 

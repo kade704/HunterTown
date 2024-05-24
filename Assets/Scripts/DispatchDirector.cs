@@ -8,8 +8,9 @@ public class DispatchDirector : MonoBehaviour
     [SerializeField] private Sprite _hellBackground;
 
     private DispatchHunter[] _dispatchHunters;
-    private DispatchMonster _monster;
-    private SpriteRenderer _portal;
+    private DispatchMonster _dispatchMonster;
+    private DispatchPortal _dispatchPortal;
+    private Camera _camera;
     private SpriteRenderer _background;
 
     public DispatchHunter[] DispatchHunters => _dispatchHunters;
@@ -17,8 +18,8 @@ public class DispatchDirector : MonoBehaviour
     private void Awake()
     {
         _dispatchHunters = GetComponentsInChildren<DispatchHunter>();
-        _monster = GetComponentInChildren<DispatchMonster>();
-        _portal = transform.Find("Portal").GetComponent<SpriteRenderer>();
+        _dispatchMonster = GetComponentInChildren<DispatchMonster>();
+        _dispatchPortal = GetComponentInChildren<DispatchPortal>();
         _background = transform.Find("Background").GetComponent<SpriteRenderer>();
     }
 
@@ -46,42 +47,81 @@ public class DispatchDirector : MonoBehaviour
     {
         var dispatchHunters = _dispatchHunters.Where(hunter => hunter.Hunter != null).ToArray();
 
-        for (int i = dispatchHunters.Length - 1; i >= 1; i--)
+        for (int i = 0; i < dispatchHunters.Length; i++)
         {
-            StartCoroutine(dispatchHunters[i].EnterPortalRoutine(_portal.transform));
+            StartCoroutine(dispatchHunters[i].EnterPortalRoutine(_dispatchPortal.transform));
             yield return new WaitForSeconds(0.5f);
         }
 
-        yield return dispatchHunters[0].EnterPortalRoutine(_portal.transform);
+        yield return new WaitForSeconds(2);
+    }
+
+    public IEnumerator ExitPortal()
+    {
+        var dispatchHunters = _dispatchHunters.Where(hunter => hunter.Hunter != null).ToArray();
+
+        for (int i = 0; i < dispatchHunters.Length; i++)
+        {
+            StartCoroutine(dispatchHunters[i].ExitPortalRoutine());
+            yield return new WaitForSeconds(0.5f);
+        }
+
+        yield return new WaitForSeconds(2);
     }
 
     public void PrepareBattle()
     {
         var dispatchHunters = _dispatchHunters.Where(hunter => hunter.Hunter != null).ToArray();
 
-        _portal.enabled = false;
-        _monster.AvatarCustomize.ShowAvatar();
+        _dispatchPortal.MoveLeft();
 
         for (int i = 0; i < dispatchHunters.Length; i++)
         {
-            dispatchHunters[i].transform.position = dispatchHunters[i].StartPosition;
-            dispatchHunters[i].AvatarCustomize.ShowAvatar();
+            dispatchHunters[i].transform.position = _dispatchPortal.transform.position;
         }
 
         _background.sprite = _hellBackground;
     }
 
-    public IEnumerator BattleRoutine(Portal portal)
+    private IEnumerator MarchRoutine()
     {
+        var dispatchHunters = _dispatchHunters.Where(hunter => hunter.Hunter != null).ToArray();
+
+        for (int i = 0; i < dispatchHunters.Length; i++)
+        {
+            dispatchHunters[i].SetMovement(true);
+        }
+
+        yield return new WaitForSeconds(3f);
+
+        yield return _dispatchMonster.RespawnRoutine();
+
+        for (int i = 0; i < dispatchHunters.Length; i++)
+        {
+            dispatchHunters[i].SetMovement(false);
+        }
+    }
+
+    public IEnumerator BattleRoutine()
+    {
+        yield return ExitPortal();
+
+        yield return new WaitForSeconds(1f);
+
+        StartCoroutine(_dispatchPortal.LeaveRoutine());
+        yield return MarchRoutine();
+
+        yield return new WaitForSeconds(1f);
+
         var dispatchHunters = _dispatchHunters.Where(hunter => hunter.Hunter != null).ToArray();
 
         for (int i = dispatchHunters.Length - 1; i >= 0; i--)
         {
-            yield return dispatchHunters[i].AttackBeginRoutine(_monster.StartPosition - new Vector2(0.3f, 0));
+            yield return dispatchHunters[i].AttackBeginRoutine((Vector2)_dispatchMonster.transform.position - new Vector2(0.3f, 0));
 
             if (!dispatchHunters[i].Death)
             {
-                _monster.Die();
+                _dispatchMonster.Die();
                 yield return new WaitForSeconds(0.5f);
             }
 
@@ -90,19 +130,16 @@ public class DispatchDirector : MonoBehaviour
 
             if (!dispatchHunters[i].Death)
             {
-                yield return _monster.RespawnRoutine();
+                yield return MarchRoutine();
             }
             else
             {
-                yield return _monster.AttackBeginRoutine(dispatchHunters[i].StartPosition + new Vector2(0.3f, 0));
+                yield return _dispatchMonster.AttackBeginRoutine((Vector2)dispatchHunters[i].transform.position + new Vector2(0.3f, 0));
                 dispatchHunters[i].Die();
-                GameManager.Instance.GetSystem<LoggerSystem>().LogError($"{dispatchHunters[i].Hunter.DisplayName}이(가) 사망했습니다.");
-                GameManager.Instance.GetSystem<HunterSpawner>().RemoveHunter(dispatchHunters[i].Hunter);
+
+                yield return _dispatchMonster.AttackEndRoutine();
             }
 
-            yield return new WaitForSeconds(0.5f);
-
-            yield return _monster.AttackEndRoutine();
             yield return new WaitForSeconds(0.5f);
         }
     }
@@ -126,8 +163,16 @@ public class DispatchDirector : MonoBehaviour
 
             foreach (var dispatchHunter in dispatchHunters)
             {
-                dispatchHunter.Hunter.DefaultDamage += dispatchHunter.IncleaseDamage;
-                dispatchHunter.Hunter.DefaultHp += dispatchHunter.IncleaseHP;
+                if (dispatchHunter.Death)
+                {
+                    GameManager.Instance.GetSystem<LoggerSystem>().LogError($"{dispatchHunter.Hunter.DisplayName}이(가) 사망했습니다.");
+                    GameManager.Instance.GetSystem<HunterSpawner>().RemoveHunter(dispatchHunter.Hunter);
+                }
+                else
+                {
+                    dispatchHunter.Hunter.DefaultDamage += dispatchHunter.IncleaseDamage;
+                    dispatchHunter.Hunter.DefaultHp += dispatchHunter.IncleaseHP;
+                }
             }
 
             GameManager.Instance.GetSystem<LoggerSystem>().LogInfo("파견에 성공했습니다. 포탈이 사라집니다.");
@@ -145,8 +190,8 @@ public class DispatchDirector : MonoBehaviour
         {
             _dispatchHunters[i].Initialize();
         }
-        _monster.Initialize();
-        _portal.enabled = true;
+        _dispatchMonster.Initialize();
+        _dispatchPortal.MoveRight();
         _background.sprite = _natureBackground;
     }
 }

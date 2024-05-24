@@ -78,6 +78,14 @@ public class DispatchHunter : MonoBehaviour
         _avatarCustomize.HideAvatar();
     }
 
+    public IEnumerator ExitPortalRoutine()
+    {
+        _avatarCustomize.ShowAvatar();
+        _animator.SetFloat("RunState", 0.5f);
+        yield return MotionUtil.MoveToRoutine(transform, _startPosition, 1);
+        _animator.SetFloat("RunState", 0);
+    }
+
     public IEnumerator AttackBeginRoutine(Vector2 position)
     {
         _animator.SetFloat("RunState", 0.5f);
@@ -98,9 +106,13 @@ public class DispatchHunter : MonoBehaviour
         _animator.SetFloat("RunState", 0);
     }
 
+    public void SetMovement(bool value)
+    {
+        _animator.SetFloat("RunState", value ? 0.5f : 0);
+    }
+
     public void Die()
     {
         _animator.SetTrigger("Die");
-        _death = true;
     }
 }

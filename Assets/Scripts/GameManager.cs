@@ -7,9 +7,9 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     private static GameManager _instance;
-    private Dictionary<string, MonoBehaviour> _systems = new();
+    private readonly Dictionary<string, MonoBehaviour> _systems = new();
 
-    private bool _loadFromSave = false;
+    private int _selectedGame = 1;
 
     public static GameManager Instance => _instance;
 
@@ -56,27 +56,16 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F1))
-        {
-            LoadGame();
-        }
-
         if (Input.GetKeyDown(KeyCode.F2))
         {
             SaveGame();
         }
     }
 
-    public void NewGame()
-    {
-        _loadFromSave = false;
-        SceneManager.LoadScene("Game");
-    }
-
     private void InitializeGame()
     {
-        var savePath = Application.persistentDataPath + "/SaveData.json";
-        if (!File.Exists(savePath) || !_loadFromSave)
+        var savePath = Application.persistentDataPath + $"/SaveData{_selectedGame}.json";
+        if (!File.Exists(savePath))
         {
             var player = GetSystem<Player>();
             player.Money = 10000;
@@ -103,9 +92,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void LoadGame()
+    public void LoadGame(int game)
     {
-        _loadFromSave = true;
+        _selectedGame = game;
         SceneManager.LoadScene("Game");
     }
 
@@ -117,7 +106,7 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        var savePath = Application.persistentDataPath + "/SaveData.json";
+        var savePath = Application.persistentDataPath + $"/SaveData{_selectedGame}.json";
         var root = new JObject
         {
             ["player"] = GetSystem<Player>().Serialize(),

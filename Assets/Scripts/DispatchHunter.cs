@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 
 public class DispatchHunter : MonoBehaviour
@@ -7,17 +6,24 @@ public class DispatchHunter : MonoBehaviour
     private AvatarCustomize _avatarCustomize;
     private Vector2 _startPosition;
     private Hunter _hunter;
-    private bool _death;
+    private bool _willDeath;
+    private bool _isDeath;
     private int _incleaseHP;
     private int _incleaseDamage;
 
     public AvatarCustomize AvatarCustomize => _avatarCustomize;
     public Vector2 StartPosition => _startPosition;
 
-    public bool Death
+    public bool WillDeath
     {
-        get => _death;
-        set => _death = value;
+        get => _willDeath;
+        set => _willDeath = value;
+    }
+
+    public bool IsDeath
+    {
+        get => _isDeath;
+        set => _isDeath = value;
     }
 
     public int IncleaseHP
@@ -62,48 +68,9 @@ public class DispatchHunter : MonoBehaviour
         _startPosition = transform.position;
     }
 
-    public void Initialize()
+    public void SetFlip(bool value)
     {
-        _death = false;
-        _animator.SetFloat("RunState", 0);
-        _animator.SetTrigger("Respawn");
-        _avatarCustomize.HideAvatar();
-    }
-
-    public IEnumerator EnterPortalRoutine(Transform portal)
-    {
-        _animator.SetFloat("RunState", 0.5f);
-        yield return MotionUtil.MoveToRoutine(transform, portal.position, 1);
-        _animator.SetFloat("RunState", 0);
-        _avatarCustomize.HideAvatar();
-    }
-
-    public IEnumerator ExitPortalRoutine()
-    {
-        _avatarCustomize.ShowAvatar();
-        _animator.SetFloat("RunState", 0.5f);
-        yield return MotionUtil.MoveToRoutine(transform, _startPosition, 1);
-        _animator.SetFloat("RunState", 0);
-    }
-
-    public IEnumerator AttackBeginRoutine(Vector2 position)
-    {
-        _animator.SetFloat("RunState", 0.5f);
-        yield return MotionUtil.MoveToRoutine(transform, position, 3f);
-
-        _animator.SetFloat("RunState", 0.5f);
-        _animator.SetTrigger("Attack");
-    }
-
-    public IEnumerator AttackEndRoutine()
-    {
-        transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
-
-        _animator.SetFloat("RunState", 0.5f);
-        yield return MotionUtil.MoveToRoutine(transform, _startPosition, 3f);
-        transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
-
-        _animator.SetFloat("RunState", 0);
+        transform.localScale = new Vector3(value ? -1 : 1, 1, 1);
     }
 
     public void SetMovement(bool value)
@@ -114,5 +81,15 @@ public class DispatchHunter : MonoBehaviour
     public void Die()
     {
         _animator.SetTrigger("Die");
+    }
+
+    public void Attack()
+    {
+        _animator.SetTrigger("Attack");
+    }
+
+    public void Respawn()
+    {
+        _animator.SetTrigger("Respawn");
     }
 }

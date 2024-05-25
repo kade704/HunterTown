@@ -28,7 +28,7 @@ public class UIDispatchResultSlot : MonoBehaviour
                 _iconImage.sprite = value.Hunter.Thumbnail;
                 _nameText.text = value.Hunter.DisplayName;
 
-                if (value.Death)
+                if (value.WillDeath)
                 {
                     _deathText.enabled = true;
                     _hpText.enabled = false;

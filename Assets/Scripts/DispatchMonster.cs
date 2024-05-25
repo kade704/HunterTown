@@ -22,45 +22,6 @@ public class DispatchMonster : MonoBehaviour
         RandomCustomize();
     }
 
-    public void Initialize()
-    {
-        _animator.SetFloat("RunState", 0);
-        _animator.SetTrigger("Respawn");
-        _avatarCustomize.HideAvatar();
-    }
-
-    public IEnumerator AttackBeginRoutine(Vector2 position)
-    {
-        _animator.SetFloat("RunState", 0.5f);
-        yield return MotionUtil.MoveToRoutine(transform, position, 3f);
-
-        _animator.SetFloat("RunState", 0.5f);
-        _animator.SetTrigger("Attack");
-    }
-
-    public IEnumerator AttackEndRoutine()
-    {
-        transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
-
-        _animator.SetFloat("RunState", 0.5f);
-        yield return MotionUtil.MoveToRoutine(transform, _startPosition, 3f);
-        transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
-
-        _animator.SetFloat("RunState", 0);
-    }
-
-    public IEnumerator RespawnRoutine()
-    {
-        RandomCustomize();
-        _animator.SetTrigger("Respawn");
-        yield return MotionUtil.MoveToRoutine(transform, _startPosition - new Vector2(1, 0), 1);
-    }
-
-    public IEnumerator LeaveRoutine()
-    {
-        yield return MotionUtil.MoveToRoutine(transform, _startPosition - new Vector2(4, 0), 1);
-    }
-
     public void RandomCustomize()
     {
         var database = GameManager.Instance.GetSystem<CustomizeDatabase>();
@@ -73,9 +34,28 @@ public class DispatchMonster : MonoBehaviour
         _avatarCustomize.Weapon = database.Weapons[Random.Range(0, database.Weapons.Length)];
     }
 
+    public void SetMovement(bool value)
+    {
+        _animator.SetFloat("RunState", value ? 0.5f : 0);
+    }
+
+    public void SetFlip(bool value)
+    {
+        transform.localScale = new Vector3(value ? -1 : 1, 1, 1);
+    }
+
     public void Die()
     {
-        print("asdasdasdad");
         _animator.SetTrigger("Die");
+    }
+
+    public void Attack()
+    {
+        _animator.SetTrigger("Attack");
+    }
+
+    public void Respawn()
+    {
+        _animator.SetTrigger("Respawn");
     }
 }

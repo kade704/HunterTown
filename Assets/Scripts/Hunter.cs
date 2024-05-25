@@ -80,16 +80,13 @@ public class Hunter : MonoBehaviour
     private IEnumerator MoveTargetRoutine()
     {
         Construction clickedConstruction = null;
+        var interactableSelector = GameManager.Instance.GetSystem<InteractableSelector>();
 
         while (clickedConstruction == null)
         {
-            if (Input.GetMouseButtonDown(0))
+            if (interactableSelector.SelectedInteractable && interactableSelector.SelectedInteractable.GetComponent<Construction>())
             {
-                clickedConstruction = GetClickedConstruction();
-                if (clickedConstruction != null && clickedConstruction.Visitable)
-                {
-                    break;
-                }
+                clickedConstruction = interactableSelector.SelectedInteractable.GetComponent<Construction>();
             }
 
             yield return null;
@@ -123,22 +120,6 @@ public class Hunter : MonoBehaviour
         }
 
         GameManager.Instance.GetSystem<PathDrawer>().RemovePath(_movePath);
-    }
-
-    private Construction GetClickedConstruction()
-    {
-        var position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        var colliders = Physics2D.OverlapPointAll(position);
-
-        foreach (var collider in colliders)
-        {
-            if (collider.TryGetComponent<Construction>(out var construction))
-            {
-                return construction;
-            }
-        }
-
-        return null;
     }
 
     public IEnumerator CaptureThumbnailRoutine(int resolution = 64)

@@ -235,6 +235,7 @@ public class Portal : MonoBehaviour, ISerializable, IDeserializable
         {
             probability *= 1.1f;
         }
+        probability = Mathf.Clamp01(probability);
         return probability;
     }
 

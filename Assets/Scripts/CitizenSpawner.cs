@@ -26,6 +26,7 @@ public class CitizenSpawner : MonoBehaviour
         {
             for (int i = 0; i < _citizens.Count - targetCitizenCount; i++)
             {
+                _citizens.RemoveAt(i);
                 Destroy(_citizens[i].gameObject);
             }
         }

@@ -35,9 +35,11 @@ public class UIDispatchResultPanel : MonoBehaviour
     {
         var dispatchHunters = GameManager.Instance.GetSystem<DispatchDirector>().DispatchHunters;
 
-        _titleText.text = dispatchHunters.All(hunter => hunter.Death) ? "파견 실패..." : "파견 성공!";
+        var activeDispatchHunters = dispatchHunters.Where(hunter => hunter.Hunter != null).ToArray();
 
-        var aliveCount = dispatchHunters.Count(hunter => !hunter.Death);
+        _titleText.text = activeDispatchHunters.All(hunter => hunter.WillDeath) ? "파견 실패..." : "파견 성공!";
+
+        var aliveCount = activeDispatchHunters.Count(hunter => !hunter.WillDeath);
         _subTitleText.text = aliveCount > 0 ? $"{aliveCount}명의 사냥꾼이 생존했습니다." : "모든 헌터가 사망했습니다.";
 
         for (int i = 0; i < _dispatchResultSlots.Length; i++)

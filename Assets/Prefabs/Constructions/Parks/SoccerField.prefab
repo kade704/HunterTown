@@ -127,7 +127,7 @@ MonoBehaviour:
   _maintenanceCost: 130
   _displayName: "\uCD95\uAD6C\uC7A5"
   _description: "\uC2DC\uBBFC\uB4E4\uC5D0 \uB180\uAC70\uB9AC\uB97C \uC81C\uACF5\uD55C\uB2E4.\n\n\uC2DC\uBBFC
-    \uC99D\uAC00 (+4/\uC77C)"
+    \uC99D\uAC00 (+4/\uC77C)\n[\uD574\uAE08\uC870\uAC74: \uC2DC\uBBFC35]"
   _defaultSprite: {fileID: 967448473, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
   _size: 2
   _buildable: 1

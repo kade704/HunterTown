@@ -4,23 +4,21 @@ using UnityEngine;
 
 public class DispatchDirector : MonoBehaviour
 {
-    [SerializeField] private Sprite _natureBackground;
-    [SerializeField] private Sprite _hellBackground;
-
+    private Transform _camera;
     private DispatchHunter[] _dispatchHunters;
-    private DispatchMonster _dispatchMonster;
-    private DispatchPortal _dispatchPortal;
-    private Camera _camera;
-    private SpriteRenderer _background;
+    private DispatchMonster[] _dispatchMonster;
+    private Transform _dispatchEnterPortal;
+    private Transform _dispatchExitPortal;
 
     public DispatchHunter[] DispatchHunters => _dispatchHunters;
 
     private void Awake()
     {
+        _camera = transform.Find("Camera");
         _dispatchHunters = GetComponentsInChildren<DispatchHunter>();
-        _dispatchMonster = GetComponentInChildren<DispatchMonster>();
-        _dispatchPortal = GetComponentInChildren<DispatchPortal>();
-        _background = transform.Find("Background").GetComponent<SpriteRenderer>();
+        _dispatchMonster = GetComponentsInChildren<DispatchMonster>();
+        _dispatchEnterPortal = transform.Find("EnterPortal");
+        _dispatchExitPortal = transform.Find("ExitPortal");
     }
 
     public void SetHunter(int index, Hunter hunter, Portal portal)
@@ -32,8 +30,9 @@ public class DispatchDirector : MonoBehaviour
 
         if (hunter != null)
         {
-            var death = Random.Range(0, 1) > portal.CalcHunterDeathProbability(hunter);
-            _dispatchHunters[index].Death = death;
+            var death = Random.value < portal.CalcHunterDeathProbability(hunter);
+            print(death);
+            _dispatchHunters[index].WillDeath = death;
 
             var reward = portal.HunterDispatchReward;
             var damage = Random.Range(0, reward);
@@ -49,11 +48,11 @@ public class DispatchDirector : MonoBehaviour
 
         for (int i = 0; i < dispatchHunters.Length; i++)
         {
-            StartCoroutine(dispatchHunters[i].EnterPortalRoutine(_dispatchPortal.transform));
-            yield return new WaitForSeconds(0.5f);
+            dispatchHunters[i].SetMovement(true);
+            yield return MotionUtil.MoveToRoutine(dispatchHunters[i].transform, _dispatchEnterPortal.position, 2);
+            dispatchHunters[i].SetMovement(false);
+            dispatchHunters[i].AvatarCustomize.HideAvatar();
         }
-
-        yield return new WaitForSeconds(2);
     }
 
     public IEnumerator ExitPortal()
@@ -62,43 +61,44 @@ public class DispatchDirector : MonoBehaviour
 
         for (int i = 0; i < dispatchHunters.Length; i++)
         {
-            StartCoroutine(dispatchHunters[i].ExitPortalRoutine());
-            yield return new WaitForSeconds(0.5f);
+            dispatchHunters[i].AvatarCustomize.ShowAvatar();
+            dispatchHunters[i].SetMovement(true);
+            yield return MotionUtil.MoveToRoutine(dispatchHunters[i].transform, dispatchHunters[i].StartPosition + new Vector2(0, -3), 2);
+            dispatchHunters[i].SetMovement(false);
         }
-
-        yield return new WaitForSeconds(2);
     }
 
     public void PrepareBattle()
     {
+        _camera.transform.localPosition = new Vector3(0, -3, -10);
         var dispatchHunters = _dispatchHunters.Where(hunter => hunter.Hunter != null).ToArray();
-
-        _dispatchPortal.MoveLeft();
 
         for (int i = 0; i < dispatchHunters.Length; i++)
         {
-            dispatchHunters[i].transform.position = _dispatchPortal.transform.position;
+            dispatchHunters[i].transform.position = _dispatchExitPortal.position;
         }
-
-        _background.sprite = _hellBackground;
     }
 
     private IEnumerator MarchRoutine()
     {
         var dispatchHunters = _dispatchHunters.Where(hunter => hunter.Hunter != null).ToArray();
 
-        for (int i = 0; i < dispatchHunters.Length; i++)
+        var aliveHunters = dispatchHunters.Where(hunter => !hunter.IsDeath).ToArray();
+
+        for (int i = 0; i < aliveHunters.Length; i++)
         {
-            dispatchHunters[i].SetMovement(true);
+            aliveHunters[i].SetMovement(true);
         }
 
-        yield return new WaitForSeconds(3f);
-
-        yield return _dispatchMonster.RespawnRoutine();
-
-        for (int i = 0; i < dispatchHunters.Length; i++)
+        for (int i = 0; i < aliveHunters.Length; i++)
         {
-            dispatchHunters[i].SetMovement(false);
+            StartCoroutine(MotionUtil.MoveToRoutine(aliveHunters[i].transform, (Vector2)aliveHunters[i].transform.position + new Vector2(4, 0), 1));
+        }
+        yield return MotionUtil.MoveToRoutine(_camera.transform, (Vector2)_camera.transform.position + new Vector2(4, 0), 1);
+
+        for (int i = 0; i < aliveHunters.Length; i++)
+        {
+            aliveHunters[i].SetMovement(false);
         }
     }
 
@@ -108,39 +108,50 @@ public class DispatchDirector : MonoBehaviour
 
         yield return new WaitForSeconds(1f);
 
-        StartCoroutine(_dispatchPortal.LeaveRoutine());
-        yield return MarchRoutine();
-
-        yield return new WaitForSeconds(1f);
-
         var dispatchHunters = _dispatchHunters.Where(hunter => hunter.Hunter != null).ToArray();
 
-        for (int i = dispatchHunters.Length - 1; i >= 0; i--)
+        for (int i = 0; i < dispatchHunters.Length; i++)
         {
-            yield return dispatchHunters[i].AttackBeginRoutine((Vector2)_dispatchMonster.transform.position - new Vector2(0.3f, 0));
+            yield return MarchRoutine();
 
-            if (!dispatchHunters[i].Death)
+            yield return new WaitForSeconds(1f);
+
+            var startPosition = (Vector2)_dispatchHunters[i].transform.position;
+
+            _dispatchHunters[i].SetFlip(true);
+            _dispatchHunters[i].SetMovement(true);
+            yield return MotionUtil.MoveToRoutine(_dispatchHunters[i].transform, (Vector2)_dispatchMonster[i].transform.position - new Vector2(0.3f, 0), 3);
+            _dispatchHunters[i].SetMovement(false);
+
+            var attackCount = Random.Range(0, 4);
+            _dispatchHunters[i].Attack();
+            _dispatchMonster[i].Attack();
+            for (int j = 0; j < attackCount; j++)
             {
-                _dispatchMonster.Die();
-                yield return new WaitForSeconds(0.5f);
+                yield return new WaitForSeconds(1);
+                _dispatchHunters[i].Attack();
+                _dispatchMonster[i].Attack();
             }
 
-            yield return dispatchHunters[i].AttackEndRoutine();
-            yield return new WaitForSeconds(0.5f);
-
-            if (!dispatchHunters[i].Death)
+            if (_dispatchHunters[i].WillDeath)
             {
-                yield return MarchRoutine();
+                _dispatchHunters[i].Die();
+                _dispatchHunters[i].IsDeath = true;
             }
             else
             {
-                yield return _dispatchMonster.AttackBeginRoutine((Vector2)dispatchHunters[i].transform.position + new Vector2(0.3f, 0));
-                dispatchHunters[i].Die();
+                _dispatchMonster[i].Die();
 
-                yield return _dispatchMonster.AttackEndRoutine();
+                yield return new WaitForSeconds(0.5f);
+
+                _dispatchHunters[i].SetFlip(false);
+                _dispatchHunters[i].SetMovement(true);
+                yield return MotionUtil.MoveToRoutine(_dispatchHunters[i].transform, startPosition, 3);
+                _dispatchHunters[i].SetMovement(false);
+                _dispatchHunters[i].SetFlip(true);
             }
 
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(1);
         }
     }
 
@@ -148,7 +159,7 @@ public class DispatchDirector : MonoBehaviour
     {
         var dispatchHunters = _dispatchHunters.Where(hunter => hunter.Hunter != null).ToArray();
 
-        if (dispatchHunters.Any(hunter => !hunter.Death))
+        if (dispatchHunters.Any(hunter => !hunter.WillDeath))
         {
             var earnedMoney = portal.Power * 10f;
             if (portal.ContainAbility("crystal_portal"))
@@ -161,20 +172,6 @@ public class DispatchDirector : MonoBehaviour
             }
             GameManager.Instance.GetSystem<Player>().Money += (int)earnedMoney;
 
-            foreach (var dispatchHunter in dispatchHunters)
-            {
-                if (dispatchHunter.Death)
-                {
-                    GameManager.Instance.GetSystem<LoggerSystem>().LogError($"{dispatchHunter.Hunter.DisplayName}이(가) 사망했습니다.");
-                    GameManager.Instance.GetSystem<HunterSpawner>().RemoveHunter(dispatchHunter.Hunter);
-                }
-                else
-                {
-                    dispatchHunter.Hunter.DefaultDamage += dispatchHunter.IncleaseDamage;
-                    dispatchHunter.Hunter.DefaultHp += dispatchHunter.IncleaseHP;
-                }
-            }
-
             GameManager.Instance.GetSystem<LoggerSystem>().LogInfo("파견에 성공했습니다. 포탈이 사라집니다.");
             GameManager.Instance.GetSystem<PortalGenerator>().RemovePortal(portal.GetComponent<Portal>());
         }
@@ -182,16 +179,39 @@ public class DispatchDirector : MonoBehaviour
         {
             GameManager.Instance.GetSystem<LoggerSystem>().LogError("파견에 실패했습니다.");
         }
+
+        foreach (var dispatchHunter in dispatchHunters)
+        {
+            if (dispatchHunter.WillDeath)
+            {
+                GameManager.Instance.GetSystem<LoggerSystem>().LogError($"{dispatchHunter.Hunter.DisplayName}이(가) 사망했습니다.");
+                GameManager.Instance.GetSystem<HunterSpawner>().RemoveHunter(dispatchHunter.Hunter);
+            }
+            else
+            {
+                dispatchHunter.Hunter.DefaultDamage += dispatchHunter.IncleaseDamage;
+                dispatchHunter.Hunter.DefaultHp += dispatchHunter.IncleaseHP;
+            }
+        }
     }
 
     public void Initialize()
     {
+        _camera.localPosition = Vector3.zero;
+
         for (int i = 0; i < 4; i++)
         {
-            _dispatchHunters[i].Initialize();
+            _dispatchHunters[i].Respawn();
+            _dispatchHunters[i].SetFlip(true);
+            _dispatchHunters[i].SetMovement(false);
+            _dispatchHunters[i].Hunter = null;
+            _dispatchHunters[i].IsDeath = false;
+            _dispatchHunters[i].WillDeath = false;
+            _dispatchHunters[i].AvatarCustomize.HideAvatar();
+            _dispatchHunters[i].transform.position = _dispatchHunters[i].StartPosition;
+
+            _dispatchMonster[i].Respawn();
+            _dispatchMonster[i].RandomCustomize();
         }
-        _dispatchMonster.Initialize();
-        _dispatchPortal.MoveRight();
-        _background.sprite = _natureBackground;
     }
 }

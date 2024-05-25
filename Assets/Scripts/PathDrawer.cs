@@ -69,7 +69,7 @@ public class PathDrawer : MonoBehaviour
         {
             SpriteRenderer renderer = new GameObject().AddComponent<SpriteRenderer>();
 
-            renderer.sortingOrder = -10;
+            renderer.sortingOrder = -9;
             renderer.color = color;
             renderer.transform.SetParent(newArrow.Container);
             renderer.transform.position = gridmap.CellToWorld(path.Nodes[i].Position);
@@ -153,7 +153,6 @@ public class PathDrawer : MonoBehaviour
                 }
             }
 
-            renderer.sortingOrder = 300 - Mathf.FloorToInt(renderer.transform.position.y * 10) + 1;
             _pathArrows[path].Renderers.Add(renderer);
         }
     }

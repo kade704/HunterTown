@@ -67,7 +67,7 @@ public class GameManager : MonoBehaviour
         var savePath = Application.persistentDataPath + $"/SaveData{_selectedGame}.json";
         if (!File.Exists(savePath))
         {
-            var player = GetSystem<Player>();
+            var player = GetSystem<MoneySystem>();
             player.Money = 10000;
 
             var constructionGridMap = GetSystem<ConstructionGridmap>();
@@ -84,7 +84,9 @@ public class GameManager : MonoBehaviour
         else
         {
             var saveData = JObject.Parse(File.ReadAllText(savePath));
-            GetSystem<Player>().Deserialize(saveData["player"]);
+            GetSystem<TimeSystem>().Deserialize(saveData["time"]);
+            GetSystem<MoneySystem>().Deserialize(saveData["money"]);
+            GetSystem<PopulationSystem>().Deserialize(saveData["population"]);
             GetSystem<HunterSpawner>().Deserialize(saveData["hunters"]);
             GetSystem<ConstructionGridmap>().Deserialize(saveData["constructions"]);
 
@@ -109,7 +111,9 @@ public class GameManager : MonoBehaviour
         var savePath = Application.persistentDataPath + $"/SaveData{_selectedGame}.json";
         var root = new JObject
         {
-            ["player"] = GetSystem<Player>().Serialize(),
+            ["time"] = GetSystem<TimeSystem>().Serialize(),
+            ["money"] = GetSystem<MoneySystem>().Serialize(),
+            ["population"] = GetSystem<PopulationSystem>().Serialize(),
             ["hunters"] = GetSystem<HunterSpawner>().Serialize(),
             ["constructions"] = GetSystem<ConstructionGridmap>().Serialize()
         };

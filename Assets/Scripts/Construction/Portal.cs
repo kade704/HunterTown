@@ -5,6 +5,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 
 [RequireComponent(typeof(Construction))]
+[RequireComponent(typeof(Visitable))]
 public class Portal : MonoBehaviour, ISerializable, IDeserializable
 {
     [SerializeField] private SpriteRenderer _portalRenderer;
@@ -21,8 +22,9 @@ public class Portal : MonoBehaviour, ISerializable, IDeserializable
     [ReadOnly][SerializeField] private bool _difficultyVisibility = true;
     [ReadOnly][SerializeField] private bool[] _abilityVisibilities = new bool[3] { true, true, true };
     private int _startDay;
-    private int _waveDay;
+    private int _waveDay = int.MaxValue;
     private Construction _construction;
+    private Visitable _visitable;
 
 
     public float Power
@@ -88,6 +90,7 @@ public class Portal : MonoBehaviour, ISerializable, IDeserializable
 
     public bool[] AbilityVisibilities => _abilityVisibilities;
     public Construction Construction => _construction;
+    public Visitable Visitable => _visitable;
 
     public char Rank
     {
@@ -113,6 +116,10 @@ public class Portal : MonoBehaviour, ISerializable, IDeserializable
     private void Awake()
     {
         _construction = GetComponent<Construction>();
+        _visitable = GetComponent<Visitable>();
+
+        _construction.OnBuilded.AddListener(OnBuilded);
+        _construction.OnDestroyed.AddListener(OnDestroyed);
 
         // _onInteracted.AddListener((id) =>
         //  {
@@ -128,15 +135,18 @@ public class Portal : MonoBehaviour, ISerializable, IDeserializable
         StartCoroutine(AnimateRoutine());
 
         var timeSystem = GameManager.Instance.GetSystem<TimeSystem>();
-        _startDay = timeSystem.Day.Total;
-        _waveDay = timeSystem.Day.Total + WaveTime;
-
         timeSystem.Day.OnChanged.AddListener(OnDayChanged);
 
-        _construction.OnVisitorChanged.AddListener(OnVisitorChanged);
-        _construction.OnDestroyed.AddListener(OnDestroyed);
+        _visitable.OnVisitorChanged.AddListener(OnVisitorChanged);
 
         _progressRenderer.material.SetFloat("_Value", 1);
+    }
+
+    private void OnBuilded()
+    {
+        var timeSystem = GameManager.Instance.GetSystem<TimeSystem>();
+        _startDay = timeSystem.Day.Total;
+        _waveDay = timeSystem.Day.Total + WaveTime;
     }
 
     private void OnDestroyed()
@@ -147,9 +157,9 @@ public class Portal : MonoBehaviour, ISerializable, IDeserializable
 
     private void OnVisitorChanged()
     {
-        for (int i = 0; i < _construction.VisitedHunters.Length; i++)
+        for (int i = 0; i < _visitable.VisitedHunters.Length; i++)
         {
-            _construction.VisitedHunters[i].transform.position = _visitorPositions[i].position;
+            _visitable.VisitedHunters[i].transform.position = _visitorPositions[i].position;
         }
     }
 
@@ -174,7 +184,7 @@ public class Portal : MonoBehaviour, ISerializable, IDeserializable
     {
         GameManager.Instance.GetSystem<LoggerSystem>().LogInfo($"탐색이 시작되었습니다.");
 
-        GameManager.Instance.GetSystem<Player>().Money -= Random.Range(30, 70);
+        GameManager.Instance.GetSystem<MoneySystem>().Money -= Random.Range(30, 70);
 
 
         GameManager.Instance.GetSystem<LoggerSystem>().LogInfo($"탐색이 완료되었습니다.");
@@ -281,6 +291,7 @@ public class Portal : MonoBehaviour, ISerializable, IDeserializable
     {
         var data = new JObject
         {
+            ["waveDay"] = _waveDay,
             ["power"] = _defaultPower,
             ["danger"] = _defaultDanger,
             ["difficulty"] = _defaultDifficulty,
@@ -303,6 +314,7 @@ public class Portal : MonoBehaviour, ISerializable, IDeserializable
 
     public void Deserialize(JToken token)
     {
+        _waveDay = token["waveDay"].Value<int>();
         _defaultPower = token["power"].Value<float>();
         _defaultDanger = token["danger"].Value<float>();
         _defaultDifficulty = token["difficulty"].Value<float>();

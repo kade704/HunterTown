@@ -122,7 +122,7 @@ public class UIDispatchPanel : MonoBehaviour
             abilitySlot.Hidden = !portal.AbilityVisibilities[i];
         }
 
-        var hunters = portal.Construction.VisitedHunters;
+        var hunters = portal.Visitable.VisitedHunters;
         for (int i = 0; i < 4; i++)
         {
             if (i < hunters.Length)

@@ -66,7 +66,7 @@ public class UIEmployPanel : MonoBehaviour
 
     private IEnumerator RefreshRoutine()
     {
-        GameManager.Instance.GetSystem<Player>().Money -= 500;
+        GameManager.Instance.GetSystem<MoneySystem>().Money -= 500;
 
         yield return HideTransitionRoutine();
 
@@ -108,7 +108,7 @@ public class UIEmployPanel : MonoBehaviour
         company.RemainEmployeeCount -= 1;
         _remainText.text = $"고용 가능 인원: {company.RemainEmployeeCount}";
 
-        GameManager.Instance.GetSystem<Player>().Money -= 100;
+        GameManager.Instance.GetSystem<MoneySystem>().Money -= 100;
 
         var employDirector = GameManager.Instance.GetSystem<EmployDirector>();
 

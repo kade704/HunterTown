@@ -26,7 +26,14 @@ public class UIOptions : MonoBehaviour
         _ambienceVolumeSlider.onValueChanged.AddListener((value) => audioMixer.AmbienceVolume = value);
         _removeSaveButton.onClick.AddListener(() =>
         {
-            File.Delete(Application.persistentDataPath + "/SaveData.json");
+            if (File.Exists(Application.persistentDataPath + "/SaveData1.json"))
+                File.Delete(Application.persistentDataPath + "/SaveData1.json");
+
+            if (File.Exists(Application.persistentDataPath + "/SaveData2.json"))
+                File.Delete(Application.persistentDataPath + "/SaveData2.json");
+
+            if (File.Exists(Application.persistentDataPath + "/SaveData3.json"))
+                File.Delete(Application.persistentDataPath + "/SaveData3.json");
         });
         _backButton.onClick.AddListener(() =>
         {

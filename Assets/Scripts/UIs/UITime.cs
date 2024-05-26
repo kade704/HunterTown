@@ -1,25 +1,33 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UITimer : MonoBehaviour
+public class UITime : MonoBehaviour
 {
-    [SerializeField] private Text _time;
-    [SerializeField] private Toggle _pauseButton;
-    [SerializeField] private Toggle _resumeButton;
-    [SerializeField] private Toggle _fastButton;
+    private Text _timeText;
+    private Image _progressImage;
+    private Toggle _pauseButton;
+    private Toggle _resumeButton;
+    private Toggle _fastButton;
 
-    private TimeSystem _timeSystem;
-
+    private void Awake()
+    {
+        _timeText = transform.Find("TimeText").GetComponent<Text>();
+        _progressImage = transform.Find("ProgressImage").GetComponent<Image>();
+        _pauseButton = transform.Find("SpeedButtons/PauseButton").GetComponent<Toggle>();
+        _resumeButton = transform.Find("SpeedButtons/ResumeButton").GetComponent<Toggle>();
+        _fastButton = transform.Find("SpeedButtons/FastButton").GetComponent<Toggle>();
+    }
 
     private void Start()
     {
-        _timeSystem = GameManager.Instance.GetSystem<TimeSystem>();
+        var timeSystem = GameManager.Instance.GetSystem<TimeSystem>();
+        _timeText.text = $"{timeSystem.Year.Current}년 {timeSystem.Month.Current}월 {timeSystem.Day.Current}일";
 
         _pauseButton.onValueChanged.AddListener((active) =>
         {
             if (active)
             {
-                _timeSystem.Pause();
+                timeSystem.Pause();
             }
         });
 
@@ -27,7 +35,7 @@ public class UITimer : MonoBehaviour
         {
             if (active)
             {
-                _timeSystem.Resume();
+                timeSystem.Resume();
             }
         });
 
@@ -35,20 +43,18 @@ public class UITimer : MonoBehaviour
         {
             if (active)
             {
-                _timeSystem.Fast();
+                timeSystem.Fast();
             }
         });
 
-        _timeSystem.Hour.OnChanged.AddListener(() =>
+        timeSystem.Day.OnChanged.AddListener(() =>
         {
-            var year = _timeSystem.Year.Current;
-            var month = _timeSystem.Month.Current;
-            var day = _timeSystem.Day.Current;
-            var hour = _timeSystem.Hour.Current;
+            _timeText.text = $"{timeSystem.Year.Current}년 {timeSystem.Month.Current}월 {timeSystem.Day.Current}일";
+        });
 
-            var clock = (hour < 12 ? "오전" : "오후") + " " + (hour % 12 == 0 ? "12" : hour % 12) + ":00";
-
-            _time.text = $"{year}년 {month}월 {day}일   {clock}";
+        timeSystem.Hour.OnChanged.AddListener(() =>
+        {
+            _progressImage.fillAmount = timeSystem.Hour.Current / 24f;
         });
     }
 }

@@ -1325,6 +1325,7 @@ GameObject:
   - component: {fileID: 6625200932925004226}
   - component: {fileID: 3248824799526615361}
   - component: {fileID: -1060310408039384435}
+  - component: {fileID: -2354475400162325190}
   m_Layer: 0
   m_Name: Citizen
   m_TagString: Untagged
@@ -1439,6 +1440,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0ad9bc14cfa15b4192178d34597a759, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-2354475400162325190
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6450463278522870409}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db4b3043542bb394abd7d63a52a6ab68, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _defaultOrder: 1
 --- !u!1 &6553292392576465081
 GameObject:
   m_ObjectHideFlags: 0

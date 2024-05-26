@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
@@ -14,6 +13,9 @@ public class Construction : MonoBehaviour
 
     [SerializeField]
     private int _maintenanceCost;
+
+    [SerializeField]
+    private int _populationCondition;
 
     [SerializeField]
     private string _displayName;
@@ -37,21 +39,12 @@ public class Construction : MonoBehaviour
     [SerializeField]
     private bool _destroyable;
 
-    [SerializeField]
-    private bool _visitable;
 
-    [EnableIf("_visitable")]
-    [SerializeField]
-    private int _visitorCapacity;
-
-    [SerializeField]
-    private int _durability;
-
-    private List<Hunter> _visitedHunters = new();
     private ConstructionGridmap _constructionGridMap;
     private Interactable _interactable;
     private Vector2Int _cellPos;
-    private UnityEvent _onVisitorChanged = new UnityEvent();
+
+
     private UnityEvent _onBuilded = new UnityEvent();
     private UnityEvent _onDestroyed = new UnityEvent();
 
@@ -65,14 +58,11 @@ public class Construction : MonoBehaviour
         get => _constructionGridMap;
         set => _constructionGridMap = value;
     }
-    public int Durability
-    {
-        get => _durability;
-        set => _durability = value;
-    }
+
     public string ID => _id;
     public int Cost => _cost;
     public int MaintenanceCost => _maintenanceCost;
+    public int PopulationCondition => _populationCondition;
     public string DisplayName => _displayName;
     public string Description => _description;
     public Sprite DefaultSprite => _defaultSprite;
@@ -80,11 +70,10 @@ public class Construction : MonoBehaviour
 
     public bool Buildable => _buildable;
     public bool Destroyable => _destroyable;
-    public bool Visitable => _visitable;
-    public Hunter[] VisitedHunters => _visitedHunters.ToArray();
-    public UnityEvent OnVisitorChanged => _onVisitorChanged;
+
     public UnityEvent OnBuilded => _onBuilded;
     public UnityEvent OnDestroyed => _onDestroyed;
+
 
     private void Awake()
     {
@@ -95,23 +84,5 @@ public class Construction : MonoBehaviour
     {
         _interactable.DisplayName = _displayName;
         _interactable.Description = _description;
-    }
-
-    public void EnterVisitor(Hunter hunter)
-    {
-        if (!_visitedHunters.Contains(hunter) && _visitedHunters.Count < _visitorCapacity)
-        {
-            _visitedHunters.Add(hunter);
-            _onVisitorChanged.Invoke();
-        }
-    }
-
-    public void ExitVisitor(Hunter hunter)
-    {
-        if (_visitedHunters.Contains(hunter))
-        {
-            _visitedHunters.Remove(hunter);
-            _onVisitorChanged.Invoke();
-        }
     }
 }

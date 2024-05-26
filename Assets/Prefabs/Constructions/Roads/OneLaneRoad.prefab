@@ -117,10 +117,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _id: '#one_lane_road'
   _cost: 5
-  _maintenanceCost: 0
+  _maintenanceCost: 3
+  _populationCondition: 20
   _displayName: "1\uCC28\uC120 \uB3C4\uB85C"
-  _description: "\uC77C\uBC18\uC801\uC778 \uB3C4\uB85C\uC774\uB2E4.\n\n(\uC774\uB3D9\uC18D\uB3C4:
-    1.7)"
+  _description: "\uC77C\uBC18\uC801\uC778 \uB3C4\uB85C\uC774\uB2E4.\n\n\uC774\uB3D9\uC18D\uB3C4:
+    170%\n\uC720\uC9C0\uBE44: 3\uC6D0/\uC6D4\n\n[\uD574\uAE08\uC870\uAC74: \uC2DC\uBBFC
+    20\uBA85]"
   _defaultSprite: {fileID: 83718644, guid: 9ce137b1be9c78d4683d4c1afb72be4e, type: 3}
   _size: 1
   _buildable: 1

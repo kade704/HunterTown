@@ -9,16 +9,14 @@ public class Monster : MonoBehaviour
     [SerializeField] private SpriteRenderer _progressRenderer;
 
     private int _startHour;
-    private Building _target;
+    private Durable _target;
     private AvatarMovement _avatarMovement;
     private Animator _animator;
-    private SortingGroup _sortingGroup;
     private bool _isDead = false;
 
     private void Awake()
     {
         _animator = GetComponent<Animator>();
-        _sortingGroup = GetComponent<SortingGroup>();
         _avatarMovement = GetComponent<AvatarMovement>();
     }
 
@@ -31,8 +29,6 @@ public class Monster : MonoBehaviour
 
     private void Update()
     {
-        _sortingGroup.sortingOrder = 300 - Mathf.FloorToInt(transform.position.y * 10) + 1;
-
         var timeSystem = GameManager.Instance.GetSystem<TimeSystem>();
         var value = 1 - ((float)timeSystem.Hour.Total - _startHour) / _lifeHour;
 
@@ -53,7 +49,7 @@ public class Monster : MonoBehaviour
         {
             _animator.SetFloat("RunState", 0.5f);
 
-            _target = FindNearestBuilding();
+            _target = FindNearestDurable();
             if (!_target) yield break;
 
             var start = constructionGridMap.WorldToCell(transform.position);
@@ -62,10 +58,10 @@ public class Monster : MonoBehaviour
 
             _animator.SetFloat("RunState", 0);
 
-            while (_target != null && _target.Construction.Durability > 0)
+            while (_target != null && _target.Durability > 0)
             {
                 _animator.SetTrigger("Attack");
-                _target.Construction.Durability -= 1;
+                _target.Durability -= 1;
                 yield return new WaitForSeconds(1);
             }
 
@@ -90,22 +86,22 @@ public class Monster : MonoBehaviour
         GameManager.Instance.GetSystem<MonsterSpawner>().DestroyMonster(this);
     }
 
-    private Building FindNearestBuilding()
+    private Durable FindNearestDurable()
     {
-        var buildings = FindObjectsOfType<Building>().Where(building => building.GetComponent<Portal>() == null).ToArray();
-        Building nearestBuilding = null;
+        var durables = FindObjectsOfType<Durable>();
+        Durable nearestDurable = null;
         var minDistance = float.MaxValue;
 
-        foreach (var building in buildings)
+        foreach (var durable in durables)
         {
-            var distance = Vector2.Distance(transform.position, building.transform.position);
+            var distance = Vector2.Distance(transform.position, durable.transform.position);
             if (distance < minDistance)
             {
                 minDistance = distance;
-                nearestBuilding = building;
+                nearestDurable = durable;
             }
         }
 
-        return nearestBuilding;
+        return nearestDurable;
     }
 }

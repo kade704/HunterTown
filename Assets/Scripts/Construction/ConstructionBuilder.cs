@@ -94,7 +94,7 @@ public class ConstructionBuilder : MonoBehaviour
 
                             _constructionGridMap.BuildConstruction(_selectedConstructionPrefab, draggingCell);
 
-                            GameManager.Instance.GetSystem<Player>().Money -= _selectedConstructionPrefab.Cost;
+                            GameManager.Instance.GetSystem<MoneySystem>().Money -= _selectedConstructionPrefab.Cost;
                         }
                     }
                     GameManager.Instance.GetSystem<AudioController>().PlaySFX("Build");
@@ -159,7 +159,7 @@ public class ConstructionBuilder : MonoBehaviour
                 }
             }
         }
-        else if (_selectedConstructionPrefab.GetComponent<Building>() != null)
+        else if (_selectedConstructionPrefab.GetComponent<Durable>() != null)
         {
             var buildable = CheckBuildingBuildable(cellPos);
 
@@ -172,7 +172,7 @@ public class ConstructionBuilder : MonoBehaviour
             {
                 _constructionGridMap.BuildConstruction(_selectedConstructionPrefab, cellPos);
 
-                GameManager.Instance.GetSystem<Player>().Money -= _selectedConstructionPrefab.Cost;
+                GameManager.Instance.GetSystem<MoneySystem>().Money -= _selectedConstructionPrefab.Cost;
                 GameManager.Instance.GetSystem<AudioController>().PlaySFX("Build");
             }
         }
@@ -199,7 +199,7 @@ public class ConstructionBuilder : MonoBehaviour
 
             if (Input.GetMouseButtonDown(0) && !UIUtil.IsUIObjectOverPointer())
             {
-                GameManager.Instance.GetSystem<Player>().Money += hoveredConstruction.Cost / 2;
+                GameManager.Instance.GetSystem<MoneySystem>().Money += hoveredConstruction.Cost / 2;
                 GameManager.Instance.GetSystem<AudioController>().PlaySFX("Destruction");
                 _constructionGridMap.DestroyConstruction(hoveredConstruction.CellPos);
             }
@@ -215,7 +215,7 @@ public class ConstructionBuilder : MonoBehaviour
     {
         if (_constructionGridMap.IsConstructionExistAt(cellPos))
         {
-            var building = _constructionGridMap.GetConstructionAt(cellPos).GetComponent<Building>();
+            var building = _constructionGridMap.GetConstructionAt(cellPos).GetComponent<Durable>();
             if (building)
             {
                 return false;

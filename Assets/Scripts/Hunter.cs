@@ -1,7 +1,6 @@
 using System.Collections;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 [RequireComponent(typeof(Interactable))]
 public class Hunter : MonoBehaviour
@@ -11,10 +10,10 @@ public class Hunter : MonoBehaviour
     [ReadOnly][SerializeField] private float _defaultDamage;
 
     private Interactable _interactable;
-    private Construction _visitedConstruction;
+    private Visitable _lastVisited;
 
     private Animator _animator;
-    private SortingGroup _sortingGroup;
+
     private Sprite _thumbnail;
     private AvatarMovement _avatarMovement;
     private AvatarCustomize _avatarCustomize;
@@ -44,7 +43,6 @@ public class Hunter : MonoBehaviour
     {
         _animator = GetComponent<Animator>();
         _interactable = GetComponent<Interactable>();
-        _sortingGroup = GetComponent<SortingGroup>();
         _avatarMovement = GetComponent<AvatarMovement>();
         _avatarCustomize = GetComponent<AvatarCustomize>();
     }
@@ -72,7 +70,7 @@ public class Hunter : MonoBehaviour
 
     private void Update()
     {
-        _sortingGroup.sortingOrder = 300 - Mathf.FloorToInt(transform.position.y * 10) + 1;
+
         _interactable.Description = $"체력: {_defaultHp}\n공격력: {_defaultDamage}\n";
     }
 
@@ -92,10 +90,10 @@ public class Hunter : MonoBehaviour
             yield return null;
         }
 
-        if (_visitedConstruction)
+        if (_lastVisited)
         {
-            _visitedConstruction.ExitVisitor(this);
-            _visitedConstruction = null;
+            _lastVisited.ExitVisitor(this);
+            _lastVisited = null;
         }
 
         var gridmap = GameManager.Instance.GetSystem<ConstructionGridmap>();
@@ -113,10 +111,10 @@ public class Hunter : MonoBehaviour
 
         yield return _avatarMovement.MoveRoutine(_movePath);
 
-        if (clickedConstruction && clickedConstruction.Visitable)
+        if (clickedConstruction && clickedConstruction.GetComponent<Visitable>() != null)
         {
-            _visitedConstruction = clickedConstruction;
-            clickedConstruction.EnterVisitor(this);
+            _lastVisited = clickedConstruction.GetComponent<Visitable>();
+            _lastVisited.EnterVisitor(this);
         }
 
         GameManager.Instance.GetSystem<PathDrawer>().RemovePath(_movePath);

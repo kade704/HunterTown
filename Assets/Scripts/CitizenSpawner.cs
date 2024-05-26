@@ -11,7 +11,7 @@ public class CitizenSpawner : MonoBehaviour
 
     private void Start()
     {
-        GameManager.Instance.GetSystem<Player>().OnPopulationChanged.AddListener(OnPopulationChanged);
+        GameManager.Instance.GetSystem<PopulationSystem>().OnPopulationChanged.AddListener(OnPopulationChanged);
     }
 
     private void OnPopulationChanged(int population)
@@ -19,15 +19,19 @@ public class CitizenSpawner : MonoBehaviour
         var targetCitizenCount = population / POPULATION_PER_CITIZEN;
         if (targetCitizenCount > _citizens.Count)
         {
-            var citizen = Instantiate(_citizenPrefab, transform);
-            _citizens.Add(citizen);
+            for (int i = 0; i < targetCitizenCount - _citizens.Count; i++)
+            {
+                var citizen = Instantiate(_citizenPrefab, transform);
+                _citizens.Add(citizen);
+            }
         }
         else if (targetCitizenCount < _citizens.Count)
         {
             for (int i = 0; i < _citizens.Count - targetCitizenCount; i++)
             {
-                _citizens.RemoveAt(i);
-                Destroy(_citizens[i].gameObject);
+                var last = _citizens.Count - 1;
+                Destroy(_citizens[last].gameObject);
+                _citizens.RemoveAt(last);
             }
         }
     }

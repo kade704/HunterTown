@@ -31,7 +31,6 @@ public class DispatchDirector : MonoBehaviour
         if (hunter != null)
         {
             var death = Random.value < portal.CalcHunterDeathProbability(hunter);
-            print(death);
             _dispatchHunters[index].WillDeath = death;
 
             var reward = portal.HunterDispatchReward;
@@ -170,7 +169,7 @@ public class DispatchDirector : MonoBehaviour
             {
                 earnedMoney *= 0.5f;
             }
-            GameManager.Instance.GetSystem<Player>().Money += (int)earnedMoney;
+            GameManager.Instance.GetSystem<MoneySystem>().Money += (int)earnedMoney;
 
             GameManager.Instance.GetSystem<LoggerSystem>().LogInfo("파견에 성공했습니다. 포탈이 사라집니다.");
             GameManager.Instance.GetSystem<PortalGenerator>().RemovePortal(portal.GetComponent<Portal>());

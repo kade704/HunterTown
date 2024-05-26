@@ -992,6 +992,7 @@ GameObject:
   - component: {fileID: 709077098282209036}
   - component: {fileID: 712750543145840348}
   - component: {fileID: 8535490694738626908}
+  - component: {fileID: 6337041436566229029}
   m_Layer: 6
   m_Name: Monster
   m_TagString: Untagged
@@ -1107,8 +1108,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 078695d110069fa4f8c7e77a5707d0e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _lifeHour: 36
+  _lifeHour: 100
   _progressRenderer: {fileID: 4527314580331743528}
+--- !u!114 &6337041436566229029
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5072308351198709086}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db4b3043542bb394abd7d63a52a6ab68, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _defaultOrder: 2
 --- !u!1 &5405553295476107089
 GameObject:
   m_ObjectHideFlags: 0

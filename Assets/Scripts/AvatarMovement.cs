@@ -23,27 +23,26 @@ public class AvatarMovement : MonoBehaviour
         int index = 0;
         while (index < path.Length)
         {
-            var newSpeed = GameManager.Instance.GetSystem<TimeSystem>().TimeScale * 0.3f * speed;
-            var road = gridmap.GetConstructionAt(path.Nodes[index].Position)?.GetComponent<Road>();
-            if (road != null)
-            {
-                newSpeed *= road.Speed;
-            }
-            else
-            {
-                newSpeed *= 0.5f;
-            }
-
             var worldPos = gridmap.CellToWorld(path.Nodes[index].Position);
             while (Vector2.Distance(transform.position, worldPos) > 0.1f)
             {
+                var newSpeed = GameManager.Instance.GetSystem<TimeSystem>().TimeScale * 0.3f * speed;
+                var road = gridmap.GetConstructionAt(path.Nodes[index].Position)?.GetComponent<Road>();
+                if (road != null)
+                {
+                    newSpeed *= road.Speed;
+                }
+                else
+                {
+                    newSpeed *= 0.5f;
+                }
+
                 var dir = (worldPos - (Vector2)transform.position).normalized;
                 var velocity = newSpeed * Time.deltaTime * dir;
 
                 transform.localScale = new Vector3(velocity.x < 0 ? _startScale.x : -_startScale.x, _startScale.y, _startScale.y);
 
                 transform.position += (Vector3)velocity;
-
 
                 _animator.SetFloat("RunState", 0.5f);
 

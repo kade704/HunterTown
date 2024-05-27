@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Rendering;
@@ -20,27 +21,49 @@ public struct Interaction
 
 public class Interactable : MonoBehaviour
 {
-    [SerializeField] private Interaction[] _interactions;
-
+    [SerializeField]
     private string _displayName;
+
+    [Title("Description", bold: false)]
+    [HideLabel]
+    [MultiLineProperty(5)]
+    [SerializeField]
     private string _description;
+
+    [Title("Sub Description", bold: false)]
+    [HideLabel]
+    [MultiLineProperty(3)]
+    [SerializeField]
+    private string _subDescription;
+
+    [SerializeField]
+    private Interaction[] _interactions;
+
+
     private SpriteRenderer[] _renderers;
     private Dictionary<SpriteRenderer, Color> _defaultColors = new();
     private SortingGroup _sortingGroup;
     private UnityEvent<Interaction> _onInteracted = new();
 
-    public Interaction[] Interactions => _interactions;
     public string DisplayName
     {
-        get { return _displayName; }
-        set { _displayName = value; }
-    }
-    public string Description
-    {
-        get { return _description; }
-        set { _description = value; }
+        get => _displayName;
+        set => _displayName = value;
     }
 
+    public string Description
+    {
+        get => _description;
+        set => _description = value;
+    }
+
+    public string SubDescription
+    {
+        get => _subDescription;
+        set => _subDescription = value;
+    }
+
+    public Interaction[] Interactions => _interactions;
     public SpriteRenderer[] SpriteRenderer => _renderers;
     public SortingGroup SortingGroup => _sortingGroup;
     public UnityEvent<Interaction> OnInteracted => _onInteracted;

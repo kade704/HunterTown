@@ -84,7 +84,7 @@ public class UIDispatchPanel : MonoBehaviour
 
     private IEnumerator DispatchRoutine()
     {
-        GameManager.Instance.GetSystem<LoggerSystem>().LogInfo($"파견이 시작되었습니다.");
+        GameManager.Instance.GetSystem<NotificationSystem>().NofifyInfo($"파견이 시작되었습니다.");
         UIUtil.ShowCanvasGroup(_skipButton.GetComponent<CanvasGroup>());
 
         yield return _dispatchDirector.EnterPortal();

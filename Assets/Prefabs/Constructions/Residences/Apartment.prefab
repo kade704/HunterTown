@@ -27,7 +27,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 1.56, z: 0}
-  m_LocalScale: {x: 1, y: 0.08, z: 1}
+  m_LocalScale: {x: 1.5, y: 0.08, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4142113863155088889}
@@ -168,8 +168,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.44}
-  m_Size: {x: 0.86, y: 1.38}
+  m_Offset: {x: 0, y: 0.72}
+  m_Size: {x: 0.86, y: 1.34}
   m_Direction: 0
 --- !u!114 &8646880615237549289
 MonoBehaviour:
@@ -187,10 +187,8 @@ MonoBehaviour:
   _cost: 1500
   _maintenanceCost: 80
   _populationCondition: 50
-  _displayName: "\uC544\uD30C\uD2B8"
-  _description: "\uC5EC\uB7EC\uBA85\uC758 \uC2DC\uBBFC\uC744 \uC218\uC6A9\uD560\uC218
-    \uC788\uB2E4.\n\n\uC720\uC9C0\uBE44: 80\uC6D0/\uC6D4\n\uC2DC\uBBFC \uC218\uC6A9
-    +20\uBA85\n\n[\uD574\uAE08\uC870\uAC74: \uC2DC\uBBFC 50\uBA85]"
+  _displayName: 
+  _description: 
   _defaultSprite: {fileID: -1343409075, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
   _size: 2
   _buildable: 1
@@ -220,6 +218,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97ef4819a08424d4e866a2ae3dc5977e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _displayName: "\uC544\uD30C\uD2B8"
+  _description: "\uC5EC\uB7EC\uBA85\uC758 \uC2DC\uBBFC\uC744 \uC218\uC6A9\uD560\uC218
+    \uC788\uB2E4.\n\n\uC720\uC9C0\uBE44: 80\uC6D0/\uC6D4\n\uC2DC\uBBFC \uC218\uC6A9
+    +20\uBA85\n\n[\uD574\uAE08\uC870\uAC74: \uC2DC\uBBFC 50\uBA85]"
+  _subDescription: 
   _interactions: []
 --- !u!114 &-126376017957432389
 MonoBehaviour:

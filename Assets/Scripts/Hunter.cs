@@ -5,7 +5,6 @@ using UnityEngine;
 [RequireComponent(typeof(Interactable))]
 public class Hunter : MonoBehaviour
 {
-    [ReadOnly][SerializeField] private string _displayName;
     [ReadOnly][SerializeField] private float _defaultHp;
     [ReadOnly][SerializeField] private float _defaultDamage;
 
@@ -20,13 +19,25 @@ public class Hunter : MonoBehaviour
     private Coroutine _moveTargetRoutine;
     private Path _movePath;
 
-    public string DisplayName { get { return _displayName; } set { _displayName = value; } }
-    public float DefaultHp { get { return _defaultHp; } set { _defaultHp = value; } }
+    public float DefaultHp
+    {
+        get => _defaultHp;
+        set => _defaultHp = value;
+    }
 
-    public float DefaultDamage { get { return _defaultDamage; } set { _defaultDamage = value; } }
+    public float DefaultDamage
+    {
+        get => _defaultDamage;
+        set => _defaultDamage = value;
+    }
 
-    public Sprite Thumbnail { get { return _thumbnail; } set { _thumbnail = value; } }
-    public AvatarCustomize AvatarCustomize { get { return _avatarCustomize; } }
+    public Sprite Thumbnail
+    {
+        get => _thumbnail;
+    }
+
+    public AvatarCustomize AvatarCustomize => _avatarCustomize;
+    public Interactable Interactable => _interactable;
 
 
     public float Viability
@@ -49,8 +60,6 @@ public class Hunter : MonoBehaviour
 
     private void Start()
     {
-        _interactable.DisplayName = _displayName;
-
         _interactable.OnInteracted.AddListener((interaction) =>
         {
             if (interaction.ID == "#move_target")
@@ -71,7 +80,7 @@ public class Hunter : MonoBehaviour
     private void Update()
     {
 
-        _interactable.Description = $"체력: {_defaultHp}\n공격력: {_defaultDamage}\n";
+        _interactable.SubDescription = $"체력: {_defaultHp}\n공격력: {_defaultDamage}\n";
     }
 
 
@@ -103,7 +112,7 @@ public class Hunter : MonoBehaviour
 
         if (_movePath == null)
         {
-            GameManager.Instance.GetSystem<LoggerSystem>().LogWarning("경로를 찾을 수 없습니다.");
+            GameManager.Instance.GetSystem<NotificationSystem>().NotifyWarning("경로를 찾을 수 없습니다.");
             yield break;
         }
 

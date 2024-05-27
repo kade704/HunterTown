@@ -1,25 +1,29 @@
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class UIHunters : MonoBehaviour
 {
     [SerializeField] private UIHunterButton _hunterButtonPrefab;
 
-    private List<UIHunterButton> _hunterButtons = new();
+    private Dictionary<Hunter, UIHunterButton> _hunterButtonMap = new();
 
-    private void Awake()
+    private void Start()
     {
-        var hunterSpawner = FindObjectOfType<HunterSpawner>();
-        hunterSpawner.OnHuntersChanged.AddListener(() =>
+        GameManager.Instance.GetSystem<HunterSpawner>().OnHuntersChanged.AddListener(() => StartCoroutine(OnHunterChanged()));
+    }
+
+    private IEnumerator OnHunterChanged()
+    {
+        yield return null;
+        yield return null;
+
+        var hunterButtons = _hunterButtonMap.Values.ToList();
+
+        foreach (var hunter in GameManager.Instance.GetSystem<HunterSpawner>().Hunters)
         {
-            _hunterButtons.Clear();
-
-            foreach (Transform child in transform)
-            {
-                Destroy(child.gameObject);
-            }
-
-            foreach (var hunter in hunterSpawner.Hunters)
+            if (!_hunterButtonMap.ContainsKey(hunter))
             {
                 var button = Instantiate(_hunterButtonPrefab, transform);
                 button.Hunter = hunter;
@@ -28,8 +32,18 @@ public class UIHunters : MonoBehaviour
                     GameManager.Instance.GetSystem<InteractableSelector>().SelectInteractable(hunter.GetComponent<Interactable>());
                     GameManager.Instance.GetSystem<CameraMovement>().MovePosition(hunter.transform.position);
                 });
-                _hunterButtons.Add(button);
+                _hunterButtonMap.Add(hunter, button);
             }
-        });
+            else
+            {
+                hunterButtons.Remove(_hunterButtonMap[hunter]);
+            }
+        }
+
+        foreach (var hunterButton in hunterButtons)
+        {
+            _hunterButtonMap.Remove(_hunterButtonMap.First(x => x.Value == hunterButton).Key);
+            Destroy(hunterButton.gameObject);
+        }
     }
 }

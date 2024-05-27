@@ -8,7 +8,6 @@ public class Company : MonoBehaviour, ISerializable, IDeserializable
 
     private Construction _construction;
     private Interactable _interactable;
-    private string _defaultDescription;
 
     public int RemainEmployeeCount
     {
@@ -25,16 +24,19 @@ public class Company : MonoBehaviour, ISerializable, IDeserializable
 
     private void Start()
     {
-        _defaultDescription = _interactable.Description;
-        _interactable.Description = $"{_defaultDescription}\n\n고용 가능 인원: {_remainEmployeeCount}명";
+        _interactable.SubDescription = $"고용 가능 인원: {_remainEmployeeCount}명";
 
         var timeSystem = GameManager.Instance.GetSystem<TimeSystem>();
         timeSystem.Month.OnChanged.AddListener(() =>
         {
             _remainEmployeeCount += 1;
-            _interactable.Description = $"{_defaultDescription}\n고용 가능 인원: {_remainEmployeeCount}명";
-            GameManager.Instance.GetSystem<LoggerSystem>().LogInfo($"본부에서 고용 가능 인원이 추가되었습니다.");
+            GameManager.Instance.GetSystem<NotificationSystem>().NofifyInfo($"본부에서 고용 가능 인원이 추가되었습니다.");
         });
+    }
+
+    private void Update()
+    {
+        _interactable.SubDescription = $"고용 가능 인원: {_remainEmployeeCount}명";
     }
 
     public JToken Serialize()

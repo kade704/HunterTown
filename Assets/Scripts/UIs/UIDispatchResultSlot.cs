@@ -26,7 +26,7 @@ public class UIDispatchResultSlot : MonoBehaviour
             {
                 _iconImage.enabled = true;
                 _iconImage.sprite = value.Hunter.Thumbnail;
-                _nameText.text = value.Hunter.DisplayName;
+                _nameText.text = value.Hunter.Interactable.DisplayName;
 
                 if (value.WillDeath)
                 {

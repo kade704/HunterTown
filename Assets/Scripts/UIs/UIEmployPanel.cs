@@ -114,7 +114,7 @@ public class UIEmployPanel : MonoBehaviour
 
         var hunterSpawner = GameManager.Instance.GetSystem<HunterSpawner>();
         var newHunter = hunterSpawner.SpawnHunter(company.Construction.CellPos - Vector2Int.one);
-        newHunter.DisplayName = employDirector.EmployHunters[index].Name;
+        newHunter.Interactable.DisplayName = employDirector.EmployHunters[index].Name;
         newHunter.DefaultHp = employDirector.EmployHunters[index].HP;
         newHunter.DefaultDamage = employDirector.EmployHunters[index].Damage;
         newHunter.AvatarCustomize.CopyAvatar(employDirector.EmployHunters[index].AvatarCustomize);

@@ -3,42 +3,57 @@ using UnityEngine.UI;
 
 public class UIInteractablePanel : MonoBehaviour
 {
-    [SerializeField] private GameObject _panel;
-    [SerializeField] private Text _name;
-    [SerializeField] private Text _description;
-    [SerializeField] private Transform _interactionButtonsParent;
     [SerializeField] private UIInteractionButton _interactionButtonPrefab;
 
+    private CanvasGroup _panel;
+    private Text _nameText;
+    private Text _descriptionText;
+    private Text _subDescriptionText;
+    private Transform _interactionButtonContainer;
     private InteractableSelector _interactableSelector;
 
 
     private void Awake()
     {
+        _panel = transform.Find("Panel").GetComponent<CanvasGroup>();
+        _nameText = transform.Find("Panel/NameText").GetComponent<Text>();
+        _descriptionText = transform.Find("Panel/DescriptionText").GetComponent<Text>();
+        _subDescriptionText = transform.Find("Panel/SubDescriptionText").GetComponent<Text>();
+        _interactionButtonContainer = transform.Find("InteractionButtons");
+
         _interactableSelector = FindObjectOfType<InteractableSelector>();
 
         var InteractableSelector = FindObjectOfType<InteractableSelector>();
         InteractableSelector.OnInteractableSelected.AddListener(OnInteractableClicked);
     }
 
+    private void Update()
+    {
+        if (_interactableSelector.SelectedInteractable)
+        {
+            _subDescriptionText.text = _interactableSelector.SelectedInteractable.SubDescription;
+        }
+    }
+
     private void OnInteractableClicked(Interactable interactable)
     {
         if (interactable)
         {
-            _panel.SetActive(true);
+            UIUtil.ShowCanvasGroup(_panel);
 
-            _name.text = interactable.DisplayName;
-            _description.text = interactable.Description;
+            _nameText.text = interactable.DisplayName;
+            _descriptionText.text = interactable.Description;
 
             LayoutRebuilder.ForceRebuildLayoutImmediate(_panel.GetComponent<RectTransform>());
 
-            foreach (Transform interactionButton in _interactionButtonsParent)
+            foreach (Transform interactionButton in _interactionButtonContainer)
             {
                 Destroy(interactionButton.gameObject);
             }
 
             foreach (var interaction in interactable.Interactions)
             {
-                var interactionButton = Instantiate(_interactionButtonPrefab, _interactionButtonsParent);
+                var interactionButton = Instantiate(_interactionButtonPrefab, _interactionButtonContainer);
                 interactionButton.Interaction = interaction;
                 interactionButton.OnClick.AddListener(() =>
                 {
@@ -49,12 +64,12 @@ public class UIInteractablePanel : MonoBehaviour
         }
         else
         {
-            foreach (Transform interactionButton in _interactionButtonsParent)
+            foreach (Transform interactionButton in _interactionButtonContainer)
             {
                 Destroy(interactionButton.gameObject);
             }
 
-            _panel.SetActive(false);
+            UIUtil.HideCanvasGroup(_panel);
         }
     }
 }

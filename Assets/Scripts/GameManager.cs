@@ -90,7 +90,7 @@ public class GameManager : MonoBehaviour
             GetSystem<HunterSpawner>().Deserialize(saveData["hunters"]);
             GetSystem<ConstructionGridmap>().Deserialize(saveData["constructions"]);
 
-            GetSystem<LoggerSystem>().LogInfo("게임 불러옴.");
+            GetSystem<NotificationSystem>().NofifyInfo("게임 불러옴.");
         }
     }
 
@@ -119,7 +119,7 @@ public class GameManager : MonoBehaviour
         };
         File.WriteAllText(savePath, root.ToString());
 
-        GetSystem<LoggerSystem>().LogInfo("게임 저장됨.");
+        GetSystem<NotificationSystem>().NofifyInfo("게임 저장됨.");
     }
 
     public void SaveOptions()

@@ -119,17 +119,12 @@ MonoBehaviour:
   _cost: 10
   _maintenanceCost: 5
   _populationCondition: 60
-  _displayName: "2\uCC28\uC120 \uB3C4\uB85C"
-  _description: "\uB113\uC740 \uB3C4\uB85C\uC774\uB2E4.\n\n\uC774\uB3D9\uC18D\uB3C4:
-    250%\n\uC720\uC9C0\uBE44: 5\uC6D0/\uC6D4\n\n[\uD574\uAE08\uC870\uAC74: \uC2DC\uBBFC
-    60\uBA85]"
+  _displayName: 
+  _description: 
   _defaultSprite: {fileID: -550659547, guid: 9ce137b1be9c78d4683d4c1afb72be4e, type: 3}
   _size: 1
   _buildable: 1
   _destroyable: 1
-  _visitable: 0
-  _visitorCapacity: 0
-  _durability: 0
 --- !u!114 &3380698535929008947
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -173,6 +168,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97ef4819a08424d4e866a2ae3dc5977e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _displayName: "2\uCC28\uC120 \uB3C4\uB85C"
+  _description: "\uB113\uC740 \uB3C4\uB85C\uC774\uB2E4.\n\n\uC774\uB3D9\uC18D\uB3C4:
+    250%\n\uC720\uC9C0\uBE44: 5\uC6D0/\uC6D4\n\n[\uD574\uAE08\uC870\uAC74: \uC2DC\uBBFC
+    60\uBA85]"
+  _subDescription: 
   _interactions: []
 --- !u!1 &7437596200735343293
 GameObject:

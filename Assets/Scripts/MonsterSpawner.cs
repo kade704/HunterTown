@@ -9,11 +9,13 @@ public class MonsterSpawner : MonoBehaviour
 
     public Monster[] Monsters => _monsters.ToArray();
 
-    public void SpawnMonster(Vector2Int cellPos)
+    public Monster SpawnMonster(Vector2Int cellPos)
     {
         var worldPos = GameManager.Instance.GetSystem<ConstructionGridmap>().CellToWorld(cellPos);
         var newMonster = Instantiate(_monsterPrefab, worldPos, Quaternion.identity, transform);
         _monsters.Add(newMonster);
+
+        return newMonster;
     }
 
     public void DestroyMonster(Monster monster)
@@ -21,4 +23,6 @@ public class MonsterSpawner : MonoBehaviour
         _monsters.Remove(monster);
         Destroy(monster.gameObject);
     }
+
+
 }

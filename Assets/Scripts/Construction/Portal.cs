@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using Sirenix.OdinInspector;
@@ -25,6 +26,7 @@ public class Portal : MonoBehaviour, ISerializable, IDeserializable
     private int _waveDay = int.MaxValue;
     private Construction _construction;
     private Visitable _visitable;
+    private Interactable _interactable;
 
 
     public float Power
@@ -116,6 +118,7 @@ public class Portal : MonoBehaviour, ISerializable, IDeserializable
     private void Awake()
     {
         _construction = GetComponent<Construction>();
+        _interactable = GetComponent<Interactable>();
         _visitable = GetComponent<Visitable>();
 
         _construction.OnBuilded.AddListener(OnBuilded);
@@ -140,6 +143,7 @@ public class Portal : MonoBehaviour, ISerializable, IDeserializable
         _visitable.OnVisitorChanged.AddListener(OnVisitorChanged);
 
         _progressRenderer.material.SetFloat("_Value", 1);
+        _interactable.SubDescription = $"남은 시간: {_waveDay - timeSystem.Day.Total}일";
     }
 
     private void OnBuilded()
@@ -171,6 +175,8 @@ public class Portal : MonoBehaviour, ISerializable, IDeserializable
         var progress = 1 - (day - _startDay) / (float)(_waveDay - _startDay);
         _progressRenderer.material.SetFloat("_Value", progress);
 
+        _interactable.SubDescription = $"남은 시간: {_waveDay - day}일";
+
         if (day >= _waveDay)
         {
             _startDay = timeSystem.Day.Total;
@@ -182,12 +188,12 @@ public class Portal : MonoBehaviour, ISerializable, IDeserializable
 
     public void ExamineRoutine()
     {
-        GameManager.Instance.GetSystem<LoggerSystem>().LogInfo($"탐색이 시작되었습니다.");
+        GameManager.Instance.GetSystem<NotificationSystem>().NofifyInfo($"탐색이 시작되었습니다.");
 
         GameManager.Instance.GetSystem<MoneySystem>().Money -= Random.Range(30, 70);
 
 
-        GameManager.Instance.GetSystem<LoggerSystem>().LogInfo($"탐색이 완료되었습니다.");
+        GameManager.Instance.GetSystem<NotificationSystem>().NofifyInfo($"탐색이 완료되었습니다.");
 
         if (ContainAbility("understood_world"))
         {
@@ -226,16 +232,25 @@ public class Portal : MonoBehaviour, ISerializable, IDeserializable
     public IEnumerator WaveRoutine()
     {
         GameManager.Instance.GetSystem<CameraMovement>().MovePosition(_construction.transform.position);
-        GameManager.Instance.GetSystem<LoggerSystem>().LogError("포탈 웨이브가 시작되었습니다!");
 
-        GameManager.Instance.GetSystem<MonsterSpawner>().SpawnMonster(_construction.CellPos);
-        yield return new WaitForSeconds(1);
+        var notificationSystem = GameManager.Instance.GetSystem<NotificationSystem>();
 
-        GameManager.Instance.GetSystem<MonsterSpawner>().SpawnMonster(_construction.CellPos);
-        yield return new WaitForSeconds(1.5f);
+        var message = notificationSystem.NotifyError("포탈 웨이브가 시작되었습니다!", false);
 
-        GameManager.Instance.GetSystem<MonsterSpawner>().SpawnMonster(_construction.CellPos);
-        yield return new WaitForSeconds(1.2f);
+        var monsters = new List<Monster>();
+        for (int i = 0; i < 3; i++)
+        {
+            var monster = GameManager.Instance.GetSystem<MonsterSpawner>().SpawnMonster(_construction.CellPos);
+            monsters.Add(monster);
+            yield return new WaitForSeconds(1);
+        }
+
+        while (monsters.Where(monter => monter != null).Count() > 0)
+        {
+            yield return new WaitForSeconds(1);
+        }
+
+        notificationSystem.RemoveMessage(message);
     }
 
     public float CalcHunterDeathProbability(Hunter hunter)

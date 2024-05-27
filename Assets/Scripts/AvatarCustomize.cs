@@ -2,28 +2,27 @@ using UnityEngine;
 
 public class AvatarCustomize : MonoBehaviour
 {
-    [SerializeField] private SpriteRenderer _headBaseRenderer;
-    [SerializeField] private SpriteRenderer _bodyBaseRenderer;
-    [SerializeField] private SpriteRenderer _armLeftBaseRenderer;
-    [SerializeField] private SpriteRenderer _armRightBaseRenderer;
-    [SerializeField] private SpriteRenderer _legLeftBaseRenderer;
-    [SerializeField] private SpriteRenderer _legRightBaseRenderer;
-    [SerializeField] private SpriteRenderer _hairRenderer;
-    [SerializeField] private SpriteRenderer _bodyClothRenderer;
-    [SerializeField] private SpriteRenderer _armLeftClothRenderer;
-    [SerializeField] private SpriteRenderer _armRightClothRenderer;
-    [SerializeField] private SpriteRenderer _legLeftClothRenderer;
-    [SerializeField] private SpriteRenderer _legRightClothRenderer;
-    [SerializeField] private SpriteRenderer _bodyArmorRenderer;
-    [SerializeField] private SpriteRenderer _armLeftArmorRenderer;
-    [SerializeField] private SpriteRenderer _armRightArmorRenderer;
-    [SerializeField] private SpriteRenderer _helmetRenderer;
-    [SerializeField] private SpriteRenderer _weaponRenderer;
-    [SerializeField] private SpriteRenderer _eyeLeftRenderer;
-    [SerializeField] private SpriteRenderer _eyeRightRenderer;
-    [SerializeField] private Transform _spriteRoot;
-    [SerializeField] private SpriteRenderer _shadowRenderer;
-
+    private SpriteRenderer _headBaseRenderer;
+    private SpriteRenderer _bodyBaseRenderer;
+    private SpriteRenderer _armLeftBaseRenderer;
+    private SpriteRenderer _armRightBaseRenderer;
+    private SpriteRenderer _legLeftBaseRenderer;
+    private SpriteRenderer _legRightBaseRenderer;
+    private SpriteRenderer _hairRenderer;
+    private SpriteRenderer _bodyClothRenderer;
+    private SpriteRenderer _armLeftClothRenderer;
+    private SpriteRenderer _armRightClothRenderer;
+    private SpriteRenderer _legLeftClothRenderer;
+    private SpriteRenderer _legRightClothRenderer;
+    private SpriteRenderer _bodyArmorRenderer;
+    private SpriteRenderer _armLeftArmorRenderer;
+    private SpriteRenderer _armRightArmorRenderer;
+    private SpriteRenderer _helmetRenderer;
+    private SpriteRenderer _weaponRenderer;
+    private SpriteRenderer _eyeLeftRenderer;
+    private SpriteRenderer _eyeRightRenderer;
+    private Transform _spriteRoot;
+    private SpriteRenderer _shadowRenderer;
     private BaseBody _baseBody;
     private TopCloth _topCloth;
     private BottomCloth _bottomCloth;
@@ -146,6 +145,31 @@ public class AvatarCustomize : MonoBehaviour
             _weapon = value;
             _weaponRenderer.sprite = value.weapon;
         }
+    }
+
+    private void Awake()
+    {
+        _headBaseRenderer = transform.Find("Root/Head/Base").GetComponent<SpriteRenderer>();
+        _bodyBaseRenderer = transform.Find("Root/Body/Base").GetComponent<SpriteRenderer>();
+        _armLeftBaseRenderer = transform.Find("Root/LeftArm/Base").GetComponent<SpriteRenderer>();
+        _armRightBaseRenderer = transform.Find("Root/RightArm/Base").GetComponent<SpriteRenderer>();
+        _legLeftBaseRenderer = transform.Find("Root/LeftFoot/Base").GetComponent<SpriteRenderer>();
+        _legRightBaseRenderer = transform.Find("Root/RightFoot/Base").GetComponent<SpriteRenderer>();
+        _hairRenderer = transform.Find("Root/Head/Hair").GetComponent<SpriteRenderer>();
+        _bodyClothRenderer = transform.Find("Root/Body/Cloth").GetComponent<SpriteRenderer>();
+        _armLeftClothRenderer = transform.Find("Root/LeftArm/Cloth").GetComponent<SpriteRenderer>();
+        _armRightClothRenderer = transform.Find("Root/RightArm/Cloth").GetComponent<SpriteRenderer>();
+        _legLeftClothRenderer = transform.Find("Root/LeftFoot/Cloth").GetComponent<SpriteRenderer>();
+        _legRightClothRenderer = transform.Find("Root/RightFoot/Cloth").GetComponent<SpriteRenderer>();
+        _bodyArmorRenderer = transform.Find("Root/Body/Armor").GetComponent<SpriteRenderer>();
+        _armLeftArmorRenderer = transform.Find("Root/LeftArm/Armor").GetComponent<SpriteRenderer>();
+        _armRightArmorRenderer = transform.Find("Root/RightArm/Armor").GetComponent<SpriteRenderer>();
+        _helmetRenderer = transform.Find("Root/Head/Helmet").GetComponent<SpriteRenderer>();
+        _weaponRenderer = transform.Find("Root/LeftArm/Weapon").GetComponent<SpriteRenderer>();
+        _eyeLeftRenderer = transform.Find("Root/Head/Eyes/LeftEye").GetComponent<SpriteRenderer>();
+        _eyeRightRenderer = transform.Find("Root/Head/Eyes/RightEye").GetComponent<SpriteRenderer>();
+        _spriteRoot = transform.Find("Root");
+        _shadowRenderer = transform.Find("Shadow/Shadow").GetComponent<SpriteRenderer>();
     }
 
     public void ShowAvatar()

@@ -17,7 +17,7 @@ public class UIDispatchSlot : MonoBehaviour
             _hunter = value;
             if (value)
             {
-                _name.text = value.DisplayName;
+                _name.text = value.Interactable.DisplayName;
             }
             else
             {

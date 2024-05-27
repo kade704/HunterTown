@@ -94,7 +94,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4142113863155088889}
   - component: {fileID: 1632356818169332689}
-  - component: {fileID: 4436391697399867256}
+  - component: {fileID: 74711559645292475}
   - component: {fileID: 8646880615237549289}
   - component: {fileID: -8048074963830222491}
   - component: {fileID: -3484673571759944834}
@@ -136,8 +136,8 @@ SortingGroup:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_SortAtRoot: 0
---- !u!60 &4436391697399867256
-PolygonCollider2D:
+--- !u!58 &74711559645292475
+CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -168,31 +168,9 @@ PolygonCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.28}
-    oldSize: {x: 1, y: 0.84375}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Points:
-    m_Paths:
-    - - {x: 0.265625, y: 0.42437506}
-      - {x: 0.25, y: 0.59625006}
-      - {x: -0.125, y: 0.59625006}
-      - {x: -0.21875, y: 0.58062506}
-      - {x: -0.421875, y: 0.37750006}
-      - {x: -0.421875, y: 0.0025000572}
-      - {x: -0.046875, y: -0.21624994}
-      - {x: 0.109375, y: -0.21624994}
-      - {x: 0.34375, y: -0.13812494}
-      - {x: 0.390625, y: -0.059999943}
-      - {x: 0.40625, y: 0.15875006}
-      - {x: 0.40625, y: 0.29937506}
-  m_UseDelaunayMesh: 0
+  m_Offset: {x: 0, y: 0.21}
+  serializedVersion: 2
+  m_Radius: 0.4
 --- !u!114 &8646880615237549289
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -209,9 +187,8 @@ MonoBehaviour:
   _cost: 700
   _maintenanceCost: 35
   _populationCondition: 20
-  _displayName: "\uBAA8\uB358\uD558\uC6B0\uC2A4"
-  _description: "\uBA4B\uC788\uB294 \uC9D1\uC774\uB2E4.\n\n\uC720\uC9C0\uBE44: 35\uC6D0/\uC6D4\n\uC2DC\uBBFC
-    \uC218\uC6A9 +9\uBA85\n\n[\uD574\uAE08\uC870\uAC74: \uC2DC\uBBFC 20\uBA85]"
+  _displayName: 
+  _description: 
   _defaultSprite: {fileID: -1750879985, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
   _size: 1
   _buildable: 1
@@ -228,6 +205,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97ef4819a08424d4e866a2ae3dc5977e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _displayName: "\uBAA8\uB358\uD558\uC6B0\uC2A4"
+  _description: "\uBA4B\uC788\uB294 \uC9D1\uC774\uB2E4.\n\n\uC720\uC9C0\uBE44: 35\uC6D0/\uC6D4\n\uC2DC\uBBFC
+    \uC218\uC6A9 +9\uBA85\n\n[\uD574\uAE08\uC870\uAC74: \uC2DC\uBBFC 20\uBA85]"
+  _subDescription: 
   _interactions: []
 --- !u!114 &-3484673571759944834
 MonoBehaviour:
@@ -295,7 +276,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0.73, z: 0}
-  m_LocalScale: {x: 1, y: 0.08, z: 1}
+  m_LocalScale: {x: 0.7, y: 0.08, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4142113863155088889}

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 685435536630114913}
   - component: {fileID: 8051050032945168828}
   m_Layer: 5
-  m_Name: Icon
+  m_Name: IconImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -88,7 +88,7 @@ GameObject:
   - component: {fileID: 1738724908502701715}
   - component: {fileID: 8518530011424638517}
   m_Layer: 5
-  m_Name: Msg
+  m_Name: ContentText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -184,7 +184,7 @@ GameObject:
   - component: {fileID: 6293884836955271148}
   - component: {fileID: 1708781390814597326}
   m_Layer: 5
-  m_Name: MessageBox
+  m_Name: NotificationMessage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

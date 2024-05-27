@@ -17,14 +17,6 @@ public class Construction : MonoBehaviour
     [SerializeField]
     private int _populationCondition;
 
-    [SerializeField]
-    private string _displayName;
-
-    [Title("Description", bold: false)]
-    [HideLabel]
-    [MultiLineProperty(5)]
-    [SerializeField]
-    private string _description;
 
     [PreviewField]
     [SerializeField]
@@ -63,8 +55,6 @@ public class Construction : MonoBehaviour
     public int Cost => _cost;
     public int MaintenanceCost => _maintenanceCost;
     public int PopulationCondition => _populationCondition;
-    public string DisplayName => _displayName;
-    public string Description => _description;
     public Sprite DefaultSprite => _defaultSprite;
     public int Size => _size;
 
@@ -78,11 +68,5 @@ public class Construction : MonoBehaviour
     private void Awake()
     {
         _interactable = GetComponent<Interactable>();
-    }
-
-    private void Start()
-    {
-        _interactable.DisplayName = _displayName;
-        _interactable.Description = _description;
     }
 }

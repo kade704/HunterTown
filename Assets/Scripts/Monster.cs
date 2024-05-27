@@ -1,15 +1,16 @@
 using System.Collections;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 public class Monster : MonoBehaviour
 {
+    private SpriteRenderer _lifeRenderer;
+
     [SerializeField] private int _lifeHour;
-    [SerializeField] private SpriteRenderer _progressRenderer;
 
     private int _startHour;
     private Durable _target;
+    private AvatarCustomize _avatarCustomize;
     private AvatarMovement _avatarMovement;
     private Animator _animator;
     private bool _isDead = false;
@@ -17,12 +18,17 @@ public class Monster : MonoBehaviour
     private void Awake()
     {
         _animator = GetComponent<Animator>();
+        _avatarCustomize = GetComponent<AvatarCustomize>();
         _avatarMovement = GetComponent<AvatarMovement>();
+
+        _lifeRenderer = transform.Find("Life").GetComponent<SpriteRenderer>();
     }
 
     private void Start()
     {
         StartCoroutine(DestructRoutine());
+
+        RandomCustomize();
 
         _startHour = GameManager.Instance.GetSystem<TimeSystem>().Hour.Total;
     }
@@ -32,7 +38,7 @@ public class Monster : MonoBehaviour
         var timeSystem = GameManager.Instance.GetSystem<TimeSystem>();
         var value = 1 - ((float)timeSystem.Hour.Total - _startHour) / _lifeHour;
 
-        _progressRenderer.material.SetFloat("_Value", value);
+        _lifeRenderer.material.SetFloat("_Value", value);
 
         if (value <= 0 && !_isDead)
         {
@@ -103,5 +109,17 @@ public class Monster : MonoBehaviour
         }
 
         return nearestDurable;
+    }
+
+    public void RandomCustomize()
+    {
+        var database = GameManager.Instance.GetSystem<CustomizeDatabase>();
+
+        var monsterBody = database.BaseBodies.Where(x => x.id.Contains("monster")).ToArray();
+
+        _avatarCustomize.BaseBody = monsterBody[Random.Range(0, monsterBody.Length)];
+        _avatarCustomize.Eye = database.Eyes[Random.Range(0, database.Eyes.Length)];
+        _avatarCustomize.EyeColor = Random.ColorHSV(0, 1, 0f, 0.4f, 0.8f, 1f);
+        _avatarCustomize.Weapon = database.Weapons[Random.Range(0, database.Weapons.Length)];
     }
 }

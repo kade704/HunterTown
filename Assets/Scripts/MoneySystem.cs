@@ -9,6 +9,8 @@ public class MoneySystem : MonoBehaviour, ISerializable, IDeserializable
     [ReadOnly] private int _money;
     [ReadOnly] private int _expenditure;
 
+    private NotificationSystem.Message _minusMessage;
+
     private UnityEvent<int> _onMoneyChanged = new();
     private UnityEvent<int> _onExpenditureChanged = new();
 
@@ -37,6 +39,8 @@ public class MoneySystem : MonoBehaviour, ISerializable, IDeserializable
 
     private void Start()
     {
+        _onMoneyChanged.AddListener(MoneyChanged);
+
         var constructionGridMap = FindObjectOfType<ConstructionGridmap>();
         constructionGridMap.OnConstructionBuilded.AddListener((construction) =>
         {
@@ -58,6 +62,27 @@ public class MoneySystem : MonoBehaviour, ISerializable, IDeserializable
             Money -= Expenditure;
         });
     }
+
+    private void MoneyChanged(int value)
+    {
+        var notificationSystem = GameManager.Instance.GetSystem<NotificationSystem>();
+        if (value < 0)
+        {
+            if (_minusMessage == null)
+            {
+                _minusMessage = notificationSystem.NotifyError("잔고가 마이너스입니다. 다음달에 파산됩니다.", false);
+            }
+        }
+        else
+        {
+            if (_minusMessage != null)
+            {
+                notificationSystem.RemoveMessage(_minusMessage);
+                _minusMessage = null;
+            }
+        }
+    }
+
     public void Deserialize(JToken token)
     {
         Money = token["money"].Value<int>();

@@ -170,9 +170,10 @@ public class UIConstructionBuildPanel : MonoBehaviour
             else if (hoveredButton.ConstructionPrefab)
             {
                 var construction = hoveredButton.ConstructionPrefab;
+                var interactable = construction.GetComponent<Interactable>();
 
-                _informationTitle.text = $"[{construction.DisplayName}] - {construction.Cost}G";
-                _informationDescription.text = construction.Description;
+                _informationTitle.text = $"[{interactable.DisplayName}] - {construction.Cost}G";
+                _informationDescription.text = interactable.Description;
 
                 LayoutRebuilder.ForceRebuildLayoutImmediate(_informationPanel.GetComponent<RectTransform>());
                 UIUtil.ShowCanvasGroup(_informationPanel);

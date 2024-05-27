@@ -27,7 +27,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 1.24, z: 0}
-  m_LocalScale: {x: 1, y: 0.08, z: 1}
+  m_LocalScale: {x: 1.5, y: 0.08, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4142113863155088889}
@@ -212,10 +212,8 @@ MonoBehaviour:
   _cost: 2500
   _maintenanceCost: 130
   _populationCondition: 35
-  _displayName: "\uCD95\uAD6C\uC7A5"
-  _description: "\uC2DC\uBBFC\uB4E4\uC5D0 \uB180\uAC70\uB9AC\uB97C \uC81C\uACF5\uD55C\uB2E4.\n\n\uC2DC\uBBFC
-    \uC99D\uAC00 (+4/\uC77C)\n\uC720\uC9C0\uBE44: 130\uC6D0/\uC6D4\n\n[\uD574\uAE08\uC870\uAC74:
-    \uC2DC\uBBFC 35\uBA85]"
+  _displayName: 
+  _description: 
   _defaultSprite: {fileID: 967448473, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
   _size: 2
   _buildable: 1
@@ -232,6 +230,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97ef4819a08424d4e866a2ae3dc5977e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _displayName: "\uCD95\uAD6C\uC7A5"
+  _description: "\uC2DC\uBBFC\uB4E4\uC5D0 \uB180\uAC70\uB9AC\uB97C \uC81C\uACF5\uD55C\uB2E4.\n\n\uC2DC\uBBFC
+    \uC99D\uAC00 (+4/\uC77C)\n\uC720\uC9C0\uBE44: 130\uC6D0/\uC6D4\n\n[\uD574\uAE08\uC870\uAC74:
+    \uC2DC\uBBFC 35\uBA85]"
+  _subDescription: 
   _interactions: []
 --- !u!114 &4795656294047771551
 MonoBehaviour:

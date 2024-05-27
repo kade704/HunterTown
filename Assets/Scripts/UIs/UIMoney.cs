@@ -29,6 +29,6 @@ public class UIMoney : MonoBehaviour
     private void UpdateMoneyText()
     {
         var player = GameManager.Instance.GetSystem<MoneySystem>();
-        _moneyText.text = $"{player.Money}원 <color=#ff0000>({-player.Expenditure}원)</color>";
+        _moneyText.text = $"{player.Money}원 <color=#ff0000>({-player.Expenditure}원/월)</color>";
     }
 }

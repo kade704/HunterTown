@@ -212,10 +212,8 @@ MonoBehaviour:
   _cost: 900
   _maintenanceCost: 36
   _populationCondition: 15
-  _displayName: "\uD50C\uB77C\uC790"
-  _description: "\uC2DC\uBBFC\uB4E4\uC758 \uC27C\uD130\uB97C \uC81C\uACF5\uD55C\uB2E4\n\n\uC2DC\uBBFC
-    \uC99D\uAC00 (+2/\uC77C)\n\uC720\uC9C0\uBE44: 36\uC6D0/\uC6D4\n\n[\uD574\uAE08\uC870\uAC74:
-    \uC2DC\uBBFC 15\uBA85]"
+  _displayName: 
+  _description: 
   _defaultSprite: {fileID: -873236447, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
   _size: 1
   _buildable: 1
@@ -232,6 +230,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97ef4819a08424d4e866a2ae3dc5977e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _displayName: "\uD50C\uB77C\uC790"
+  _description: "\uC2DC\uBBFC\uB4E4\uC758 \uC27C\uD130\uB97C \uC81C\uACF5\uD55C\uB2E4\n\n\uC2DC\uBBFC
+    \uC99D\uAC00 (+2/\uC77C)\n\uC720\uC9C0\uBE44: 36\uC6D0/\uC6D4\n\n[\uD574\uAE08\uC870\uAC74:
+    \uC2DC\uBBFC 15\uBA85]"
+  _subDescription: 
   _interactions: []
 --- !u!114 &7229216960351309750
 MonoBehaviour:

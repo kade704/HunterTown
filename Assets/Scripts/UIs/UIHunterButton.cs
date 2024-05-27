@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class UIHunterButton : MonoBehaviour
 {
-    [SerializeField] private Image _sprite;
+    private Image _spriteImage;
     private Hunter _hunter;
     private Button _button;
 
@@ -12,17 +12,14 @@ public class UIHunterButton : MonoBehaviour
     private void Awake()
     {
         _button = GetComponent<Button>();
-    }
-
-    private void Update()
-    {
-        _sprite.sprite = _hunter.Thumbnail;
+        _spriteImage = transform.Find("SpriteImage").GetComponent<Image>();
     }
 
     public Hunter Hunter
     {
         set
         {
+            _spriteImage.sprite = value.Thumbnail;
             _hunter = value;
         }
         get

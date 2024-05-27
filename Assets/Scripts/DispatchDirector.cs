@@ -171,19 +171,19 @@ public class DispatchDirector : MonoBehaviour
             }
             GameManager.Instance.GetSystem<MoneySystem>().Money += (int)earnedMoney;
 
-            GameManager.Instance.GetSystem<LoggerSystem>().LogInfo("파견에 성공했습니다. 포탈이 사라집니다.");
+            GameManager.Instance.GetSystem<NotificationSystem>().NofifyInfo("파견에 성공했습니다. 포탈이 사라집니다.");
             GameManager.Instance.GetSystem<PortalGenerator>().RemovePortal(portal.GetComponent<Portal>());
         }
         else
         {
-            GameManager.Instance.GetSystem<LoggerSystem>().LogError("파견에 실패했습니다.");
+            GameManager.Instance.GetSystem<NotificationSystem>().NotifyError("파견에 실패했습니다.");
         }
 
         foreach (var dispatchHunter in dispatchHunters)
         {
             if (dispatchHunter.WillDeath)
             {
-                GameManager.Instance.GetSystem<LoggerSystem>().LogError($"{dispatchHunter.Hunter.DisplayName}이(가) 사망했습니다.");
+                GameManager.Instance.GetSystem<NotificationSystem>().NotifyError($"{dispatchHunter.Hunter.Interactable.DisplayName}이(가) 사망했습니다.");
                 GameManager.Instance.GetSystem<HunterSpawner>().RemoveHunter(dispatchHunter.Hunter);
             }
             else

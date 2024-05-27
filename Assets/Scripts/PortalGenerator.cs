@@ -79,7 +79,7 @@ public class PortalGenerator : MonoBehaviour
             }
         }
 
-        GameManager.Instance.GetSystem<LoggerSystem>().LogWarning($"포탈이 <b>({cellPos.x}, {cellPos.y})</b>위치에 생성되었습니다.");
+        GameManager.Instance.GetSystem<NotificationSystem>().NotifyWarning($"포탈이 <b>({cellPos.x}, {cellPos.y})</b>위치에 생성되었습니다.");
     }
 
     public void RemovePortal(Portal portal)

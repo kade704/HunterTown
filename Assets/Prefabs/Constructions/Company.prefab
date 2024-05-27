@@ -309,7 +309,7 @@ MonoBehaviour:
   _maintenanceCost: 0
   _populationCondition: 0
   _displayName: "\uBCF8\uBD80"
-  _description: "\uD5CC\uD130\uB4E4\uC744 \uAD00\uB9AC\uD558\uB294 \uC2DC\uC124\uC774\uB2E4."
+  _description: 
   _defaultSprite: {fileID: 0}
   _size: 2
   _buildable: 0
@@ -326,6 +326,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97ef4819a08424d4e866a2ae3dc5977e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _displayName: "\uBCF8\uBD80"
+  _description: "\uD5CC\uD130\uB4E4\uC744 \uAD00\uB9AC\uD558\uB294 \uC2DC\uC124\uC774\uB2E4."
+  _subDescription: 
   _interactions:
   - _id: '#employment'
     _displayName: "\uACE0\uC6A9"

@@ -32,6 +32,6 @@ public class UIPopulation : MonoBehaviour
     private void UpdatePopulationText()
     {
         var populationSystem = GameManager.Instance.GetSystem<PopulationSystem>();
-        _populationText.text = $"{populationSystem.Population}명/{populationSystem.MaxPopulation}명 (<color=#00ff00>+{populationSystem.PopulationGrowth}</color>명)";
+        _populationText.text = $"{populationSystem.Population}명/{populationSystem.MaxPopulation}명 (<color=#00ff00>+{populationSystem.PopulationGrowth}</color>명/일)";
     }
 }

@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     private static GameManager _instance;
     private readonly Dictionary<string, MonoBehaviour> _systems = new();
 
-    private int _selectedGame = 1;
+    private int _selectedSave = 1;
 
     public static GameManager Instance => _instance;
 
@@ -64,22 +64,18 @@ public class GameManager : MonoBehaviour
 
     private void InitializeGame()
     {
-        var savePath = Application.persistentDataPath + $"/SaveData{_selectedGame}.json";
+        var savePath = Application.persistentDataPath + $"/SaveData{_selectedSave}.json";
         if (!File.Exists(savePath))
         {
             var player = GetSystem<MoneySystem>();
             player.Money = 10000;
 
             var constructionGridMap = GetSystem<ConstructionGridmap>();
-            var road = GetSystem<ConstructionDatabase>().GetConstructionPrefab("#dirt_road");
             var company = GetSystem<ConstructionDatabase>().GetConstructionPrefab("#company");
             company.GetComponent<Company>().RemainEmployeeCount = 4;
             constructionGridMap.BuildConstruction(company, new Vector2Int(16, 16));
-            constructionGridMap.BuildConstruction(road, new Vector2Int(15, 15));
-            constructionGridMap.BuildConstruction(road, new Vector2Int(15, 16));
-            constructionGridMap.BuildConstruction(road, new Vector2Int(15, 17));
-            constructionGridMap.BuildConstruction(road, new Vector2Int(16, 15));
-            constructionGridMap.BuildConstruction(road, new Vector2Int(17, 15));
+
+            GetSystem<UITutorialPanel>().Show();
         }
         else
         {
@@ -90,13 +86,19 @@ public class GameManager : MonoBehaviour
             GetSystem<HunterSpawner>().Deserialize(saveData["hunters"]);
             GetSystem<ConstructionGridmap>().Deserialize(saveData["constructions"]);
 
-            GetSystem<NotificationSystem>().NofifyInfo("게임 불러옴.");
+            GetSystem<NotificationSystem>().NotifyInfo("게임 불러옴.");
         }
     }
 
-    public void LoadGame(int game)
+    public void NewGame(int save)
     {
-        _selectedGame = game;
+        _selectedSave = save;
+        SceneManager.LoadScene("Intro");
+    }
+
+    public void LoadGame(int save)
+    {
+        _selectedSave = save;
         SceneManager.LoadScene("Game");
     }
 
@@ -108,7 +110,7 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        var savePath = Application.persistentDataPath + $"/SaveData{_selectedGame}.json";
+        var savePath = Application.persistentDataPath + $"/SaveData{_selectedSave}.json";
         var root = new JObject
         {
             ["time"] = GetSystem<TimeSystem>().Serialize(),
@@ -119,7 +121,7 @@ public class GameManager : MonoBehaviour
         };
         File.WriteAllText(savePath, root.ToString());
 
-        GetSystem<NotificationSystem>().NofifyInfo("게임 저장됨.");
+        GetSystem<NotificationSystem>().NotifyInfo("게임 저장됨.");
     }
 
     public void SaveOptions()

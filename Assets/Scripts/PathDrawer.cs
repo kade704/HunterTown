@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.ComponentModel;
 using UnityEngine;
 
 public class PathDrawer : MonoBehaviour
@@ -21,57 +19,45 @@ public class PathDrawer : MonoBehaviour
     [SerializeField] private Sprite _arrowEndN;
     [SerializeField] private Sprite _arrowEndS;
 
-    private Dictionary<Path, Arrow> _pathArrows = new();
+    private Path _path;
+    private SpriteRenderer[] _renderers;
 
-    private struct Arrow
+    public Path Path => _path;
+
+    private void Awake()
     {
-        private Transform _container;
-        private List<SpriteRenderer> _renderers;
-
-        public Arrow(Transform container)
-        {
-            _container = container;
-            _renderers = new List<SpriteRenderer>();
-        }
-
-        public Transform Container => _container;
-        public List<SpriteRenderer> Renderers => _renderers;
+        _renderers = GetComponentsInChildren<SpriteRenderer>();
     }
 
     private void Update()
     {
-        foreach (var pathArrow in _pathArrows)
+        if (_path != null)
         {
-            for (int i = 0; i < pathArrow.Value.Renderers.Count; i++)
+            for (int i = 0; i < _path.Length; i++)
             {
-                var renderer = pathArrow.Value.Renderers[i];
-                renderer.enabled = pathArrow.Key.Location <= i;
+                var renderer = _renderers[i];
+                renderer.enabled = _path.Location <= i;
             }
         }
     }
 
     public void DrawPath(Path path)
     {
-        var gridmap = GameManager.Instance.GetSystem<ConstructionGridmap>();
 
         if (path.Nodes.Length == 0)
         {
             return;
         }
 
-        var newArrow = new Arrow(new GameObject().transform);
-        newArrow.Container.SetParent(transform);
-        _pathArrows[path] = newArrow;
+        _path = path;
 
-        var color = Color.HSVToRGB(Random.Range(0f, 1f), 1, 1);
+        var gridmap = GameManager.Instance.GetSystem<ConstructionGridmap>();
 
         for (int i = 0; i < path.Nodes.Length; i++)
         {
-            SpriteRenderer renderer = new GameObject().AddComponent<SpriteRenderer>();
-
-            renderer.sortingOrder = -9;
-            renderer.color = color;
-            renderer.transform.SetParent(newArrow.Container);
+            var renderer = _renderers[i];
+            renderer.enabled = true;
+            renderer.color = Color.red;
             renderer.transform.position = gridmap.CellToWorld(path.Nodes[i].Position);
 
             if (i == 0)
@@ -152,22 +138,20 @@ public class PathDrawer : MonoBehaviour
                     renderer.sprite = _arrowEN;
                 }
             }
+        }
 
-            _pathArrows[path].Renderers.Add(renderer);
+        for (int i = path.Nodes.Length; i < _renderers.Length; i++)
+        {
+            _renderers[i].enabled = false;
         }
     }
 
-    public void RemovePath(Path path)
+    public void RemovePath()
     {
-        if (_pathArrows.ContainsKey(path))
+        foreach (var renderer in _renderers)
         {
-            foreach (var renderer in _pathArrows[path].Renderers)
-            {
-                Destroy(renderer.gameObject);
-            }
-
-            Destroy(_pathArrows[path].Container.gameObject);
-            _pathArrows.Remove(path);
+            renderer.enabled = false;
         }
+        _path = null;
     }
 }

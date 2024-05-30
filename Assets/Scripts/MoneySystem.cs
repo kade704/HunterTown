@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using Sirenix.OdinInspector;
@@ -9,11 +10,13 @@ public class MoneySystem : MonoBehaviour, ISerializable, IDeserializable
     [ReadOnly] private int _money;
     [ReadOnly] private int _expenditure;
 
+    private Dictionary<string, int> _expenditureMap = new();
     private NotificationSystem.Message _minusMessage;
 
     private UnityEvent<int> _onMoneyChanged = new();
     private UnityEvent<int> _onExpenditureChanged = new();
 
+    public Dictionary<string, int> ExpenditureMap => _expenditureMap;
     public UnityEvent<int> OnMoneyChanged => _onMoneyChanged;
     public UnityEvent<int> OnExpenditureChanged => _onExpenditureChanged;
 
@@ -44,15 +47,17 @@ public class MoneySystem : MonoBehaviour, ISerializable, IDeserializable
         var constructionGridMap = FindObjectOfType<ConstructionGridmap>();
         constructionGridMap.OnConstructionBuilded.AddListener((construction) =>
         {
+            if (_expenditureMap.ContainsKey(construction.ID) == false)
+                _expenditureMap[construction.ID] = 0;
+            _expenditureMap[construction.ID]++;
             _expenditure += construction.GetComponent<Construction>().MaintenanceCost;
         });
 
         constructionGridMap.OnConstructionDestroyed.AddListener((construction) =>
         {
+            _expenditureMap[construction.ID]--;
             _expenditure -= construction.GetComponent<Construction>().MaintenanceCost;
         });
-
-
 
         Expenditure = constructionGridMap.Constructions.Sum(construction => construction.GetComponent<Construction>().MaintenanceCost);
 

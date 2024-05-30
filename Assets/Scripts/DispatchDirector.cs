@@ -171,7 +171,7 @@ public class DispatchDirector : MonoBehaviour
             }
             GameManager.Instance.GetSystem<MoneySystem>().Money += (int)earnedMoney;
 
-            GameManager.Instance.GetSystem<NotificationSystem>().NofifyInfo("파견에 성공했습니다. 포탈이 사라집니다.");
+            GameManager.Instance.GetSystem<NotificationSystem>().NotifyInfo("파견에 성공했습니다. 포탈이 사라집니다.");
             GameManager.Instance.GetSystem<PortalGenerator>().RemovePortal(portal.GetComponent<Portal>());
         }
         else

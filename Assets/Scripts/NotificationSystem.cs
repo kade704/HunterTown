@@ -63,7 +63,7 @@ public class NotificationSystem : MonoBehaviour
         return Notify(NotificationType.Warning, content, once);
     }
 
-    public Message NofifyInfo(string content, bool once = true)
+    public Message NotifyInfo(string content, bool once = true)
     {
         return Notify(NotificationType.Info, content, once);
     }

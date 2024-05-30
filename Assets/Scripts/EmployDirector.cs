@@ -3,6 +3,8 @@ using UnityEngine;
 public class EmployDirector : MonoBehaviour
 {
     [SerializeField] private string[] _nameTemplates;
+    [SerializeField] private string[] _descriptionTemplates;
+
 
     private EmployHunter[] _employHunters;
 
@@ -34,6 +36,7 @@ public class EmployDirector : MonoBehaviour
         var damage = totalStat - hp;
 
         _employHunters[index].Name = _nameTemplates[Random.Range(0, _nameTemplates.Length)];
+        _employHunters[index].Description = _descriptionTemplates[Random.Range(0, _descriptionTemplates.Length)];
         _employHunters[index].HP = hp;
         _employHunters[index].Damage = damage;
         _employHunters[index].RandomCustomize();

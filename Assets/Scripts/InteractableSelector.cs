@@ -3,21 +3,50 @@ using UnityEngine.Events;
 
 public class InteractableSelector : MonoBehaviour
 {
+    private bool _enableSelect = true;
     private Interactable _selectedInteractable;
+    private Interactable _mouseOverInteractable;
+    private UnityEvent<Interactable> _onInteractableMouseEnter = new();
+    private UnityEvent<Interactable> _onInteractableMouseExit = new();
     private UnityEvent<Interactable> _onInteractableSelected = new();
+    private UnityEvent<Interactable> _onInteractableDeselected = new();
     private UnityEvent<Interactable, Interaction> _onInteractableInteracted = new();
 
     public Interactable SelectedInteractable => _selectedInteractable;
+    public UnityEvent<Interactable> OnInteractableMouseEnter => _onInteractableMouseEnter;
+    public UnityEvent<Interactable> OnInteractableMouseExit => _onInteractableMouseExit;
     public UnityEvent<Interactable> OnInteractableSelected => _onInteractableSelected;
+    public UnityEvent<Interactable> OnInteractableDeselected => _onInteractableDeselected;
     public UnityEvent<Interactable, Interaction> OnInteractableInteracted => _onInteractableInteracted;
+    public bool EnableSelect
+    {
+        get => _enableSelect;
+        set => _enableSelect = value;
+    }
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && !UIUtil.IsUIObjectOverPointer() && GameManager.Instance.GetSystem<ConstructionBuilder>().BulidMode == ConstructionBuilder.BuildMode.Select)
+        var interactable = GetInteractableOverPointer();
+        if (interactable != _mouseOverInteractable)
         {
-            var interactable = GetInteractableOverPointer();
+            if (_mouseOverInteractable)
+            {
+                _onInteractableMouseExit.Invoke(_mouseOverInteractable);
+                _mouseOverInteractable.OnMouseExit.Invoke();
+            }
+
+            if (interactable)
+            {
+                _onInteractableMouseEnter.Invoke(interactable);
+                interactable.OnMouseEnter.Invoke();
+            }
+
+            _mouseOverInteractable = interactable;
+        }
+
+        if (Input.GetMouseButtonDown(0) && !UIUtil.IsUIObjectOverPointer() && EnableSelect)
+        {
             SelectInteractable(interactable);
-            _selectedInteractable = interactable;
         }
 
         if (_selectedInteractable)
@@ -38,7 +67,6 @@ public class InteractableSelector : MonoBehaviour
         var position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         var colliders = Physics2D.OverlapPointAll(position);
 
-
         Interactable frontInteractable = null;
         foreach (var collider in colliders)
         {
@@ -55,15 +83,19 @@ public class InteractableSelector : MonoBehaviour
     {
         if (_selectedInteractable)
         {
-            _selectedInteractable.SetFocus(false);
+            _selectedInteractable.OnDeselected.Invoke();
+            _onInteractableDeselected.Invoke(_selectedInteractable);
         }
 
         if (interactable != null)
         {
-            interactable.SetFocus(true);
+            _selectedInteractable = interactable;
+            _selectedInteractable.OnSelected.Invoke();
+            _onInteractableSelected.Invoke(_selectedInteractable);
         }
-
-        _selectedInteractable = interactable;
-        _onInteractableSelected.Invoke(interactable);
+        else
+        {
+            _selectedInteractable = null;
+        }
     }
 }

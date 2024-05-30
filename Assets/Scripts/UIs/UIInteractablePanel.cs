@@ -24,7 +24,8 @@ public class UIInteractablePanel : MonoBehaviour
         _interactableSelector = FindObjectOfType<InteractableSelector>();
 
         var InteractableSelector = FindObjectOfType<InteractableSelector>();
-        InteractableSelector.OnInteractableSelected.AddListener(OnInteractableClicked);
+        InteractableSelector.OnInteractableSelected.AddListener(OnInteractableSelected);
+        InteractableSelector.OnInteractableDeselected.AddListener(OnInteractableDeselected);
     }
 
     private void Update()
@@ -35,41 +36,39 @@ public class UIInteractablePanel : MonoBehaviour
         }
     }
 
-    private void OnInteractableClicked(Interactable interactable)
+    private void OnInteractableSelected(Interactable interactable)
     {
-        if (interactable)
+        UIUtil.ShowCanvasGroup(_panel);
+
+        _nameText.text = interactable.DisplayName;
+        _descriptionText.text = interactable.Description;
+
+        LayoutRebuilder.ForceRebuildLayoutImmediate(_panel.GetComponent<RectTransform>());
+
+        foreach (Transform interactionButton in _interactionButtonContainer)
         {
-            UIUtil.ShowCanvasGroup(_panel);
-
-            _nameText.text = interactable.DisplayName;
-            _descriptionText.text = interactable.Description;
-
-            LayoutRebuilder.ForceRebuildLayoutImmediate(_panel.GetComponent<RectTransform>());
-
-            foreach (Transform interactionButton in _interactionButtonContainer)
-            {
-                Destroy(interactionButton.gameObject);
-            }
-
-            foreach (var interaction in interactable.Interactions)
-            {
-                var interactionButton = Instantiate(_interactionButtonPrefab, _interactionButtonContainer);
-                interactionButton.Interaction = interaction;
-                interactionButton.OnClick.AddListener(() =>
-                {
-                    _interactableSelector.OnInteractableInteracted.Invoke(interactable, interaction);
-                    interactable.OnInteracted.Invoke(interaction);
-                });
-            }
+            Destroy(interactionButton.gameObject);
         }
-        else
+
+        foreach (var interaction in interactable.Interactions)
         {
-            foreach (Transform interactionButton in _interactionButtonContainer)
+            var interactionButton = Instantiate(_interactionButtonPrefab, _interactionButtonContainer);
+            interactionButton.Interaction = interaction;
+            interactionButton.OnClick.AddListener(() =>
             {
-                Destroy(interactionButton.gameObject);
-            }
-
-            UIUtil.HideCanvasGroup(_panel);
+                _interactableSelector.OnInteractableInteracted.Invoke(interactable, interaction);
+                interactable.OnInteracted.Invoke(interaction);
+            });
         }
+    }
+
+    private void OnInteractableDeselected(Interactable interactable)
+    {
+        foreach (Transform interactionButton in _interactionButtonContainer)
+        {
+            Destroy(interactionButton.gameObject);
+        }
+
+        UIUtil.HideCanvasGroup(_panel);
     }
 }

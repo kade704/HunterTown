@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 6040396087455805275}
   - component: {fileID: 3380698535929008947}
   - component: {fileID: 3595824103850118899}
+  - component: {fileID: 5769206949611407773}
   m_Layer: 0
   m_Name: TwoLaneRoad
   m_TagString: Untagged
@@ -119,9 +120,7 @@ MonoBehaviour:
   _cost: 10
   _maintenanceCost: 5
   _populationCondition: 60
-  _displayName: 
-  _description: 
-  _defaultSprite: {fileID: -550659547, guid: 9ce137b1be9c78d4683d4c1afb72be4e, type: 3}
+  _defaultSprite: {fileID: -1607230947, guid: 9ce137b1be9c78d4683d4c1afb72be4e, type: 3}
   _size: 1
   _buildable: 1
   _destroyable: 1
@@ -174,6 +173,20 @@ MonoBehaviour:
     60\uBA85]"
   _subDescription: 
   _interactions: []
+--- !u!114 &5769206949611407773
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4779888714686033562}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7b6bd64c10106d4ab2439eb700e60a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _hasCapacity: 0
+  _visitorCapacity: 0
 --- !u!1 &7437596200735343293
 GameObject:
   m_ObjectHideFlags: 0

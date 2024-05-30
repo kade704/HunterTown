@@ -142,7 +142,6 @@ public class Portal : MonoBehaviour, ISerializable, IDeserializable
 
         _visitable.OnVisitorChanged.AddListener(OnVisitorChanged);
 
-        _progressRenderer.material.SetFloat("_Value", 1);
         _interactable.SubDescription = $"남은 시간: {_waveDay - timeSystem.Day.Total}일";
     }
 
@@ -172,7 +171,7 @@ public class Portal : MonoBehaviour, ISerializable, IDeserializable
         var timeSystem = GameManager.Instance.GetSystem<TimeSystem>();
         var day = timeSystem.Day.Total;
 
-        var progress = 1 - (day - _startDay) / (float)(_waveDay - _startDay);
+        var progress = (day - _startDay) / (float)(_waveDay - _startDay);
         _progressRenderer.material.SetFloat("_Value", progress);
 
         _interactable.SubDescription = $"남은 시간: {_waveDay - day}일";
@@ -188,12 +187,12 @@ public class Portal : MonoBehaviour, ISerializable, IDeserializable
 
     public void ExamineRoutine()
     {
-        GameManager.Instance.GetSystem<NotificationSystem>().NofifyInfo($"탐색이 시작되었습니다.");
+        GameManager.Instance.GetSystem<NotificationSystem>().NotifyInfo($"탐색이 시작되었습니다.");
 
         GameManager.Instance.GetSystem<MoneySystem>().Money -= Random.Range(30, 70);
 
 
-        GameManager.Instance.GetSystem<NotificationSystem>().NofifyInfo($"탐색이 완료되었습니다.");
+        GameManager.Instance.GetSystem<NotificationSystem>().NotifyInfo($"탐색이 완료되었습니다.");
 
         if (ContainAbility("understood_world"))
         {

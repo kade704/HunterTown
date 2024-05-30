@@ -11,6 +11,8 @@ public class UIHunters : MonoBehaviour
 
     private void Start()
     {
+        StartCoroutine(OnHunterChanged());
+
         GameManager.Instance.GetSystem<HunterSpawner>().OnHuntersChanged.AddListener(() => StartCoroutine(OnHunterChanged()));
     }
 

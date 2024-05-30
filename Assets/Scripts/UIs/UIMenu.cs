@@ -11,9 +11,7 @@ public class UIMenu : MonoBehaviour
 
 
     private CanvasGroup _loadGameButtonsCanvasGroup;
-    private Button _loadGameButton1;
-    private Button _loadGameButton2;
-    private Button _loadGameButton3;
+    private Button[] _loadGameButtons = new Button[3];
     private Button _backButton;
 
     private void Awake()
@@ -24,9 +22,9 @@ public class UIMenu : MonoBehaviour
         _exitGameButton = transform.Find("MainButtons/ExitGameButton").GetComponent<Button>();
 
         _loadGameButtonsCanvasGroup = transform.Find("LoadGameButtons").GetComponent<CanvasGroup>();
-        _loadGameButton1 = transform.Find("LoadGameButtons/LoadGameButton1").GetComponent<Button>();
-        _loadGameButton2 = transform.Find("LoadGameButtons/LoadGameButton2").GetComponent<Button>();
-        _loadGameButton3 = transform.Find("LoadGameButtons/LoadGameButton3").GetComponent<Button>();
+        _loadGameButtons[0] = transform.Find("LoadGameButtons/LoadGameButton1").GetComponent<Button>();
+        _loadGameButtons[1] = transform.Find("LoadGameButtons/LoadGameButton2").GetComponent<Button>();
+        _loadGameButtons[2] = transform.Find("LoadGameButtons/LoadGameButton3").GetComponent<Button>();
         _backButton = transform.Find("LoadGameButtons/BackButton").GetComponent<Button>();
     }
 
@@ -52,28 +50,21 @@ public class UIMenu : MonoBehaviour
             UIUtil.HideCanvasGroup(_loadGameButtonsCanvasGroup);
         });
 
-        var savePath1 = Application.persistentDataPath + $"/SaveData1.json";
-        var saveStr1 = File.Exists(savePath1) ? File.GetLastWriteTime(savePath1).ToString() : "비어있음";
-        _loadGameButton1.GetComponentInChildren<Text>().text = $"세이브1 [{saveStr1}]";
-        _loadGameButton1.onClick.AddListener(() =>
+        for (int i = 1; i <= 3; i++)
         {
-            GameManager.Instance.LoadGame(1);
-        });
+            var saveIdx = i;
 
-        var savePath2 = Application.persistentDataPath + $"/SaveData2.json";
-        var saveStr2 = File.Exists(savePath2) ? File.GetLastWriteTime(savePath2).ToString() : "비어있음";
-        _loadGameButton2.GetComponentInChildren<Text>().text = $"세이브2 [{saveStr2}]";
-        _loadGameButton2.onClick.AddListener(() =>
-        {
-            GameManager.Instance.LoadGame(2);
-        });
-
-        var savePath3 = Application.persistentDataPath + $"/SaveData3.json";
-        var saveStr3 = File.Exists(savePath3) ? File.GetLastWriteTime(savePath3).ToString() : "비어있음";
-        _loadGameButton3.GetComponentInChildren<Text>().text = $"세이브3 [{saveStr3}]";
-        _loadGameButton3.onClick.AddListener(() =>
-        {
-            GameManager.Instance.LoadGame(3);
-        });
+            var savePath = Application.persistentDataPath + $"/SaveData{saveIdx}.json";
+            var saveExist = File.Exists(savePath);
+            var saveStr = saveExist ? File.GetLastWriteTime(savePath).ToString() : "비어있음";
+            _loadGameButtons[saveIdx - 1].GetComponentInChildren<Text>().text = $"세이브{saveIdx} [{saveStr}]";
+            _loadGameButtons[saveIdx - 1].onClick.AddListener(() =>
+            {
+                if (saveExist)
+                    GameManager.Instance.LoadGame(saveIdx);
+                else
+                    GameManager.Instance.NewGame(saveIdx);
+            });
+        }
     }
 }

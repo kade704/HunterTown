@@ -60,44 +60,64 @@ public class Hunter : MonoBehaviour
 
     private void Start()
     {
-        _interactable.OnInteracted.AddListener((interaction) =>
-        {
-            if (interaction.ID == "#move_target")
-            {
-                _animator.SetFloat("RunState", 0);
-                if (_movePath != null)
-                {
-                    StopCoroutine(_moveTargetRoutine);
-                    GameManager.Instance.GetSystem<PathDrawer>().RemovePath(_movePath);
-                }
-                _moveTargetRoutine = StartCoroutine(MoveTargetRoutine());
-            }
-        });
+        _interactable.OnSelected.AddListener(OnSelected);
+        _interactable.OnDeselected.AddListener(OnDeselected);
+        _interactable.OnInteracted.AddListener(OnInteracted);
 
         StartCoroutine(CaptureThumbnailRoutine());
     }
 
     private void Update()
     {
-
-        _interactable.SubDescription = $"체력: {_defaultHp}\n공격력: {_defaultDamage}\n";
+        _interactable.SubDescription = $"체력: {_defaultHp}\n공격력: {_defaultDamage}";
     }
 
+    private void OnSelected()
+    {
+        if (_movePath != null)
+        {
+            GameManager.Instance.GetSystem<PathDrawer>().DrawPath(_movePath);
+        }
+    }
+
+    private void OnDeselected()
+    {
+        if (_movePath != null)
+        {
+            GameManager.Instance.GetSystem<PathDrawer>().RemovePath();
+        }
+    }
+
+    private void OnInteracted(Interaction interaction)
+    {
+        if (interaction.ID == "#move_target")
+        {
+            _animator.SetFloat("RunState", 0);
+            if (_moveTargetRoutine != null)
+            {
+                StopCoroutine(_moveTargetRoutine);
+                GameManager.Instance.GetSystem<PathDrawer>().RemovePath();
+            }
+            _moveTargetRoutine = StartCoroutine(MoveTargetRoutine());
+        }
+    }
 
     private IEnumerator MoveTargetRoutine()
     {
-        Construction clickedConstruction = null;
-        var interactableSelector = GameManager.Instance.GetSystem<InteractableSelector>();
+        GameManager.Instance.GetSystem<InteractableSelector>().EnableSelect = false;
 
-        while (clickedConstruction == null)
+        Visitable clickedVisitable = null;
+        while (clickedVisitable == null)
         {
-            if (interactableSelector.SelectedInteractable && interactableSelector.SelectedInteractable.GetComponent<Construction>())
+            if (Input.GetMouseButtonDown(0) && !UIUtil.IsUIObjectOverPointer())
             {
-                clickedConstruction = interactableSelector.SelectedInteractable.GetComponent<Construction>();
+                clickedVisitable = GetVisitableOverPointer();
             }
 
             yield return null;
         }
+
+        GameManager.Instance.GetSystem<InteractableSelector>().EnableSelect = true;
 
         if (_lastVisited)
         {
@@ -108,7 +128,7 @@ public class Hunter : MonoBehaviour
         var gridmap = GameManager.Instance.GetSystem<ConstructionGridmap>();
 
         var start = gridmap.WorldToCell(transform.position);
-        _movePath = GameManager.Instance.GetSystem<PathFinder>().SearchPath(start, clickedConstruction.CellPos);
+        _movePath = GameManager.Instance.GetSystem<PathFinder>().SearchPath(start, clickedVisitable.Construction.CellPos);
 
         if (_movePath == null)
         {
@@ -120,13 +140,31 @@ public class Hunter : MonoBehaviour
 
         yield return _avatarMovement.MoveRoutine(_movePath);
 
-        if (clickedConstruction && clickedConstruction.GetComponent<Visitable>() != null)
+        if (clickedVisitable && clickedVisitable.GetComponent<Visitable>() != null)
         {
-            _lastVisited = clickedConstruction.GetComponent<Visitable>();
+            _lastVisited = clickedVisitable.GetComponent<Visitable>();
             _lastVisited.EnterVisitor(this);
         }
 
-        GameManager.Instance.GetSystem<PathDrawer>().RemovePath(_movePath);
+        if (_movePath == GameManager.Instance.GetSystem<PathDrawer>().Path)
+        {
+            GameManager.Instance.GetSystem<PathDrawer>().RemovePath();
+        }
+        _movePath = null;
+    }
+
+    private Visitable GetVisitableOverPointer()
+    {
+        var position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        var colliders = Physics2D.OverlapPointAll(position);
+
+        Visitable visitable = null;
+        foreach (var collider in colliders)
+        {
+            visitable = collider.GetComponent<Visitable>();
+            if (visitable) break;
+        }
+        return visitable;
     }
 
     public IEnumerator CaptureThumbnailRoutine(int resolution = 64)

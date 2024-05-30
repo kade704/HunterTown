@@ -29,7 +29,9 @@ public class ConstructionBuilder : MonoBehaviour
         {
             _buildMode = value;
             _onBuildModeChanged.Invoke(_buildMode);
+
             _previewSprites.ForEach(sprite => sprite.sprite = null);
+            GameManager.Instance.GetSystem<InteractableSelector>().EnableSelect = _buildMode == BuildMode.Select;
         }
     }
 
@@ -215,8 +217,8 @@ public class ConstructionBuilder : MonoBehaviour
     {
         if (_constructionGridMap.IsConstructionExistAt(cellPos))
         {
-            var building = _constructionGridMap.GetConstructionAt(cellPos).GetComponent<Durable>();
-            if (building)
+            var construction = _constructionGridMap.GetConstructionAt(cellPos).GetComponent<Construction>();
+            if (construction && !construction.GetComponent<Road>())
             {
                 return false;
             }

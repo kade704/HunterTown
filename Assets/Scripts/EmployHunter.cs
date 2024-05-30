@@ -8,6 +8,7 @@ public class EmployHunter : MonoBehaviour
     private Animator _animator;
     private Vector2 _startPosition;
     private string _name;
+    private string _description;
     private int _hp;
     private int _damage;
 
@@ -16,6 +17,11 @@ public class EmployHunter : MonoBehaviour
     {
         get => _name;
         set => _name = value;
+    }
+    public string Description
+    {
+        get => _description;
+        set => _description = value;
     }
     public int HP
     {

@@ -65,6 +65,7 @@ public class UIDispatchPanel : MonoBehaviour
             _dispatchDirector.FinishBattle(_targetPortal);
             _dispatchDirector.Initialize();
             UIUtil.ShowCanvasGroup(_resultPanel);
+            UIUtil.HideCanvasGroup(_skipButton.GetComponent<CanvasGroup>());
         });
 
         var interactableSelector = FindObjectOfType<InteractableSelector>();
@@ -84,7 +85,7 @@ public class UIDispatchPanel : MonoBehaviour
 
     private IEnumerator DispatchRoutine()
     {
-        GameManager.Instance.GetSystem<NotificationSystem>().NofifyInfo($"파견이 시작되었습니다.");
+        GameManager.Instance.GetSystem<NotificationSystem>().NotifyInfo($"파견이 시작되었습니다.");
         UIUtil.ShowCanvasGroup(_skipButton.GetComponent<CanvasGroup>());
 
         yield return _dispatchDirector.EnterPortal();
@@ -150,6 +151,7 @@ public class UIDispatchPanel : MonoBehaviour
         }
 
         _dispatchButton.interactable = hunters.Count() > 0;
+        _closeButton.interactable = true;
     }
 
     private IEnumerator HideTransitionRoutine()

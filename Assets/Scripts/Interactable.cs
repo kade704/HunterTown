@@ -39,11 +39,16 @@ public class Interactable : MonoBehaviour
     [SerializeField]
     private Interaction[] _interactions;
 
-
+    private bool _selected;
     private SpriteRenderer[] _renderers;
     private Dictionary<SpriteRenderer, Color> _defaultColors = new();
     private SortingGroup _sortingGroup;
     private UnityEvent<Interaction> _onInteracted = new();
+    private UnityEvent _onMouseEnter = new();
+    private UnityEvent _onMouseExit = new();
+    private UnityEvent _onSelected = new();
+    private UnityEvent _onDeselected = new();
+
 
     public string DisplayName
     {
@@ -67,6 +72,10 @@ public class Interactable : MonoBehaviour
     public SpriteRenderer[] SpriteRenderer => _renderers;
     public SortingGroup SortingGroup => _sortingGroup;
     public UnityEvent<Interaction> OnInteracted => _onInteracted;
+    public UnityEvent OnMouseEnter => _onMouseEnter;
+    public UnityEvent OnMouseExit => _onMouseExit;
+    public UnityEvent OnSelected => _onSelected;
+    public UnityEvent OnDeselected => _onDeselected;
 
     private void Awake()
     {
@@ -78,13 +87,50 @@ public class Interactable : MonoBehaviour
     {
         foreach (var _renderer in _renderers)
             _defaultColors.Add(_renderer, _renderer.color);
+
+        _onSelected.AddListener(Selected);
+        _onDeselected.AddListener(Deselected);
+        _onMouseEnter.AddListener(MouseEnter);
+        _onMouseExit.AddListener(MouseExit);
     }
 
-    public void SetFocus(bool value)
+    private void Selected()
     {
+        _selected = true;
         foreach (var renderer in _renderers)
         {
-            renderer.color = value ? Color.green : _defaultColors[renderer];
+            renderer.color = new Color(0.1f, 0.9f, 0.5f, _defaultColors[renderer].a);
+        }
+    }
+
+    private void Deselected()
+    {
+        _selected = false;
+        foreach (var renderer in _renderers)
+        {
+            renderer.color = _defaultColors[renderer];
+        }
+    }
+
+    private void MouseEnter()
+    {
+        if (!_selected)
+        {
+            foreach (var renderer in _renderers)
+            {
+                renderer.color = new Color(0.9f, 0.9f, 0.9f, _defaultColors[renderer].a);
+            }
+        }
+    }
+
+    private void MouseExit()
+    {
+        if (!_selected)
+        {
+            foreach (var renderer in _renderers)
+            {
+                renderer.color = _defaultColors[renderer];
+            }
         }
     }
 }

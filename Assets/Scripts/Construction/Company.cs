@@ -30,7 +30,7 @@ public class Company : MonoBehaviour, ISerializable, IDeserializable
         timeSystem.Month.OnChanged.AddListener(() =>
         {
             _remainEmployeeCount += 1;
-            GameManager.Instance.GetSystem<NotificationSystem>().NofifyInfo($"본부에서 고용 가능 인원이 추가되었습니다.");
+            GameManager.Instance.GetSystem<NotificationSystem>().NotifyInfo($"본부에서 고용 가능 인원이 추가되었습니다.");
         });
     }
 

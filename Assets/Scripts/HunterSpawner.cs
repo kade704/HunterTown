@@ -42,6 +42,7 @@ public class HunterSpawner : MonoBehaviour, ISerializable, IDeserializable
             var obj = new JObject
             {
                 ["name"] = hunter.Interactable.DisplayName,
+                ["decription"] = hunter.Interactable.Description,
                 ["hp"] = hunter.DefaultHp,
                 ["damage"] = hunter.DefaultDamage,
                 ["posX"] = cellPos.x,
@@ -81,6 +82,7 @@ public class HunterSpawner : MonoBehaviour, ISerializable, IDeserializable
             var worldPos = GameManager.Instance.GetSystem<ConstructionGridmap>().CellToWorld(cellPos);
 
             newHunter.Interactable.DisplayName = obj["name"].Value<string>();
+            newHunter.Interactable.Description = obj["decription"].Value<string>();
             newHunter.DefaultHp = obj["hp"].Value<float>();
             newHunter.DefaultDamage = obj["damage"].Value<float>();
             newHunter.transform.position = worldPos;

@@ -19,6 +19,8 @@ public class UIAbilitySlot : MonoBehaviour
             if (value)
             {
                 _name.text = "가려짐";
+                _effect.text = "";
+                _description.text = "";
                 _icon.enabled = true;
                 _icon.sprite = _questionMark;
 

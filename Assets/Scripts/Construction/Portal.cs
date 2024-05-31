@@ -14,14 +14,14 @@ public class Portal : MonoBehaviour, ISerializable, IDeserializable
     [SerializeField] private Transform[] _visitorPositions;
     [SerializeField] private SpriteRenderer _progressRenderer;
 
-    [ReadOnly][SerializeField] private float _defaultPower;
-    [ReadOnly][SerializeField] private float _defaultDanger;
-    [ReadOnly][SerializeField] private float _defaultDifficulty;
-    [ReadOnly][SerializeField] private Ability[] _abilities = new Ability[3];
-    [ReadOnly][SerializeField] private bool _powerVisibility = true;
-    [ReadOnly][SerializeField] private bool _dangerVisibility = true;
-    [ReadOnly][SerializeField] private bool _difficultyVisibility = true;
-    [ReadOnly][SerializeField] private bool[] _abilityVisibilities = new bool[3] { true, true, true };
+    private float _defaultPower;
+    private float _defaultDanger;
+    private float _defaultDifficulty;
+    private Ability[] _abilities = new Ability[3];
+    private bool _powerVisibility = false;
+    private bool _dangerVisibility = false;
+    private bool _difficultyVisibility = false;
+    private bool[] _abilityVisibilities = new bool[3] { false, false, false };
     private int _startDay;
     private int _waveDay = int.MaxValue;
     private Construction _construction;
@@ -44,7 +44,7 @@ public class Portal : MonoBehaviour, ISerializable, IDeserializable
             }
             return power;
         }
-        set { _defaultPower = value; }
+        set => _defaultPower = value;
     }
 
     public float Danger
@@ -62,7 +62,7 @@ public class Portal : MonoBehaviour, ISerializable, IDeserializable
             }
             return danger;
         }
-        set { _defaultDanger = value; }
+        set => _defaultDanger = value;
     }
     public float Difficulty
     {
@@ -79,18 +79,34 @@ public class Portal : MonoBehaviour, ISerializable, IDeserializable
             }
             return difficulty;
         }
-        set { _defaultDifficulty = value; }
+        set => _defaultDifficulty = value;
     }
     public Ability[] Abilities
     {
-        get { return _abilities; }
-        set { _abilities = value; }
+        get => _abilities;
+        set => _abilities = value;
     }
-    public bool PowerVisibility => _powerVisibility;
-    public bool DangerVisibility => _dangerVisibility;
-    public bool DifficultyVisibility => _difficultyVisibility;
+    public bool PowerVisibility
+    {
+        get => _powerVisibility;
+        set => _powerVisibility = value;
+    }
+    public bool DangerVisibility
+    {
+        get => _dangerVisibility;
+        set => _dangerVisibility = value;
+    }
+    public bool DifficultyVisibility
+    {
+        get => _difficultyVisibility;
+        set => _difficultyVisibility = value;
+    }
 
-    public bool[] AbilityVisibilities => _abilityVisibilities;
+    public bool[] AbilityVisibilities
+    {
+        get => _abilityVisibilities;
+        set => _abilityVisibilities = value;
+    }
     public Construction Construction => _construction;
     public Visitable Visitable => _visitable;
 
@@ -123,14 +139,6 @@ public class Portal : MonoBehaviour, ISerializable, IDeserializable
 
         _construction.OnBuilded.AddListener(OnBuilded);
         _construction.OnDestroyed.AddListener(OnDestroyed);
-
-        // _onInteracted.AddListener((id) =>
-        //  {
-        //      if (id == "examine")
-        //      {
-        //          Examine();
-        //      }
-        //  });
     }
 
     private void Start()
@@ -182,49 +190,6 @@ public class Portal : MonoBehaviour, ISerializable, IDeserializable
             _waveDay = timeSystem.Day.Total + WaveTime;
 
             StartCoroutine(WaveRoutine());
-        }
-    }
-
-    public void ExamineRoutine()
-    {
-        GameManager.Instance.GetSystem<NotificationSystem>().NotifyInfo($"탐색이 시작되었습니다.");
-
-        GameManager.Instance.GetSystem<MoneySystem>().Money -= Random.Range(30, 70);
-
-
-        GameManager.Instance.GetSystem<NotificationSystem>().NotifyInfo($"탐색이 완료되었습니다.");
-
-        if (ContainAbility("understood_world"))
-        {
-            _powerVisibility = true;
-            _dangerVisibility = true;
-            _difficultyVisibility = true;
-            for (int i = 0; i < 3; i++)
-            {
-                _abilityVisibilities[i] = true;
-            }
-        }
-        else
-        {
-            if (!_powerVisibility)
-            {
-                _powerVisibility = Random.value < 0.5f;
-            }
-            if (!_dangerVisibility)
-            {
-                _dangerVisibility = Random.value < 0.5f;
-            }
-            if (!_difficultyVisibility)
-            {
-                _difficultyVisibility = Random.value < 0.5f;
-            }
-            for (int i = 0; i < 3; i++)
-            {
-                if (!_abilityVisibilities[i])
-                {
-                    _abilityVisibilities[i] = Random.value < 0.5f;
-                }
-            }
         }
     }
 

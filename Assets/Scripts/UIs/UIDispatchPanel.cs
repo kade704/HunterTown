@@ -33,7 +33,7 @@ public class UIDispatchPanel : MonoBehaviour
         _rankText = transform.Find("RankText").GetComponent<Text>();
         _dispatchSlots = GetComponentsInChildren<UIDispatchSlot>();
         _dispatchButton = transform.Find("DispatchButton").GetComponent<Button>();
-        _abilitySlots = GetComponentsInChildren<UIAbilitySlot>();
+        _abilitySlots = transform.Find("AbilitySlots").GetComponentsInChildren<UIAbilitySlot>();
         _transitionImage = transform.Find("Director/TransitionImage").GetComponent<Image>();
         _skipButton = transform.Find("Director/SkipButton").GetComponent<Button>();
         _dispatchDirector = GameManager.Instance.GetSystem<DispatchDirector>();

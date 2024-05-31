@@ -3,51 +3,30 @@ using UnityEngine.UI;
 
 public class UIPausePanel : MonoBehaviour
 {
-    [SerializeField] private GameObject _panel;
-    [SerializeField] private Button _resumeButton;
-    [SerializeField] private Button _saveButton;
-    [SerializeField] private Button _menuButton;
-    [SerializeField] private Button _quitButton;
+    private CanvasGroup _panel;
+    private Button _resumeButton;
+    private Button _saveButton;
+    private Button _menuButton;
+    private Button _quitButton;
 
-
-    private bool _isPaused;
-
-
-    private void Update()
+    private void Awake()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            if (_isPaused)
-            {
-                GameManager.Instance.GetSystem<TimeSystem>().Resume();
-                GameManager.Instance.GetSystem<AudioController>().MasterCutoff = 1f;
-                _panel.SetActive(false);
-            }
-            else
-            {
-                GameManager.Instance.GetSystem<TimeSystem>().Pause();
-                GameManager.Instance.GetSystem<AudioController>().MasterCutoff = 0.03f;
-                _panel.SetActive(true);
-            }
-            _isPaused = !_isPaused;
-        }
+        _panel = GetComponent<CanvasGroup>();
+        _resumeButton = transform.Find("Buttons/ResumeButton").GetComponent<Button>();
+        _saveButton = transform.Find("Buttons/SaveButton").GetComponent<Button>();
+        _menuButton = transform.Find("Buttons/MenuButton").GetComponent<Button>();
+        _quitButton = transform.Find("Buttons/QuitButton").GetComponent<Button>();
     }
 
     private void Start()
     {
         _resumeButton.onClick.AddListener(() =>
         {
-            _panel.SetActive(false);
-            GameManager.Instance.GetSystem<TimeSystem>().Resume();
-            _isPaused = false;
+            Hide();
         });
         _saveButton.onClick.AddListener(() =>
         {
             GameManager.Instance.SaveGame();
-            GameManager.Instance.GetSystem<TimeSystem>().Resume();
-            GameManager.Instance.GetSystem<AudioController>().MasterCutoff = 1f;
-            _panel.SetActive(false);
-            _isPaused = false;
         });
         _menuButton.onClick.AddListener(() =>
         {
@@ -60,5 +39,19 @@ public class UIPausePanel : MonoBehaviour
         {
             Application.Quit();
         });
+    }
+
+    public void Hide()
+    {
+        GameManager.Instance.GetSystem<TimeSystem>().Resume();
+        GameManager.Instance.GetSystem<AudioController>().MasterCutoff = 1f;
+        UIUtil.HideCanvasGroup(_panel);
+    }
+
+    public void Show()
+    {
+        GameManager.Instance.GetSystem<TimeSystem>().Pause();
+        GameManager.Instance.GetSystem<AudioController>().MasterCutoff = 0.03f;
+        UIUtil.ShowCanvasGroup(_panel);
     }
 }

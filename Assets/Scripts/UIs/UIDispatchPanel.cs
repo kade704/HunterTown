@@ -17,6 +17,8 @@ public class UIDispatchPanel : MonoBehaviour
     private UIAbilitySlot[] _abilitySlots;
     private Image _transitionImage;
     private Button _skipButton;
+    private Text _rewardText;
+    private Text _totalDeathText;
 
     private Portal _targetPortal;
     private DispatchDirector _dispatchDirector;
@@ -36,6 +38,8 @@ public class UIDispatchPanel : MonoBehaviour
         _abilitySlots = transform.Find("AbilitySlots").GetComponentsInChildren<UIAbilitySlot>();
         _transitionImage = transform.Find("Director/TransitionImage").GetComponent<Image>();
         _skipButton = transform.Find("Director/SkipButton").GetComponent<Button>();
+        _rewardText = transform.Find("RewardText").GetComponent<Text>();
+        _totalDeathText = transform.Find("TotalDeathText").GetComponent<Text>();
         _dispatchDirector = GameManager.Instance.GetSystem<DispatchDirector>();
     }
 
@@ -63,7 +67,6 @@ public class UIDispatchPanel : MonoBehaviour
 
             _resultPanel.GetComponent<UIDispatchResultPanel>().Initialize();
             _dispatchDirector.FinishBattle(_targetPortal);
-            _dispatchDirector.Initialize();
             UIUtil.ShowCanvasGroup(_resultPanel);
             UIUtil.HideCanvasGroup(_skipButton.GetComponent<CanvasGroup>());
         });
@@ -102,7 +105,6 @@ public class UIDispatchPanel : MonoBehaviour
         UIUtil.ShowCanvasGroup(_resultPanel);
 
         _dispatchDirector.FinishBattle(_targetPortal);
-        _dispatchDirector.Initialize();
         UIUtil.HideCanvasGroup(_skipButton.GetComponent<CanvasGroup>());
     }
 
@@ -110,10 +112,16 @@ public class UIDispatchPanel : MonoBehaviour
     {
         _targetPortal = portal;
 
+        _dispatchDirector.Initialize(portal);
+
         _powerText.text = "능력치: " + (portal.PowerVisibility ? portal.Power.ToString("F1") : "???");
         _dangerText.text = "위험도: " + (portal.DangerVisibility ? portal.Danger.ToString("F1") : "???");
         _difficultyText.text = "복잡도: " + (portal.DifficultyVisibility ? portal.Difficulty.ToString("F1") : "???");
         _rankText.text = portal.Rank.ToString();
+        _rewardText.text = $"성공시 보상: {(portal.PowerVisibility ? portal.Reward : "???")}원";
+
+        var hunterCount = portal.Visitable.VisitedHunters.Count();
+        _totalDeathText.text = $"{hunterCount}명 대기중 <color=#00ff00>(사망확률: -{Mathf.Max(0, hunterCount - 1) * 10}%)</color>";
 
         for (int i = 0; i < 3; i++)
         {
@@ -124,6 +132,7 @@ public class UIDispatchPanel : MonoBehaviour
         }
 
         var hunters = portal.Visitable.VisitedHunters;
+
         for (int i = 0; i < 4; i++)
         {
             if (i < hunters.Length)
@@ -131,22 +140,18 @@ public class UIDispatchPanel : MonoBehaviour
                 _dispatchSlots[i].Hunter = hunters[i];
                 if (portal.DangerVisibility)
                 {
-                    var deathProbabilityPercent = (int)(portal.CalcHunterDeathProbability(hunters[i]) * 100);
+                    var deathProbabilityPercent = (int)(portal.CalcHunterDeathProbability(hunters)[i] * 100);
                     _dispatchSlots[i].DeathProbability = $"사망 확률: {deathProbabilityPercent}%";
                 }
                 else
                 {
                     _dispatchSlots[i].DeathProbability = $"사망 확률: ?%";
                 }
-                _dispatchDirector.SetHunter(i, hunters[i].GetComponent<Hunter>(), portal);
             }
             else
             {
                 _dispatchSlots[i].Hunter = null;
                 _dispatchSlots[i].DeathProbability = "";
-
-
-                _dispatchDirector.SetHunter(i, null, portal);
             }
         }
 

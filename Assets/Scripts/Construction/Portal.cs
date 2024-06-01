@@ -217,30 +217,21 @@ public class Portal : MonoBehaviour, ISerializable, IDeserializable
         notificationSystem.RemoveMessage(message);
     }
 
-    public float CalcHunterDeathProbability(Hunter hunter)
+    public float[] CalcHunterDeathProbability(Hunter[] hunters)
     {
-        var probability = 1 - Mathf.Clamp01(hunter.Viability / _defaultDanger);
-        if (ContainAbility("hunters"))
-        {
-            probability *= 1.1f;
-        }
-        probability = Mathf.Clamp01(probability);
-        return probability;
-    }
-
-    public float CalcDispatchSuccessProbability(Hunter[] hunters)
-    {
-        var combatPowerTotal = 0f;
+        float[] result = new float[hunters.Length];
         for (int i = 0; i < hunters.Length; i++)
         {
-            combatPowerTotal += hunters[i].CombatPower;
+            var probability = 1 - Mathf.Clamp01(hunters[i].Viability / _defaultDanger);
+            if (ContainAbility("hunters"))
+            {
+                probability *= 1.03f;
+            }
+            probability *= 1 - (hunters.Length - 1) * 0.1f;
+            result[i] = Mathf.Clamp01(probability);
         }
-        var probability = (combatPowerTotal / _defaultPower) - (combatPowerTotal / _defaultPower / 6);
-        if (ContainAbility("strong_boss"))
-        {
-            probability *= 0.95f;
-        }
-        return probability;
+
+        return result;
     }
 
     public bool ContainAbility(string id)
@@ -327,7 +318,7 @@ public class Portal : MonoBehaviour, ISerializable, IDeserializable
         }
     }
 
-    private int WaveTime
+    public int WaveTime
     {
         get
         {
@@ -342,6 +333,23 @@ public class Portal : MonoBehaviour, ISerializable, IDeserializable
                 'S' => Random.Range(63, 77),
                 _ => 0,
             };
+        }
+    }
+
+    public int Reward
+    {
+        get
+        {
+            var earnedMoney = Power * 10f;
+            if (ContainAbility("crystal_portal"))
+            {
+                earnedMoney *= 1.2f;
+            }
+            else if (ContainAbility("badlands"))
+            {
+                earnedMoney *= 0.5f;
+            }
+            return (int)earnedMoney;
         }
     }
 }

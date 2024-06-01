@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: UnderstoodWorld
   m_EditorClassIdentifier: 
   _id: understood_world
-  _icon: {fileID: 21300000, guid: 48bbbc8c3ef67764ca7ff47c83ec32f6, type: 3}
+  _icon: {fileID: 1750723197, guid: 3e9d7ac2495bce742ab67edf40ba867c, type: 3}
   _displayName: "\uD30C\uC545\uB41C \uC138\uACC4"
   _effect: "\uD0D0\uC0C9 \uC2DC \uBAA8\uB4E0 \uC815\uBCF4 \uACF5\uAC1C"
   _description: "\u201C\uC5EC\uAE34 \uBCF8\uC801 \uC788\uB294 \uACF3\uC778\uB370?\u201D

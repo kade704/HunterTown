@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Landmark
   m_EditorClassIdentifier: 
   _id: landmark
-  _icon: {fileID: 21300000, guid: 8179f8145ae6e604994b7d9ae8b7ff12, type: 3}
+  _icon: {fileID: 545688231, guid: 3e9d7ac2495bce742ab67edf40ba867c, type: 3}
   _displayName: "\uB79C\uB4DC\uB9C8\uD06C"
   _effect: "\uBCF5\uC7A1\uB3C4 -10%"
   _description: "\u201C\uC88B\uC544 \uBA40\uB9AC\uC11C\uB3C4 \uBCF4\uC774\uACA0\uAD6C\uB9CC!!\u201D

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: AttributeAbsorption
   m_EditorClassIdentifier: 
   _id: attribute_absorption
-  _icon: {fileID: 21300000, guid: f08c32043f150454d90daa0a4dfff1e4, type: 3}
+  _icon: {fileID: -237808739, guid: 3e9d7ac2495bce742ab67edf40ba867c, type: 3}
   _displayName: "\uC18D\uC131 \uD761\uC218"
   _effect: "\uD3EC\uD0C8 \uC18D\uC131\uC5D0 \uBD88\uB9AC\uD55C \uD5CC\uD130\uAC00
     \uC788\uC744 \uC2DC \uC720\uB9AC\uD55C \uC18D\uC131 \uD6A8\uACFC \uC81C\uAC70"

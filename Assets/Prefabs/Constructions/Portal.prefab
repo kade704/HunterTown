@@ -129,11 +129,11 @@ MonoBehaviour:
   _interactions:
   - _id: '#dispatch'
     _displayName: "\uD30C\uACAC"
-    _icon: {fileID: 21300000, guid: fe88d6c1f83aa0144843a76a67ed6376, type: 3}
+    _icon: {fileID: -710623771, guid: 3d25a359e96cc8c41a746fce71079672, type: 3}
     _key: 116
   - _id: '#examine'
     _displayName: "\uD0D0\uC0C9"
-    _icon: {fileID: 21300000, guid: 6f71cc46dc5110646a5eb39cd892b048, type: 3}
+    _icon: {fileID: -1843430188, guid: 3d25a359e96cc8c41a746fce71079672, type: 3}
     _key: 120
 --- !u!114 &-3587678450641290384
 MonoBehaviour:
@@ -159,17 +159,6 @@ MonoBehaviour:
   - {fileID: 5875726118415928960}
   - {fileID: 8468542511842067842}
   _progressRenderer: {fileID: 190216001865286727}
-  _defaultPower: 0
-  _defaultDanger: 0
-  _defaultDifficulty: 0
-  _abilities:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  _powerVisibility: 1
-  _dangerVisibility: 1
-  _difficultyVisibility: 1
-  _abilityVisibilities: 010101
 --- !u!114 &-843986353715840173
 MonoBehaviour:
   m_ObjectHideFlags: 0

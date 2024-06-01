@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ToxicAtmosphere
   m_EditorClassIdentifier: 
   _id: toxic_atmosphere
-  _icon: {fileID: 21300000, guid: 001f2a1b342b5b64fbaf09b02790af85, type: 3}
+  _icon: {fileID: -419437893, guid: 3e9d7ac2495bce742ab67edf40ba867c, type: 3}
   _displayName: "\uB3C5\uC131 \uB300\uAE30"
   _effect: "\uC704\uD5D8\uB3C4 +20%"
   _description: "\u201C\uC0C1\uCC98\uB9CC \uB098\uB3C4 \uB3C5\uC5D0 \uC911\uB3C5\uB418\uACA0\uAD70\u201D

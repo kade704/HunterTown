@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Badlands
   m_EditorClassIdentifier: 
   _id: badlands
-  _icon: {fileID: 21300000, guid: b6b25e25b5b382440a49d1a6ef904ceb, type: 3}
+  _icon: {fileID: 1772419270, guid: 3e9d7ac2495bce742ab67edf40ba867c, type: 3}
   _displayName: "\uD669\uBB34\uC9C0"
   _effect: "\uBCF4\uC0C1 \uAE08\uC561 \u201350%"
   _description: "\u201C\uC5EC\uAE34,, \uBB50\uAC00 \uC5C6\uACA0\uB294\uB370?\u201D

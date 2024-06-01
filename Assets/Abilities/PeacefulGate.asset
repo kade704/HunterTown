@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PeacefulGate
   m_EditorClassIdentifier: 
   _id: peaceful_gate
-  _icon: {fileID: 21300000, guid: f08c32043f150454d90daa0a4dfff1e4, type: 3}
+  _icon: {fileID: -861569261, guid: 3e9d7ac2495bce742ab67edf40ba867c, type: 3}
   _displayName: "\uD3C9\uD654\uC758 \uBB38"
   _effect: "\uC704\uD5D8\uB3C4 -10%  "
   _description: "\u201C\uBA3C\uC800 \uACF5\uACA9\uD558\uB294 \uAC83 \uAC19\uC9C4

@@ -106,6 +106,9 @@ public class UIExaminePanel : MonoBehaviour
         _closeButton.interactable = false;
         _examineButton.interactable = false;
 
+        GameManager.Instance.GetSystem<MoneySystem>().Money -= 100;
+        GameManager.Instance.GetSystem<NotificationSystem>().NotifyInfo("탐색이 시작되었습니다.");
+
         UIUtil.ShowCanvasGroup(_skipButton.GetComponent<CanvasGroup>());
 
         if (_targetPortal.ContainAbility("understood_world"))
@@ -124,7 +127,7 @@ public class UIExaminePanel : MonoBehaviour
             {
                 _searchIcon.enabled = true;
                 _searchIconParent.transform.position = _powerText.transform.position;
-                yield return new WaitForSeconds(Random.Range(3f, 8f));
+                yield return new WaitForSeconds(Random.Range(2f, 5f));
                 _targetPortal.PowerVisibility = Random.value < 0.5f;
                 _powerText.text = "능력치: " + (_targetPortal.PowerVisibility ? _targetPortal.Power.ToString("F1") : "???");
             }
@@ -132,7 +135,7 @@ public class UIExaminePanel : MonoBehaviour
             {
                 _searchIcon.enabled = true;
                 _searchIconParent.transform.position = _dangerText.transform.position;
-                yield return new WaitForSeconds(Random.Range(3f, 8f));
+                yield return new WaitForSeconds(Random.Range(2f, 5f));
                 _targetPortal.DangerVisibility = Random.value < 0.5f;
                 _dangerText.text = "위험도: " + (_targetPortal.DangerVisibility ? _targetPortal.Danger.ToString("F1") : "???");
             }
@@ -140,7 +143,7 @@ public class UIExaminePanel : MonoBehaviour
             {
                 _searchIcon.enabled = true;
                 _searchIconParent.transform.position = _difficultyText.transform.position;
-                yield return new WaitForSeconds(Random.Range(3f, 8f));
+                yield return new WaitForSeconds(Random.Range(2f, 5f));
                 _targetPortal.DifficultyVisibility = Random.value < 0.5f;
                 _difficultyText.text = "복잡도: " + (_targetPortal.DifficultyVisibility ? _targetPortal.Difficulty.ToString("F1") : "???");
             }
@@ -150,7 +153,7 @@ public class UIExaminePanel : MonoBehaviour
                 {
                     _searchIcon.enabled = true;
                     _searchIconParent.transform.position = _abilitySlots[i].transform.position;
-                    yield return new WaitForSeconds(Random.Range(3f, 8f));
+                    yield return new WaitForSeconds(Random.Range(2f, 5f));
                     _targetPortal.AbilityVisibilities[i] = Random.value < 0.5f;
                     _abilitySlots[i].Hidden = !_targetPortal.AbilityVisibilities[i];
                 }

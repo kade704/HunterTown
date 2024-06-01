@@ -21,24 +21,12 @@ public class DispatchDirector : MonoBehaviour
         _dispatchExitPortal = transform.Find("ExitPortal");
     }
 
-    public void SetHunter(int index, Hunter hunter, Portal portal)
+    public void Initialize(int index, Hunter hunter, Portal portal)
     {
         if (index < 0 || index >= 4)
             Debug.LogError("Invalid index");
 
-        _dispatchHunters[index].Hunter = hunter;
 
-        if (hunter != null)
-        {
-            var death = Random.value < portal.CalcHunterDeathProbability(hunter);
-            _dispatchHunters[index].WillDeath = death;
-
-            var reward = portal.HunterDispatchReward;
-            var damage = Random.Range(0, reward);
-            var hp = reward - damage;
-            _dispatchHunters[index].IncleaseDamage = damage;
-            _dispatchHunters[index].IncleaseHP = hp;
-        }
     }
 
     public IEnumerator EnterPortal()
@@ -160,16 +148,7 @@ public class DispatchDirector : MonoBehaviour
 
         if (dispatchHunters.Any(hunter => !hunter.WillDeath))
         {
-            var earnedMoney = portal.Power * 10f;
-            if (portal.ContainAbility("crystal_portal"))
-            {
-                earnedMoney *= 1.2f;
-            }
-            else if (portal.ContainAbility("badlands"))
-            {
-                earnedMoney *= 0.5f;
-            }
-            GameManager.Instance.GetSystem<MoneySystem>().Money += (int)earnedMoney;
+            GameManager.Instance.GetSystem<MoneySystem>().Money += portal.Reward;
 
             GameManager.Instance.GetSystem<NotificationSystem>().NotifyInfo("파견에 성공했습니다. 포탈이 사라집니다.");
             GameManager.Instance.GetSystem<PortalGenerator>().RemovePortal(portal.GetComponent<Portal>());
@@ -194,19 +173,39 @@ public class DispatchDirector : MonoBehaviour
         }
     }
 
-    public void Initialize()
+    public void Initialize(Portal portal)
     {
         _camera.localPosition = Vector3.zero;
 
+        var hunters = portal.Visitable.VisitedHunters;
         for (int i = 0; i < 4; i++)
         {
+            if (i < hunters.Length)
+            {
+                var death = Random.value < portal.CalcHunterDeathProbability(hunters)[i];
+                _dispatchHunters[i].WillDeath = death;
+                var reward = portal.HunterDispatchReward;
+                var damage = Random.Range(0, reward);
+                var hp = reward - damage;
+                _dispatchHunters[i].Hunter = hunters[i];
+                _dispatchHunters[i].IncleaseDamage = damage;
+                _dispatchHunters[i].IncleaseHP = hp;
+                _dispatchHunters[i].AvatarCustomize.ShowAvatar();
+
+            }
+            else
+            {
+                _dispatchHunters[i].WillDeath = false;
+                _dispatchHunters[i].IncleaseDamage = 0;
+                _dispatchHunters[i].IncleaseHP = 0;
+                _dispatchHunters[i].Hunter = null;
+                _dispatchHunters[i].AvatarCustomize.HideAvatar();
+            }
+
             _dispatchHunters[i].Respawn();
             _dispatchHunters[i].SetFlip(true);
             _dispatchHunters[i].SetMovement(false);
-            _dispatchHunters[i].Hunter = null;
             _dispatchHunters[i].IsDeath = false;
-            _dispatchHunters[i].WillDeath = false;
-            _dispatchHunters[i].AvatarCustomize.HideAvatar();
             _dispatchHunters[i].transform.position = _dispatchHunters[i].StartPosition;
 
             _dispatchMonster[i].Respawn();

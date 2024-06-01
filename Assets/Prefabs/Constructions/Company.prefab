@@ -308,8 +308,6 @@ MonoBehaviour:
   _cost: 0
   _maintenanceCost: 0
   _populationCondition: 0
-  _displayName: "\uBCF8\uBD80"
-  _description: 
   _defaultSprite: {fileID: 0}
   _size: 2
   _buildable: 0
@@ -332,7 +330,7 @@ MonoBehaviour:
   _interactions:
   - _id: '#employment'
     _displayName: "\uACE0\uC6A9"
-    _icon: {fileID: 21300000, guid: e006722fe885e3f4991f2cb4939e1aa0, type: 3}
+    _icon: {fileID: -640492632, guid: 3d25a359e96cc8c41a746fce71079672, type: 3}
     _key: 103
 --- !u!114 &3245388415801309323
 MonoBehaviour:

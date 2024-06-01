@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Maze
   m_EditorClassIdentifier: 
   _id: maze
-  _icon: {fileID: 21300000, guid: 9fbcaec9565d4ee42beee9067e89b37a, type: 3}
+  _icon: {fileID: 2043805103, guid: 3e9d7ac2495bce742ab67edf40ba867c, type: 3}
   _displayName: "\uBBF8\uB85C"
   _effect: "\uBCF5\uC7A1\uB3C4 +20% "
   _description: "\u201C\uC5EC\uAE30\uAC00.. \uC5B4\uB514 \uC9C0?\u201D \uD3EC\uD0C8

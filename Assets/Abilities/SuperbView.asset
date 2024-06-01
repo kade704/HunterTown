@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SuperbView
   m_EditorClassIdentifier: 
   _id: superb_view
-  _icon: {fileID: 21300000, guid: ddf3f76fd0372fc43a19717bc725ff1a, type: 3}
+  _icon: {fileID: 449566667, guid: 3e9d7ac2495bce742ab67edf40ba867c, type: 3}
   _displayName: "\uC808\uACBD"
   _effect: "\uC99D\uAC00\uD558\uB294 \uB2A5\uB825\uCE58 +50%"
   _description: "\u201C\uC640\uC6B0,,, \uC624\uAE38 \uC798 \uD588\uAD70\u201D \uC544\uB984\uB2E4\uC6B4

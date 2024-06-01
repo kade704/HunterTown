@@ -66,6 +66,7 @@ public class UIEmployPanel : MonoBehaviour
 
     private IEnumerator RefreshRoutine()
     {
+        _refreshButton.interactable = false;
         GameManager.Instance.GetSystem<MoneySystem>().Money -= 500;
 
         yield return HideTransitionRoutine();
@@ -78,6 +79,8 @@ public class UIEmployPanel : MonoBehaviour
         }
 
         yield return ShowTransitionRoutine();
+
+        _refreshButton.interactable = true;
     }
 
     private IEnumerator HideTransitionRoutine()

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: StrongBoss
   m_EditorClassIdentifier: 
   _id: strong_boss
-  _icon: {fileID: 21300000, guid: 26127b5d8322d5940b1615312afb4b1d, type: 3}
+  _icon: {fileID: 1022045648, guid: 3e9d7ac2495bce742ab67edf40ba867c, type: 3}
   _displayName: "\uAC15\uB825\uD55C \uBCF4\uC2A4"
   _effect: "\uD3EC\uD0C8 \uD074\uB9AC\uC5B4 \uD655\uB960 -5%"
   _description: "\u201C\uC800\uAC78 \uC5B4\uB5BB\uAC8C \uC8FD\uC774\uC9C0?\u201D

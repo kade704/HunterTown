@@ -1444,27 +1444,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7b0502b90d067d429068211375670af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _headBaseRenderer: {fileID: 681240212363435563}
-  _bodyBaseRenderer: {fileID: 9161902740070068965}
-  _armLeftBaseRenderer: {fileID: 9059438593788189023}
-  _armRightBaseRenderer: {fileID: 3649395108072449780}
-  _legLeftBaseRenderer: {fileID: 5163221603561792929}
-  _legRightBaseRenderer: {fileID: 11565878592940518}
-  _hairRenderer: {fileID: 791346230217804672}
-  _bodyClothRenderer: {fileID: 8678031787817683831}
-  _armLeftClothRenderer: {fileID: 2670460494124371913}
-  _armRightClothRenderer: {fileID: 5881573589927381816}
-  _legLeftClothRenderer: {fileID: 3960156431137140149}
-  _legRightClothRenderer: {fileID: 7209369564811378741}
-  _bodyArmorRenderer: {fileID: 2122958329169355130}
-  _armLeftArmorRenderer: {fileID: 1446489900435212852}
-  _armRightArmorRenderer: {fileID: 8821488804134759289}
-  _helmetRenderer: {fileID: 6641700396897332126}
-  _weaponRenderer: {fileID: 129381468107458814}
-  _eyeLeftRenderer: {fileID: 6959887939744252620}
-  _eyeRightRenderer: {fileID: 2159825906688249700}
-  _spriteRoot: {fileID: 1285562720511458490}
-  _shadowRenderer: {fileID: 2462541441788333034}
 --- !u!114 &7018670336668674498
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1477,7 +1456,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53cdd44c2ac77d94b9840e4525341168, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _displayName: 
   _defaultHp: 0
   _defaultDamage: 0
 --- !u!114 &1720262372711644873
@@ -1492,10 +1470,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97ef4819a08424d4e866a2ae3dc5977e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _displayName: 
+  _description: 
+  _subDescription: 
   _interactions:
   - _id: '#move_target'
     _displayName: "\uC704\uCE58\uB85C \uC774\uB3D9"
-    _icon: {fileID: 21300000, guid: e6f9ee05f9c56ab49baee805d3d4aa05, type: 3}
+    _icon: {fileID: -1871108157, guid: 3d25a359e96cc8c41a746fce71079672, type: 3}
     _key: 101
 --- !u!114 &2335267170331257468
 MonoBehaviour:

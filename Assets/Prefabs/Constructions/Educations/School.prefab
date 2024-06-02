@@ -99,6 +99,7 @@ GameObject:
   - component: {fileID: -8048074963830222491}
   - component: {fileID: 7229216960351309750}
   - component: {fileID: -2033238828273883613}
+  - component: {fileID: -6532605075806882300}
   m_Layer: 0
   m_Name: School
   m_TagString: Untagged
@@ -184,10 +185,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _id: '#school'
   _cost: 2000
-  _maintenanceCost: 36
-  _populationCondition: 50
-  _displayName: 
-  _description: 
+  _maintenanceCost: 20
+  _populationCondition: 20
   _defaultSprite: {fileID: 971381696, guid: 7fb5b5410ed82e9409fb6c1602cbc5aa, type: 3}
   _size: 2
   _buildable: 1
@@ -207,7 +206,7 @@ MonoBehaviour:
   _displayName: "\uD559\uAD50"
   _description: "\uC2DC\uBBFC\uB4E4\uC5D0\uAC8C \uAE30\uCD08\uC801\uC778 \uAD50\uC721\uC744
     \uC81C\uACF5\uD55C\uB2E4.\n\n\uACE0\uC6A9 \uD5CC\uD130 \uB2A5\uB825\uCE58 (+75%)\n\uC720\uC9C0\uBE44:
-    36\uC6D0/\uC6D4\n\n[\uD574\uAE08\uC870\uAC74: \uC2DC\uBBFC 50\uBA85]"
+    20\uC6D0/\uC6D4\n\n[\uD574\uAE08\uC870\uAC74: \uC2DC\uBBFC 20\uBA85]"
   _subDescription: 
   _interactions: []
 --- !u!114 &7229216960351309750
@@ -236,6 +235,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _defaultOrder: 0
+--- !u!114 &-6532605075806882300
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2901527553759305183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b27923cc3443af8478d07009ceab4238, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _incleaseEmployStat: 0.75
 --- !u!1 &5815719711826261461
 GameObject:
   m_ObjectHideFlags: 0

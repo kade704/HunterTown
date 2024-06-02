@@ -21,14 +21,6 @@ public class DispatchDirector : MonoBehaviour
         _dispatchExitPortal = transform.Find("ExitPortal");
     }
 
-    public void Initialize(int index, Hunter hunter, Portal portal)
-    {
-        if (index < 0 || index >= 4)
-            Debug.LogError("Invalid index");
-
-
-    }
-
     public IEnumerator EnterPortal()
     {
         var dispatchHunters = _dispatchHunters.Where(hunter => hunter.Hunter != null).ToArray();

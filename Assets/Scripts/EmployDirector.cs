@@ -28,8 +28,16 @@ public class EmployDirector : MonoBehaviour
         if (index < 0 || index >= 4)
             Debug.LogError("Invalid index");
 
+        var educations = FindObjectsOfType<Education>();
+        var statScale = 0f;
+        foreach (var education in educations)
+        {
+            statScale += education.IncleaseEmployStat;
+        }
+
         var day = GameManager.Instance.GetSystem<TimeSystem>().Day.Total;
         var totalStat = 13 + (day * day / 1500);
+        totalStat = (int)(totalStat * (1 + statScale));
         totalStat = (int)(totalStat * Random.Range(0.9f, 1.1f));
 
         var hp = Random.Range(0, totalStat + 1 - 6) + 3;

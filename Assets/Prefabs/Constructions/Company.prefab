@@ -325,7 +325,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _displayName: "\uBCF8\uBD80"
-  _description: "\uD5CC\uD130\uB4E4\uC744 \uAD00\uB9AC\uD558\uB294 \uC2DC\uC124\uC774\uB2E4."
+  _description: "\uD5CC\uD130\uB4E4\uC744 \uACE0\uC6A9\uD560\uC218 \uC788\uB294 \uC2DC\uC124\uC774\uB2E4.\n15\uC77C
+    \uB9C8\uB2E4 \uACE0\uC6A9 \uAC00\uB2A5 \uC778\uC6D0\uC774 \uCD94\uAC00\uB41C\uB2E4."
   _subDescription: 
   _interactions:
   - _id: '#employment'

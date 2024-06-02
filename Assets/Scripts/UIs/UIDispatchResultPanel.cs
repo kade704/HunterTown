@@ -34,13 +34,14 @@ public class UIDispatchResultPanel : MonoBehaviour
     public void Initialize()
     {
         var dispatchHunters = GameManager.Instance.GetSystem<DispatchDirector>().DispatchHunters;
+        var dispatchUI = GameManager.Instance.GetSystem<UIDispatchPanel>();
 
         var activeDispatchHunters = dispatchHunters.Where(hunter => hunter.Hunter != null).ToArray();
 
         _titleText.text = activeDispatchHunters.All(hunter => hunter.WillDeath) ? "파견 실패..." : "파견 성공!";
 
         var aliveCount = activeDispatchHunters.Count(hunter => !hunter.WillDeath);
-        _subTitleText.text = aliveCount > 0 ? $"{aliveCount}명의 사냥꾼이 생존했습니다." : "모든 헌터가 사망했습니다.";
+        _subTitleText.text = aliveCount > 0 ? $"{dispatchUI.TargetPortal.Reward}원을 획득하였습니다." : "모든 헌터가 사망했습니다.";
 
         for (int i = 0; i < _dispatchResultSlots.Length; i++)
         {

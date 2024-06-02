@@ -9,7 +9,6 @@ public class Monster : MonoBehaviour
     [SerializeField] private int _lifeHour;
 
     private int _startHour;
-    private Durable _target;
     private AvatarCustomize _avatarCustomize;
     private AvatarMovement _avatarMovement;
     private Animator _animator;
@@ -53,34 +52,33 @@ public class Monster : MonoBehaviour
         var pathFinder = GameManager.Instance.GetSystem<PathFinder>();
         while (true)
         {
-            _animator.SetFloat("RunState", 0.5f);
+            _animator.SetFloat("RunState", 1);
 
-            _target = FindNearestDurable();
-            if (!_target) yield break;
+            var target = FindNearestDurable();
+            if (!target) yield break;
+
+            var targetCell = target.Construction.CellPos;
 
             var start = constructionGridMap.WorldToCell(transform.position);
-            var path = pathFinder.SearchPath(start, _target.Construction.CellPos);
+            var path = pathFinder.SearchPath(start, targetCell);
             yield return _avatarMovement.MoveRoutine(path, 3);
 
             _animator.SetFloat("RunState", 0);
 
-            while (_target != null && _target.Durability > 0)
+            while (constructionGridMap.IsConstructionExistAt(targetCell) && constructionGridMap.GetConstructionAt(targetCell).GetComponent<Durable>().Durability > 0)
             {
                 _animator.SetTrigger("Attack");
-                _target.Durability -= 1;
+                constructionGridMap.GetConstructionAt(targetCell).GetComponent<Durable>().Durability -= 1;
                 yield return new WaitForSeconds(1);
             }
 
-            if (_target == null)
+            if (!constructionGridMap.IsConstructionExistAt(targetCell))
             {
-                yield return new WaitForSeconds(1);
                 continue;
             }
 
-            constructionGridMap.DestroyConstruction(_target.Construction);
-            GameManager.Instance.GetSystem<AudioController>().PlaySFX("Destruction");
+            constructionGridMap.DestroyConstruction(targetCell);
 
-            yield return new WaitForSeconds(1);
         }
     }
 

@@ -42,19 +42,27 @@ public class Durable : MonoBehaviour
 
     private void DurabilityChanged()
     {
-        if (Durability < _startDurability)
+        if (Durability <= 0)
         {
-            _progressRenderer.enabled = true;
-            _progressRenderer.material.SetFloat("_Value", (float)Durability / _startDurability);
-            if (_recoverDurabilityRoutine != null)
-            {
-                StopCoroutine(_recoverDurabilityRoutine);
-            }
-            _recoverDurabilityRoutine = StartCoroutine(RecoverDurabilityRoutine());
+            _construction.ConstructionGridMap.DestroyConstruction(_construction);
+            GameManager.Instance.GetSystem<AudioController>().PlaySFX("Destruction");
         }
         else
         {
-            _progressRenderer.enabled = false;
+            if (Durability < _startDurability)
+            {
+                _progressRenderer.enabled = true;
+                _progressRenderer.material.SetFloat("_Value", (float)Durability / _startDurability);
+                if (_recoverDurabilityRoutine != null)
+                {
+                    StopCoroutine(_recoverDurabilityRoutine);
+                }
+                _recoverDurabilityRoutine = StartCoroutine(RecoverDurabilityRoutine());
+            }
+            else
+            {
+                _progressRenderer.enabled = false;
+            }
         }
     }
 

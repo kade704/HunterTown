@@ -24,6 +24,8 @@ public class UIDispatchPanel : MonoBehaviour
     private DispatchDirector _dispatchDirector;
     private Coroutine _dispatchRoutine;
 
+    public Portal TargetPortal => _targetPortal;
+
     private void Awake()
     {
         _panel = GetComponent<CanvasGroup>();
@@ -121,7 +123,7 @@ public class UIDispatchPanel : MonoBehaviour
         _rewardText.text = $"성공시 보상: {(portal.PowerVisibility ? portal.Reward : "???")}원";
 
         var hunterCount = portal.Visitable.VisitedHunters.Count();
-        _totalDeathText.text = $"{hunterCount}명 대기중 <color=#00ff00>(사망확률: -{Mathf.Max(0, hunterCount - 1) * 10}%)</color>";
+        _totalDeathText.text = $"{hunterCount}명 배치 <color=#00ff00>(사망확률: -{Mathf.Max(0, hunterCount - 1) * 10}%)</color>";
 
         for (int i = 0; i < 3; i++)
         {

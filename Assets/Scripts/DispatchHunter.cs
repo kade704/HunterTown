@@ -75,7 +75,7 @@ public class DispatchHunter : MonoBehaviour
 
     public void SetMovement(bool value)
     {
-        _animator.SetFloat("RunState", value ? 0.5f : 0);
+        _animator.SetFloat("RunState", value ? 1 : 0);
     }
 
     public void Die()

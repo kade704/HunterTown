@@ -44,7 +44,7 @@ public class AvatarMovement : MonoBehaviour
 
                 transform.position += (Vector3)velocity;
 
-                _animator.SetFloat("RunState", 0.5f);
+                _animator.SetFloat("RunState", 1);
 
                 yield return null;
             }

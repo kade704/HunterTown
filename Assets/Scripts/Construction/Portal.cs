@@ -150,7 +150,7 @@ public class Portal : MonoBehaviour, ISerializable, IDeserializable
 
         _visitable.OnVisitorChanged.AddListener(OnVisitorChanged);
 
-        _interactable.SubDescription = $"남은 시간: {_waveDay - timeSystem.Day.Total}일";
+        _interactable.SubDescription = $"포탈 웨이브 까지 {_waveDay - timeSystem.Day.Total}일";
     }
 
     private void OnBuilded()
@@ -182,7 +182,7 @@ public class Portal : MonoBehaviour, ISerializable, IDeserializable
         var progress = (day - _startDay) / (float)(_waveDay - _startDay);
         _progressRenderer.material.SetFloat("_Value", progress);
 
-        _interactable.SubDescription = $"남은 시간: {_waveDay - day}일";
+        _interactable.SubDescription = $"포탈 웨이브 까지 {_waveDay - day}일";
 
         if (day >= _waveDay)
         {

@@ -33,6 +33,10 @@ public class CameraMovement : MonoBehaviour
     {
         _targetPosition = transform.position;
         _targetZoom = _camera.orthographicSize;
+
+        var options = GameManager.Instance.GetSystem<Options>();
+        _zoomSpeed = options.CameraZoomSpeed;
+        _moveSpeed = options.CameraMoveSpeed;
     }
 
     private void LateUpdate()

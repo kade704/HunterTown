@@ -26,7 +26,7 @@ public class GameOverSystem : MonoBehaviour
             var moneySystem = GameManager.Instance.GetSystem<MoneySystem>();
             if (moneySystem.Money < 0)
             {
-                GameOver("도산했습니다");
+                GameOver("파산했습니다");
             }
         });
     }

@@ -69,6 +69,18 @@ public class AudioController : MonoBehaviour
 
     private void Start()
     {
+        var options = GameManager.Instance.GetSystem<Options>();
+
+        MasterVolume = options.MasterVolume;
+        MusicVolume = options.MusicVolume;
+        SFXVolume = options.SFXVolume;
+        AmbienceVolume = options.AmbienceVolume;
+
+        options.OnMasterVolumeChanged.AddListener((value) => MasterVolume = value);
+        options.OnMusicVolumeChanged.AddListener((value) => MusicVolume = value);
+        options.OnSFXVolumeChanged.AddListener((value) => SFXVolume = value);
+        options.OnAmbienceVolumeChanged.AddListener((value) => AmbienceVolume = value);
+
         StartCoroutine(MusicRoutine());
     }
 

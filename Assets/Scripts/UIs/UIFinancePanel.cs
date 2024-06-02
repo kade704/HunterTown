@@ -9,14 +9,21 @@ public class UIFinancePanel : MonoBehaviour
     private Button _closeButton;
     private CanvasGroup _canvasGroup;
     private Transform _financeSlotContainer;
-    private Text _expenditureText;
+    private Text _populationText;
+    private Text _expenseText;
+    private Text _incomeText;
+    private Text _amountText;
+
 
     private void Awake()
     {
         _canvasGroup = GetComponent<CanvasGroup>();
         _closeButton = transform.Find("CloseButton").GetComponent<Button>();
         _financeSlotContainer = transform.Find("FinanceSlots/Viewport/Container");
-        _expenditureText = transform.Find("ExpenditureText").GetComponent<Text>();
+        _populationText = transform.Find("PopulationText").GetComponent<Text>();
+        _expenseText = transform.Find("ExpenseText").GetComponent<Text>();
+        _incomeText = transform.Find("IncomeText").GetComponent<Text>();
+        _amountText = transform.Find("AmountText").GetComponent<Text>();
     }
 
     private void Start()
@@ -44,9 +51,9 @@ public class UIFinancePanel : MonoBehaviour
             Count = group.Count()
         }).Where(element => element.Prefab.MaintenanceCost > 0).ToList();
 
-        var expenditure = constructionGroup.Sum(element => element.Prefab.MaintenanceCost * element.Count);
+        var expense = constructionGroup.Sum(element => element.Prefab.MaintenanceCost * element.Count);
 
-        _expenditureText.text = $"총 지출   <color=#ff0000>-{expenditure}원/월</color>";
+        _expenseText.text = $"월간 지출 <color=#ff0000>-{expense}원/월</color>";
 
         foreach (Transform child in _financeSlotContainer)
         {
@@ -59,5 +66,16 @@ public class UIFinancePanel : MonoBehaviour
             slot.Construction = element.Prefab;
             slot.Count = element.Count;
         }
+
+        var populationSystem = GameManager.Instance.GetSystem<PopulationSystem>();
+
+        _populationText.text = $"인구수({populationSystem.Population})\n* 45원/명";
+
+        var income = populationSystem.Population * 45;
+        _incomeText.text = $"월간 수익 <color=#00ff00>+{populationSystem.Population * 45}원/월</color>";
+
+        var amount = income - expense;
+        var amountStr = amount >= 0 ? $"<color=#00ff00>+{amount}</color>" : $"<color=#ff0000>{amount}</color>";
+        _amountText.text = $"월 매출 {amountStr}원/월";
     }
 }

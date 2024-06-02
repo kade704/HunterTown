@@ -11,7 +11,7 @@ public class ConstructionBuilder : MonoBehaviour
     private SpriteRenderer[] _previewSprites;
     private BuildMode _buildMode = BuildMode.Select;
     private bool _isDragging = false;
-    private Vector2Int[] _draggingCells = new Vector2Int[64];
+    private Vector2Int[] _draggingCells = new Vector2Int[32];
     private Vector2Int _startDragPos;
     private UnityEvent<BuildMode> _onBuildModeChanged = new();
 
@@ -39,6 +39,14 @@ public class ConstructionBuilder : MonoBehaviour
     {
         _previewSprites = transform.GetComponentsInChildren<SpriteRenderer>();
         _constructionGridMap = GameManager.Instance.GetSystem<ConstructionGridmap>();
+    }
+
+    private void Start()
+    {
+        for (int i = 0; i < _draggingCells.Length; i++)
+        {
+            _draggingCells[i] = new Vector2Int(-1, -1);
+        }
     }
 
     private void Update()

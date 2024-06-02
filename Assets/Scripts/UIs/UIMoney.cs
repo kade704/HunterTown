@@ -22,7 +22,7 @@ public class UIMoney : MonoBehaviour
             UpdateMoneyText();
         });
 
-        moneySystem.OnExpenditureChanged.AddListener((expenditure) =>
+        moneySystem.OnAmountChanged.AddListener((expenditure) =>
         {
             UpdateMoneyText();
         });
@@ -36,6 +36,7 @@ public class UIMoney : MonoBehaviour
     private void UpdateMoneyText()
     {
         var player = GameManager.Instance.GetSystem<MoneySystem>();
-        _moneyText.text = $"{player.Money}원 <color=#ff0000>({-player.Expenditure}원/월)</color>";
+        var amountStr = player.Amount >= 0 ? $"<color=#00ff00>(+{player.Amount}원/월)</color>" : $"<color=#ff0000>({player.Amount}원/월)</color>";
+        _moneyText.text = $"{player.Money}원 {amountStr}";
     }
 }

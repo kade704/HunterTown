@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using Sirenix.OdinInspector;
@@ -8,15 +7,16 @@ using UnityEngine.Events;
 public class MoneySystem : MonoBehaviour, ISerializable, IDeserializable
 {
     [ReadOnly] private int _money;
-    [ReadOnly] private int _expenditure;
+    [ReadOnly] private int _income;
+    [ReadOnly] private int _expense;
 
     private NotificationSystem.Message _minusMessage;
 
     private UnityEvent<int> _onMoneyChanged = new();
-    private UnityEvent<int> _onExpenditureChanged = new();
+    private UnityEvent<int> _onAmountChanged = new();
 
     public UnityEvent<int> OnMoneyChanged => _onMoneyChanged;
-    public UnityEvent<int> OnExpenditureChanged => _onExpenditureChanged;
+    public UnityEvent<int> OnAmountChanged => _onAmountChanged;
 
     public int Money
     {
@@ -28,40 +28,46 @@ public class MoneySystem : MonoBehaviour, ISerializable, IDeserializable
         }
     }
 
-    public int Expenditure
+    public int Amount
     {
-        get => _expenditure;
-        set
-        {
-            _expenditure = value;
-            OnExpenditureChanged.Invoke(value);
-        }
+        get => _income - _expense;
     }
 
     private void Start()
     {
         _onMoneyChanged.AddListener(MoneyChanged);
 
-        var constructionGridMap = FindObjectOfType<ConstructionGridmap>();
+        var constructionGridMap = GameManager.Instance.GetSystem<ConstructionGridmap>();
+        var populationSystem = GameManager.Instance.GetSystem<PopulationSystem>();
         foreach (var construction in constructionGridMap.Constructions)
         {
-            _expenditure += construction.GetComponent<Construction>().MaintenanceCost;
+            _expense += construction.GetComponent<Construction>().MaintenanceCost;
         }
+
+        _income += populationSystem.Population * 45;
 
         constructionGridMap.OnConstructionBuilded.AddListener((construction) =>
         {
-            _expenditure += construction.GetComponent<Construction>().MaintenanceCost;
+            _expense += construction.GetComponent<Construction>().MaintenanceCost;
+            _onAmountChanged.Invoke(Amount);
         });
 
         constructionGridMap.OnConstructionDestroyed.AddListener((construction) =>
         {
-            _expenditure -= construction.GetComponent<Construction>().MaintenanceCost;
+            _expense -= construction.GetComponent<Construction>().MaintenanceCost;
+            _onAmountChanged.Invoke(Amount);
+        });
+
+        populationSystem.OnPopulationChanged.AddListener((population) =>
+        {
+            _income = population * 45;
+            _onAmountChanged.Invoke(Amount);
         });
 
         var timeSystem = GameManager.Instance.GetSystem<TimeSystem>();
         timeSystem.Month.OnChanged.AddListener(() =>
         {
-            Money -= Expenditure;
+            Money -= Amount;
         });
     }
 

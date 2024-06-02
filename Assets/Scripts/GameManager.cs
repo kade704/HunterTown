@@ -50,7 +50,6 @@ public class GameManager : MonoBehaviour
             }
         };
 
-        LoadOptions();
         GoMenu();
     }
 
@@ -122,32 +121,6 @@ public class GameManager : MonoBehaviour
         File.WriteAllText(savePath, root.ToString());
 
         GetSystem<NotificationSystem>().NotifyInfo("게임 저장됨.");
-    }
-
-    public void SaveOptions()
-    {
-        var parser = new INIParser();
-        parser.Open(Application.persistentDataPath + "/Options.ini");
-        parser.WriteValue("Audio", "MasterVolume", GetSystem<AudioController>().MasterVolume.ToString());
-        parser.WriteValue("Audio", "MusicVolume", GetSystem<AudioController>().MusicVolume.ToString());
-        parser.WriteValue("Audio", "SFXVolume", GetSystem<AudioController>().SFXVolume.ToString());
-        parser.WriteValue("Audio", "AmbienceVolume", GetSystem<AudioController>().AmbienceVolume.ToString());
-        parser.Close();
-
-        Debug.Log("Options saved.");
-    }
-
-    public void LoadOptions()
-    {
-        var parser = new INIParser();
-        parser.Open(Application.persistentDataPath + "/Options.ini");
-        GetSystem<AudioController>().MasterVolume = (float)parser.ReadValue("Audio", "MasterVolume", 1.0);
-        GetSystem<AudioController>().MusicVolume = (float)parser.ReadValue("Audio", "MusicVolume", 0.5);
-        GetSystem<AudioController>().SFXVolume = (float)parser.ReadValue("Audio", "SFXVolume", 0.8);
-        GetSystem<AudioController>().AmbienceVolume = (float)parser.ReadValue("Audio", "AmbienceVolume", 0.5);
-        parser.Close();
-
-        Debug.Log("Options loaded.");
     }
 
     public void GoMenu()

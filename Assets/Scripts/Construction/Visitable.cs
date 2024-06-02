@@ -14,7 +14,7 @@ public class Visitable : MonoBehaviour
     private int _visitorCapacity;
 
     private Construction _construction;
-    private HashSet<Hunter> _visitedHunters = new();
+    private List<Hunter> _visitedHunters = new();
     private UnityEvent _onVisitorChanged = new UnityEvent();
 
     public Construction Construction => _construction;
@@ -30,10 +30,13 @@ public class Visitable : MonoBehaviour
 
     public void EnterVisitor(Hunter hunter)
     {
-        if (!_hasCapacity || _visitedHunters.Count < _visitorCapacity)
+        if (!_visitedHunters.Contains(hunter))
         {
-            _visitedHunters.Add(hunter);
-            _onVisitorChanged.Invoke();
+            if (!_hasCapacity || _visitedHunters.Count < _visitorCapacity)
+            {
+                _visitedHunters.Add(hunter);
+                _onVisitorChanged.Invoke();
+            }
         }
     }
 

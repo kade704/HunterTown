@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class CitizenSpawner : MonoBehaviour
 {
@@ -8,6 +9,7 @@ public class CitizenSpawner : MonoBehaviour
     private List<Citizen> _citizens = new();
 
     private const int POPULATION_PER_CITIZEN = 5;
+
 
     private void Start()
     {

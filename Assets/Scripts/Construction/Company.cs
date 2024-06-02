@@ -27,10 +27,14 @@ public class Company : MonoBehaviour, ISerializable, IDeserializable
         _interactable.SubDescription = $"고용 가능 인원: {_remainEmployeeCount}명";
 
         var timeSystem = GameManager.Instance.GetSystem<TimeSystem>();
-        timeSystem.Month.OnChanged.AddListener(() =>
+        timeSystem.Day.OnChanged.AddListener(() =>
         {
-            _remainEmployeeCount += 1;
-            GameManager.Instance.GetSystem<NotificationSystem>().NotifyInfo($"본부에서 고용 가능 인원이 추가되었습니다.");
+            var day = timeSystem.Day.Current;
+            if (day == 1 || day == 15)
+            {
+                _remainEmployeeCount += 1;
+                GameManager.Instance.GetSystem<NotificationSystem>().NotifyInfo($"본부에서 고용 가능 인원이 추가되었습니다.");
+            }
         });
     }
 

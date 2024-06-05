@@ -61,6 +61,9 @@ public class UIExaminePanel : MonoBehaviour
             _closeButton.interactable = true;
             _examineButton.interactable = true;
             UIUtil.HideCanvasGroup(_skipButton.GetComponent<CanvasGroup>());
+
+            GameManager.Instance.GetSystem<NotificationSystem>().NotifyInfo("탐색이 완료되었습니다.");
+            GameManager.Instance.GetSystem<TimeSystem>().Resume();
         });
 
         var interactableSelector = FindObjectOfType<InteractableSelector>();
@@ -106,6 +109,7 @@ public class UIExaminePanel : MonoBehaviour
         _closeButton.interactable = false;
         _examineButton.interactable = false;
 
+        GameManager.Instance.GetSystem<TimeSystem>().Pause();
         GameManager.Instance.GetSystem<MoneySystem>().Money -= 100;
         GameManager.Instance.GetSystem<NotificationSystem>().NotifyInfo("탐색이 시작되었습니다.");
 
@@ -163,6 +167,9 @@ public class UIExaminePanel : MonoBehaviour
 
         _closeButton.interactable = true;
         _examineButton.interactable = true;
+
+        GameManager.Instance.GetSystem<TimeSystem>().Resume();
+        GameManager.Instance.GetSystem<NotificationSystem>().NotifyInfo("탐색이 완료되었습니다.");
 
         UIUtil.HideCanvasGroup(_skipButton.GetComponent<CanvasGroup>());
     }

@@ -59,12 +59,14 @@ public class TimeSystem : MonoBehaviour, ISerializable, IDeserializable
     private Element _day = new(1);
     private Element _month = new(1);
     private Element _year = new(2020);
+    private UnityEvent _onTimeScaleChanged = new UnityEvent();
 
     public Element Hour => _hour;
     public Element Day => _day;
     public Element Month => _month;
     public Element Year => _year;
     public float TimeScale => _timeScale;
+    public UnityEvent OnTimeScaleChanged => _onTimeScaleChanged;
 
 
     private void Start()
@@ -94,6 +96,8 @@ public class TimeSystem : MonoBehaviour, ISerializable, IDeserializable
         _timeScale = 0;
 
         StopAllCoroutines();
+
+        _onTimeScaleChanged.Invoke();
     }
 
     public void Resume()
@@ -102,6 +106,8 @@ public class TimeSystem : MonoBehaviour, ISerializable, IDeserializable
 
         StopAllCoroutines();
         StartCoroutine(TimerRoutine());
+
+        _onTimeScaleChanged.Invoke();
     }
 
     public void Fast()
@@ -110,6 +116,8 @@ public class TimeSystem : MonoBehaviour, ISerializable, IDeserializable
 
         StopAllCoroutines();
         StartCoroutine(TimerRoutine());
+
+        _onTimeScaleChanged.Invoke();
     }
 
     public JToken Serialize()

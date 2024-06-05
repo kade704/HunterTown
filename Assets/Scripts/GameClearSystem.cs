@@ -14,6 +14,7 @@ public class GameClearSystem : MonoBehaviour
         {
             if (population >= 400)
             {
+                GameManager.Instance.GetSystem<TimeSystem>().Pause();
                 _onGameClear.Invoke();
             }
         });

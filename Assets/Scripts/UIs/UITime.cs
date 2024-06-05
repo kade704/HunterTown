@@ -56,5 +56,13 @@ public class UITime : MonoBehaviour
         {
             _progressImage.fillAmount = timeSystem.Hour.Current / 24f;
         });
+
+
+        timeSystem.OnTimeScaleChanged.AddListener(() =>
+        {
+            _pauseButton.SetIsOnWithoutNotify(timeSystem.TimeScale == 0);
+            _resumeButton.SetIsOnWithoutNotify(timeSystem.TimeScale == 1);
+            _fastButton.SetIsOnWithoutNotify(timeSystem.TimeScale == 5);
+        });
     }
 }

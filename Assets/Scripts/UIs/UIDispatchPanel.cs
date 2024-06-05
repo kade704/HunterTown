@@ -71,6 +71,7 @@ public class UIDispatchPanel : MonoBehaviour
             _dispatchDirector.FinishBattle(_targetPortal);
             UIUtil.ShowCanvasGroup(_resultPanel);
             UIUtil.HideCanvasGroup(_skipButton.GetComponent<CanvasGroup>());
+            GameManager.Instance.GetSystem<TimeSystem>().Resume();
         });
 
         var interactableSelector = FindObjectOfType<InteractableSelector>();
@@ -90,6 +91,7 @@ public class UIDispatchPanel : MonoBehaviour
 
     private IEnumerator DispatchRoutine()
     {
+        GameManager.Instance.GetSystem<TimeSystem>().Pause();
         GameManager.Instance.GetSystem<NotificationSystem>().NotifyInfo($"파견이 시작되었습니다.");
         UIUtil.ShowCanvasGroup(_skipButton.GetComponent<CanvasGroup>());
 
@@ -108,6 +110,8 @@ public class UIDispatchPanel : MonoBehaviour
 
         _dispatchDirector.FinishBattle(_targetPortal);
         UIUtil.HideCanvasGroup(_skipButton.GetComponent<CanvasGroup>());
+
+        GameManager.Instance.GetSystem<TimeSystem>().Resume();
     }
 
     private void Initialize(Portal portal)

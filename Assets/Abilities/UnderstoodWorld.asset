@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c0b9084028520e4696400e3bde3ddbf, type: 3}
+  m_Name: UnderstoodWorld
+  m_EditorClassIdentifier: 
+  _id: understood_world
+  _icon: {fileID: 1750723197, guid: 3e9d7ac2495bce742ab67edf40ba867c, type: 3}
+  _displayName: "\uD30C\uC545\uB41C \uC138\uACC4"
+  _effect: "\uD0D0\uC0C9 \uC2DC \uBAA8\uB4E0 \uC815\uBCF4 \uACF5\uAC1C"
+  _description: "\u201C\uC5EC\uAE34 \uBCF8\uC801 \uC788\uB294 \uACF3\uC778\uB370?\u201D
+    \uC774\uBBF8 \uC815\uBCF4\uAC00 \uC788\uB294 \uD3EC\uD0C8\uC774\uB2E4. \uBCF8\uBD80\uC758
+    \uD30C\uC77C\uB9CC \uBCF4\uBA74 \uB420 \uAC83 \uAC19\uB2E4."
+  _advantage: 1

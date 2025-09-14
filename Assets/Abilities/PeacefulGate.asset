@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c0b9084028520e4696400e3bde3ddbf, type: 3}
+  m_Name: PeacefulGate
+  m_EditorClassIdentifier: 
+  _id: peaceful_gate
+  _icon: {fileID: -861569261, guid: 3e9d7ac2495bce742ab67edf40ba867c, type: 3}
+  _displayName: "\uD3C9\uD654\uC758 \uBB38"
+  _effect: "\uC704\uD5D8\uB3C4 -10%  "
+  _description: "\u201C\uBA3C\uC800 \uACF5\uACA9\uD558\uB294 \uAC83 \uAC19\uC9C4
+    \uC54A\uAD70..\u201D \uD3EC\uD0C8\uC758 \uBAAC\uC2A4\uD130\uB4E4\uC774 \uBA3C\uC800
+    \uACF5\uACA9\uD558\uC9C0 \uC54A\uACE0 \uACBD\uACC4\uB9CC \uD558\uACE0\uC788\uB2E4."
+  _advantage: 1

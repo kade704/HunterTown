@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c0b9084028520e4696400e3bde3ddbf, type: 3}
+  m_Name: FalseEvolution
+  m_EditorClassIdentifier: 
+  _id: false_evolution
+  _icon: {fileID: -1082062, guid: 3e9d7ac2495bce742ab67edf40ba867c, type: 3}
+  _displayName: "\uC798\uBABB\uB41C \uC9C4\uD654"
+  _effect: "\uD3EC\uD0C8 \uB2A5\uB825\uCE58 -10%"
+  _description: "\u201C\uB108\uBB34 \uBE44\uD6A8\uC728 \uC801\uC774\uC57C\u201D \uD3EC\uD0C8\uC758
+    \uBAAC\uC2A4\uD130\uB4E4\uC758 \uC9C4\uD654\uAC00 \uC798\uBABB\uB418\uC5B4 \uC798
+    \uC6C0\uC9C1\uC774\uC9C0 \uBABB\uD558\uB294 \uAC83 \uAC19\uB2E4."
+  _advantage: 1
